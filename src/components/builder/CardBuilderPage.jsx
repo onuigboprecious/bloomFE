@@ -20,7 +20,7 @@ export const CardBuilderPage = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors pb-20">
-      
+
       {/* Top Navigation Bar */}
       <header className="sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 sm:px-8 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -43,7 +43,7 @@ export const CardBuilderPage = () => {
       {/* Main Card Builder Section */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="py-10 bg-slate-900 text-white relative overflow-hidden rounded-3xl p-6 sm:p-10 border border-slate-800 shadow-2xl">
-          
+
           {/* Background Glow */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -62,10 +62,10 @@ export const CardBuilderPage = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start bg-slate-950/60 p-6 sm:p-8 rounded-3xl border border-slate-800 backdrop-blur-xl">
-              
+
               {/* Controls Editor Column */}
               <div className="lg:col-span-7 space-y-6">
-                
+
                 {/* Choose NFC Physical Finish */}
                 <div className="space-y-3">
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
@@ -78,11 +78,10 @@ export const CardBuilderPage = () => {
                         <div
                           key={finish.id}
                           onClick={() => setSelectedFinish(finish)}
-                          className={`p-3 rounded-2xl border text-left cursor-pointer transition-all ${
-                            isSelected
+                          className={`p-3 rounded-2xl border text-left cursor-pointer transition-all ${isSelected
                               ? 'border-cyan-400 bg-cyan-500/10 ring-1 ring-cyan-400/50 shadow-md'
                               : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
-                          }`}
+                            }`}
                         >
                           <div className="h-10 w-full rounded-lg bg-slate-800 mb-2 overflow-hidden relative">
                             <img src={finish.image} alt={finish.name} className="w-full h-full object-cover" />
@@ -104,7 +103,7 @@ export const CardBuilderPage = () => {
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
                     2. Customize Contact Details
                   </label>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">

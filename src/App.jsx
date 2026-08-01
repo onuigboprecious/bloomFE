@@ -3,6 +3,7 @@ import { AppProvider, useApp } from './context/AppContext';
 import Navbar from './components/layout/Navbar';
 import HeroSection from './components/hero/HeroSection';
 import NfcProcessSteps from './components/features/NfcProcessSteps';
+import WristbandShowcaseSection from './components/features/WristbandShowcaseSection';
 import Testimonials from './components/features/Testimonials';
 import FaqSection from './components/faq/FaqSection';
 import Footer from './components/layout/Footer';
@@ -36,6 +37,7 @@ export const AppContent = () => {
       <Navbar />
       <main>
         <HeroSection />
+        <WristbandShowcaseSection />
         <NfcProcessSteps />
         <Testimonials />
         <FaqSection />

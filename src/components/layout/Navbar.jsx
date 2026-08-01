@@ -23,10 +23,10 @@ export const Navbar = () => {
   return (
     <header className="sticky top-0 z-40 w-full pt-5 pb-3 px-4 sm:px-6 lg:px-8 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md transition-colors">
       <div className="max-w-6xl mx-auto">
-        
+
         {/* Floating Capsule Bar Container */}
         <div className="bg-[#F1F3F6] dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 rounded-full px-6 sm:px-8 py-3 flex items-center justify-between shadow-xs transition-colors">
-          
+
           {/* Brand Logo */}
           <a href="#" onClick={() => setCurrentPage('home')} className="flex items-center gap-0.5 group">
             <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-white font-['Plus_Jakarta_Sans']">
@@ -42,7 +42,7 @@ export const Navbar = () => {
             <button onClick={() => setCurrentPage('home')} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
               Home
             </button>
-            
+
             {/* Products Dropdown */}
             <div className="relative">
               <button
@@ -122,7 +122,7 @@ export const Navbar = () => {
                 {/* Profile Dropdown Menu */}
                 {profileDropdownOpen && (
                   <div className="absolute top-full right-0 mt-3 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 space-y-1">
-                    
+
                     {/* User Header */}
                     <div className="p-3 border-b border-slate-100 dark:border-slate-800">
                       <span className="font-extrabold text-slate-900 dark:text-white text-xs block truncate">

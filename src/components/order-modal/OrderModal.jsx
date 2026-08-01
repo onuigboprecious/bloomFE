@@ -49,11 +49,10 @@ export const OrderModal = () => {
                 <div
                   key={finish.id}
                   onClick={() => setSelectedFinish(finish)}
-                  className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${
-                    isSelected
+                  className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${isSelected
                       ? 'border-cyan-500 bg-cyan-50/40 shadow-sm ring-1 ring-cyan-500/50'
                       : 'border-slate-200 bg-white hover:border-slate-300'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-7 rounded-md bg-slate-900 overflow-hidden">

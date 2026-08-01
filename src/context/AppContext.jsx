@@ -151,7 +151,7 @@ END:VCARD`;
       }}
     >
       {children}
-      
+
       {/* Toast Notification when Card is Claimed & Linked Immediately */}
       {claimToast.show && (
         <div className="fixed bottom-6 right-6 z-50 bg-slate-900 border border-cyan-500/50 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4">

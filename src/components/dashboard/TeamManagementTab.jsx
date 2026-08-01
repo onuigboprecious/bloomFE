@@ -105,11 +105,10 @@ export const TeamManagementTab = () => {
                   </td>
                   <td className="px-5 py-3.5">
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                        member.status === 'Active'
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${member.status === 'Active'
                           ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300'
                           : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300'
-                      }`}
+                        }`}
                     >
                       {member.status}
                     </span>
@@ -117,11 +116,10 @@ export const TeamManagementTab = () => {
                   <td className="px-5 py-3.5 text-right space-x-2">
                     <button
                       onClick={() => toggleDeactivate(member.id)}
-                      className={`px-3 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition-colors ${
-                        member.status === 'Active'
+                      className={`px-3 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition-colors ${member.status === 'Active'
                           ? 'bg-rose-50 dark:bg-rose-950 text-rose-600 hover:bg-rose-100'
                           : 'bg-emerald-50 dark:bg-emerald-950 text-emerald-600 hover:bg-emerald-100'
-                      }`}
+                        }`}
                     >
                       {member.status === 'Active' ? 'Deactivate (Offboard)' : 'Re-activate'}
                     </button>

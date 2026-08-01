@@ -9,8 +9,8 @@ export const NfcProcessSteps = () => {
   const steps = [
     {
       num: "01",
-      title: "Tap your Bloom Card",
-      desc: "Hover your physical Bloom Card against the top back of any iPhone or Android smartphone.",
+      title: "Tap your Card or Wristband",
+      desc: "Hover your physical Bloom Card or NFC Wristband against the top back of any iPhone or Android smartphone.",
       icon: Rss,
       badge: "Built-in NTAG216 High-Speed NFC Chip"
     },
@@ -31,7 +31,7 @@ export const NfcProcessSteps = () => {
   ];
 
   return (
-    <section id="features" className="py-20 bg-slate-50/50 dark:bg-slate-900/50 transition-colors">
+    <section id="features" className="pt-12 pb-20 bg-slate-50 dark:bg-slate-950 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -40,10 +40,10 @@ export const NfcProcessSteps = () => {
             Simple & Effortless
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            How networking with Bloom Card works
+            How networking with Bloom works
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
-            Ditch paper business cards forever. Make unforgettable connections in seconds.
+            Ditch paper business cards forever. Make unforgettable connections in seconds with NFC Cards & Wristbands.
           </p>
         </div>
 
