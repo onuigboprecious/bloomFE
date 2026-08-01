@@ -65,6 +65,7 @@ export const mockCardFinishes = [
   {
     id: "finish-1",
     name: "Stealth Matte Black",
+    category: "card",
     material: "Deep Matte PVC + Micro NFC Chip",
     tagline: "Sleek, minimalist & ultra durable",
     price: 35000,
@@ -77,6 +78,7 @@ export const mockCardFinishes = [
   {
     id: "finish-2",
     name: "Stainless Steel Edition",
+    category: "card",
     material: "Laser-Engraved Anodized Steel",
     tagline: "Weighty executive premium finish",
     price: 65000,
@@ -89,6 +91,7 @@ export const mockCardFinishes = [
   {
     id: "finish-3",
     name: "Rose Gold Metallic",
+    category: "card",
     material: "Brushed Metallic Alloy",
     tagline: "Unforgettable luxury sheen",
     price: 55000,
@@ -101,6 +104,7 @@ export const mockCardFinishes = [
   {
     id: "finish-4",
     name: "Eco Bamboo Wood",
+    category: "card",
     material: "Sustainably Sourced Natural Wood",
     tagline: "Organic texture & eco-friendly",
     price: 40000,
@@ -109,6 +113,19 @@ export const mockCardFinishes = [
     chipColor: "border-amber-500/50 text-amber-400",
     image: "https://images.unsplash.com/photo-1546484475-7f7bd55792da?auto=format&fit=crop&q=80&w=400",
     popular: false
+  },
+  {
+    id: "finish-5",
+    name: "Bloom Active NFC Wristband",
+    category: "wristband",
+    material: "IP68 Waterproof Eco-Silicone",
+    tagline: "Hands-free smart wearable for active networking",
+    price: 28000,
+    color: "bg-gradient-to-r from-cyan-600 via-teal-600 to-blue-700 text-white",
+    cardGradient: "from-cyan-900 via-slate-900 to-teal-950",
+    chipColor: "border-cyan-400/60 text-cyan-300",
+    image: "https://images.unsplash.com/photo-1510017803434-a899398421b3?auto=format&fit=crop&q=80&w=400",
+    popular: true
   }
 ];
 

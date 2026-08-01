@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, Menu, X, ArrowUpRight, Sun, Moon, LayoutDashboard, Settings, LogOut, User, Sliders } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowUpRight, Sun, Moon, LayoutDashboard, Settings, LogOut, User, Sliders, CreditCard, Watch, Sparkles, ChevronRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export const Navbar = () => {
@@ -19,6 +19,9 @@ export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+
+  const nfcCards = cardFinishes.filter((f) => f.category !== 'wristband');
+  const nfcWristbands = cardFinishes.filter((f) => f.category === 'wristband');
 
   return (
     <header className="sticky top-0 z-40 w-full pt-5 pb-3 px-4 sm:px-6 lg:px-8 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md transition-colors">
@@ -52,29 +55,55 @@ export const Navbar = () => {
                 }}
                 className="flex items-center gap-1 hover:text-slate-900 dark:hover:text-white transition-colors py-1 cursor-pointer"
               >
-                <span>NFC Cards</span>
+                <span>NFC Products</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${productsOpen ? 'rotate-180 text-[#00BCFF]' : 'text-slate-400'}`} />
               </button>
 
               {productsOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                  {cardFinishes.map((finish) => (
-                    <button
-                      key={finish.id}
-                      onClick={() => {
-                        setSelectedFinish(finish);
-                        setCurrentPage('customizer');
-                        setProductsOpen(false);
-                      }}
-                      className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                    >
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-80 sm:w-96 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200 space-y-2">
+                  {/* NFC Cards Link Card */}
+                  <button
+                    onClick={() => {
+                      setCurrentPage('cards');
+                      setProductsOpen(false);
+                    }}
+                    className="w-full text-left p-3.5 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3.5 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                  >
+                    <div className="p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-[#00BCFF] group-hover:scale-110 transition-transform shrink-0 mt-0.5">
+                      <CreditCard className="w-5 h-5" />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-slate-900 dark:text-white text-sm">{finish.name}</span>
-                        <span className="text-xs font-bold text-cyan-600 dark:text-cyan-400">₦{finish.price.toLocaleString()}</span>
+                        <span className="font-extrabold text-slate-900 dark:text-white text-sm group-hover:text-[#00BCFF] transition-colors">NFC Cards</span>
+                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
                       </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{finish.material}</div>
-                    </button>
-                  ))}
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                        Sleek matte PVC, stainless steel, rose gold & bamboo digital business cards.
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* NFC Wristbands Link Card */}
+                  <button
+                    onClick={() => {
+                      setCurrentPage('wristbands');
+                      setProductsOpen(false);
+                    }}
+                    className="w-full text-left p-3.5 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3.5 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                  >
+                    <div className="p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-[#00BCFF] group-hover:scale-110 transition-transform shrink-0 mt-0.5">
+                      <Watch className="w-5 h-5" />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold text-slate-900 dark:text-white text-sm group-hover:text-[#00BCFF] transition-colors">NFC Wristbands</span>
+                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                        IP68 waterproof eco-silicone smart wearables for active hands-free networking.
+                      </p>
+                    </div>
+                  </button>
                 </div>
               )}
             </div>
@@ -235,6 +264,37 @@ export const Navbar = () => {
             >
               Home
             </button>
+
+            {/* Mobile NFC Products Links */}
+            <div className="py-2 border-y border-slate-100 dark:border-slate-800/80 space-y-1">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">NFC Products</span>
+              <button
+                onClick={() => {
+                  setCurrentPage('cards');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 text-[#00BCFF]" />
+                  <span>NFC Cards</span>
+                </div>
+                <span className="text-[11px] text-[#00BCFF]">View Page →</span>
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentPage('wristbands');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <Watch className="w-4 h-4 text-emerald-500" />
+                  <span>NFC Wristbands</span>
+                </div>
+                <span className="text-[11px] text-emerald-500">View Page →</span>
+              </button>
+            </div>
 
             {isAuthenticated && (
               <>

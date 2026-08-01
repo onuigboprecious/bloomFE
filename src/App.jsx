@@ -12,6 +12,8 @@ import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
 import DashboardPage from './components/dashboard/DashboardPage';
 import CardBuilderPage from './components/builder/CardBuilderPage';
+import NfcCardsPage from './components/products/NfcCardsPage';
+import NfcWristbandsPage from './components/products/NfcWristbandsPage';
 
 export const AppContent = () => {
   const { currentPage } = useApp();
@@ -30,6 +32,14 @@ export const AppContent = () => {
 
   if (currentPage === 'customizer') {
     return <CardBuilderPage />;
+  }
+
+  if (currentPage === 'cards') {
+    return <NfcCardsPage />;
+  }
+
+  if (currentPage === 'wristbands') {
+    return <NfcWristbandsPage />;
   }
 
   return (
