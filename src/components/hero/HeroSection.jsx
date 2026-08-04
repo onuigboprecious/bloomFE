@@ -31,9 +31,6 @@ export const HeroSection = () => {
             <span>Meet once. </span>
             <span className="block sm:inline-block whitespace-nowrap">Stay connected forever.</span>
           </h1>
-          <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#94A3B8] dark:text-[#64748B] leading-[1.12]">
-            Tap to share. Collect leads. Stay connected.
-          </p>
         </motion.div>
 
         {/* Hero CTA Button */}
