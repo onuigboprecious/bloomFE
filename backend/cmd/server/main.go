@@ -22,11 +22,24 @@ func main() {
 		env = "development"
 	}
 
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
-	if err != nil {
-		log.Fatalf("db open error: %v", err)
+	dbURL := os.Getenv("DATABASE_URL")
+	var db *sql.DB
+	if dbURL != "" {
+		var err error
+		db, err = sql.Open("postgres", dbURL)
+		if err != nil {
+			log.Printf("Warning: database connection setup error: %v", err)
+		} else if err := db.Ping(); err != nil {
+			log.Printf("Warning: PostgreSQL database ping failed: %v", err)
+		} else {
+			log.Println("Successfully connected to PostgreSQL database!")
+		}
+	} else {
+		log.Println("Notice: DATABASE_URL is not set. Server running without live database.")
 	}
-	defer db.Close()
+	if db != nil {
+		defer db.Close()
+	}
 
 	authSvc := auth.New(db, env)
 	// cardsSvc := cards.New(db, authSvc)
