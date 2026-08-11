@@ -4,8 +4,8 @@ services:
     name: infarbloom-backend
     env: go
     rootDir: backend
-    buildCommand: go build -o server ./cmd/server
-    startCommand: ./server
+    buildCommand: cd backend && go build -o server ./cmd/server
+    startCommand: ./backend/server
     envVars:
       - key: APP_ENV
         value: production
