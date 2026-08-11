@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { mockProfileData, mockCardFinishes, mockRecentLeads } from '../data/mockData';
+import { loginApi, signupApi, logoutApi, getMeApi } from '../api/auth';
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'login' | 'signup' | 'dashboard'
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // default authenticated for demonstration
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem('bloom_theme') === 'dark';
   });
@@ -19,6 +22,29 @@ export const AppProvider = ({ children }) => {
   const [activeCardUid, setActiveCardUid] = useState("BLM-9921-NFC");
   const [claimToast, setClaimToast] = useState({ show: false, message: '', uid: '' });
 
+  // Check active session on initial render
+  useEffect(() => {
+    getMeApi()
+      .then((userData) => {
+        setIsAuthenticated(true);
+        setUser(userData);
+        if (userData?.name) {
+          setProfile((prev) => ({
+            ...prev,
+            name: userData.name,
+            email: userData.email || prev.email,
+          }));
+        }
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+        setUser(null);
+      })
+      .finally(() => {
+        setAuthLoading(false);
+      });
+  }, []);
+
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -31,12 +57,42 @@ export const AppProvider = ({ children }) => {
 
   const toggleDarkMode = () => setDarkMode((prev) => !prev);
 
-  const loginUser = () => {
+  const loginUser = async ({ email, password }) => {
+    const userData = await loginApi({ email, password });
     setIsAuthenticated(true);
+    setUser(userData);
+    if (userData?.name) {
+      setProfile((prev) => ({
+        ...prev,
+        name: userData.name,
+        email: userData.email || email,
+      }));
+    }
+    return userData;
   };
 
-  const logoutUser = () => {
+  const signupUser = async ({ email, password, name }) => {
+    const userData = await signupApi({ email, password, name });
+    setIsAuthenticated(true);
+    setUser(userData);
+    if (name) {
+      setProfile((prev) => ({
+        ...prev,
+        name,
+        email: email || prev.email,
+      }));
+    }
+    return userData;
+  };
+
+  const logoutUser = async () => {
+    try {
+      await logoutApi();
+    } catch (e) {
+      // Continue client logout even if API call fails
+    }
     setIsAuthenticated(false);
+    setUser(null);
   };
 
   const checkUsernameAvailability = (username) => {
@@ -123,7 +179,10 @@ END:VCARD`;
         setCurrentPage,
         isAuthenticated,
         setIsAuthenticated,
+        user,
+        authLoading,
         loginUser,
+        signupUser,
         logoutUser,
         darkMode,
         setDarkMode,

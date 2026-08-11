@@ -27,45 +27,48 @@ export const NfcProcessSteps = () => {
         {/* Main Visual Stage: Phone in Center + 3 Step Callouts + Connecting Lines */}
         <div className="relative max-w-5xl mx-auto min-h-[540px] flex flex-col lg:flex-row items-center justify-center gap-8 py-4">
 
-          {/* SVG Connecting Lines (Precision viewBox paths matching STEP 1 -> Phone -> STEP 2 -> STEP 3) */}
+          {/* SVG Connecting Lines (Connecting to exact 50% vertical center of each card) */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none hidden lg:block z-0"
             viewBox="0 0 1024 540"
             preserveAspectRatio="xMidYMid meet"
             xmlns="http://www.w3.org/2000/svg"
           >
-            {/* Line 1: STEP 1 (Top Right) -> Center Phone */}
+            {/* Line 1: Middle left edge of STEP 1 (Top Right Card) -> Right side of Phone */}
             <path
-              d="M 720 120 C 630 120, 580 160, 512 200"
+              d="M 712 198 L 580 198"
               stroke="#00BCFF"
               strokeWidth="2"
               strokeDasharray="6 6"
               fill="none"
-              opacity="0.7"
+              opacity="0.8"
             />
-            <circle cx="720" cy="120" r="4" fill="#00BCFF" />
+            <circle cx="712" cy="198" r="4.5" fill="#00BCFF" />
+            <circle cx="580" cy="198" r="3.5" fill="#00BCFF" />
 
-            {/* Line 2: Center Phone -> STEP 2 (Middle Left) */}
+            {/* Line 2: Left side of Phone -> Middle right edge of STEP 2 (Middle Left Card) */}
             <path
-              d="M 512 270 C 440 270, 390 270, 310 270"
+              d="M 444 270 L 312 270"
               stroke="#00BCFF"
               strokeWidth="2"
               strokeDasharray="6 6"
               fill="none"
-              opacity="0.7"
+              opacity="0.8"
             />
-            <circle cx="310" cy="270" r="4" fill="#00BCFF" />
+            <circle cx="444" cy="270" r="3.5" fill="#00BCFF" />
+            <circle cx="312" cy="270" r="4.5" fill="#00BCFF" />
 
-            {/* Line 3: Center Phone -> STEP 3 (Bottom Right) */}
+            {/* Line 3: Right side of Phone -> Middle left edge of STEP 3 (Bottom Right Card) */}
             <path
-              d="M 512 340 C 580 380, 630 420, 720 420"
+              d="M 580 342 L 712 342"
               stroke="#00BCFF"
               strokeWidth="2"
               strokeDasharray="6 6"
               fill="none"
-              opacity="0.7"
+              opacity="0.8"
             />
-            <circle cx="720" cy="420" r="4" fill="#00BCFF" />
+            <circle cx="580" cy="342" r="3.5" fill="#00BCFF" />
+            <circle cx="712" cy="342" r="4.5" fill="#00BCFF" />
           </svg>
 
           {/* STEP 2 CALLOUT (Middle Left on Desktop) */}

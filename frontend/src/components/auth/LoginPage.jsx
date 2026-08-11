@@ -1,30 +1,33 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Lock, Mail, User, Building2, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Lock, Mail, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import Button from '../ui/Button';
 import { useApp } from '../../context/AppContext';
 
-export const SignUpPage = () => {
-  const { setCurrentPage, updateProfileField } = useApp();
-  const [fullName, setFullName] = useState('');
-  const [company, setCompany] = useState('');
+export const LoginPage = () => {
+  const { setCurrentPage, loginUser } = useApp();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [signupSuccess, setSignupSuccess] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSignUp = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSignupSuccess(true);
-      if (fullName) updateProfileField('name', fullName);
-      if (email) updateProfileField('email', email);
+    setErrorMessage('');
+    try {
+      await loginUser({ email, password });
+      setLoginSuccess(true);
       setTimeout(() => {
         setCurrentPage('dashboard');
-      }, 1200);
-    }, 1200);
+      }, 1000);
+    } catch (err) {
+      setErrorMessage(err.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -49,7 +52,7 @@ export const SignUpPage = () => {
         </a>
       </div>
 
-      {/* Main Sign Up Card Container */}
+      {/* Main Login Card Container */}
       <div className="w-full max-w-md mx-auto px-4 py-8 z-10 my-auto">
         <motion.div
           initial={{ opacity: 0, y: 25, scale: 0.98 }}
@@ -57,7 +60,7 @@ export const SignUpPage = () => {
           transition={{ duration: 0.5 }}
           className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-100/90 dark:border-slate-800 relative transition-colors"
         >
-          {signupSuccess ? (
+          {loginSuccess ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -66,43 +69,31 @@ export const SignUpPage = () => {
               <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
                 <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
               </div>
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white">Account Created!</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Welcome to Bloom. Redirecting to your digital card...</p>
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white">Welcome Back!</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Log in successful. Redirecting to your Bloom dashboard...</p>
             </motion.div>
           ) : (
-            <form onSubmit={handleSignUp} className="space-y-5">
+            <form onSubmit={handleLogin} className="space-y-6">
               {/* Header Title */}
               <div className="text-center space-y-2">
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                  Get Your Bloom Card
+                  Welcome to Bloom
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Create your digital contact profile in 60 seconds
+                  Log in to manage your NFC card & digital contacts
                 </p>
               </div>
 
-              {/* Input Fields */}
-              <div className="space-y-3.5">
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-                    Full Name
-                  </label>
-                  <div className="relative flex items-center">
-                    <User className="absolute left-3.5 w-4 h-4 text-slate-400" />
-                    <input
-                      type="text"
-                      required
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      placeholder="e.g. Precious Onuigbo"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00BCFF]/40 focus:border-[#00BCFF] placeholder:text-slate-400/50 dark:placeholder:text-slate-500/50 placeholder:italic placeholder:font-normal"
-                    />
-                  </div>
+              {errorMessage && (
+                <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs font-semibold text-rose-600 dark:text-rose-400 text-center">
+                  {errorMessage}
                 </div>
+              )}
 
+              {/* Input Fields */}
+              <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                     Email Address
                   </label>
                   <div className="relative flex items-center">
@@ -112,28 +103,52 @@ export const SignUpPage = () => {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="name@example.com"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00BCFF]/40 focus:border-[#00BCFF] placeholder:text-slate-400/50 dark:placeholder:text-slate-500/50 placeholder:italic placeholder:font-normal"
+                      placeholder="name@company.com"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#00BCFF]/40 focus:border-[#00BCFF] placeholder:text-slate-400/50 dark:placeholder:text-slate-500/50 placeholder:italic placeholder:font-normal"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
-                    Create Password
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                      Password
+                    </label>
+                    <a href="#" className="text-xs font-bold text-[#00BCFF] hover:underline">
+                      Forgot?
+                    </a>
+                  </div>
                   <div className="relative flex items-center">
                     <Lock className="absolute left-3.5 w-4 h-4 text-slate-400" />
                     <input
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="At least 8 characters"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00BCFF]/40 focus:border-[#00BCFF] placeholder:text-slate-400/50 dark:placeholder:text-slate-500/50 placeholder:italic placeholder:font-normal"
+                      placeholder="Enter password"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl pl-10 pr-10 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#00BCFF]/40 focus:border-[#00BCFF] placeholder:text-slate-400/50 dark:placeholder:text-slate-500/50 placeholder:italic placeholder:font-normal"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                   </div>
                 </div>
+              </div>
+
+              {/* Remember Me */}
+              <div className="flex items-center justify-between text-xs">
+                <label className="flex items-center gap-2 text-slate-600 dark:text-slate-400 font-medium cursor-pointer">
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    className="w-4 h-4 rounded border-slate-300 text-[#00BCFF] focus:ring-[#00BCFF]"
+                  />
+                  <span>Remember this device</span>
+                </label>
               </div>
 
               {/* Submit Button */}
@@ -142,27 +157,27 @@ export const SignUpPage = () => {
                 variant="primary"
                 size="lg"
                 disabled={isSubmitting}
-                className="w-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold py-3.5 text-sm shadow-md shadow-cyan-400/30 cursor-pointer mt-2"
+                className="w-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold py-3.5 text-sm shadow-md shadow-cyan-400/30 cursor-pointer"
               >
                 {isSubmitting ? (
                   <span className="flex items-center gap-2">
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Creating Profile...
+                    Authenticating...
                   </span>
                 ) : (
-                  'Create Free Account'
+                  'Log In to Dashboard'
                 )}
               </Button>
 
-              {/* Switch to Login */}
+              {/* Switch to Sign Up */}
               <div className="text-center text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
-                Already have an account?{' '}
+                Don't have a Bloom Card yet?{' '}
                 <button
                   type="button"
-                  onClick={() => setCurrentPage('login')}
+                  onClick={() => setCurrentPage('signup')}
                   className="font-bold text-[#00BCFF] hover:underline cursor-pointer"
                 >
-                  Log In
+                  Create Account
                 </button>
               </div>
             </form>
@@ -178,4 +193,4 @@ export const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default LoginPage;
