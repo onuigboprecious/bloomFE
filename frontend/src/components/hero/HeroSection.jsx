@@ -1,11 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import HeroShowcase from './HeroShowcase';
 import Globe from './Globe';
 import { useApp } from '../../context/AppContext';
 
 export const HeroSection = () => {
-  const { setIsOrderModalOpen } = useApp();
+  const { openWaitlistModal } = useApp();
 
   return (
     <section id="hero" className="relative pt-8 md:pt-12 pb-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors min-h-[760px]">
@@ -41,18 +40,16 @@ export const HeroSection = () => {
           className="mt-8 sm:mt-10 mb-10 flex justify-center"
         >
           <button
-            onClick={() => setIsOrderModalOpen(true)}
+            onClick={openWaitlistModal}
             className="px-8 py-3.5 text-base font-bold bg-[#00BCFF] hover:bg-cyan-500 text-white rounded-full shadow-lg shadow-cyan-400/35 hover:scale-105 active:scale-95 transition-all cursor-pointer"
           >
-            get cards by bloom.
+            Join the Waitlist
           </button>
         </motion.div>
-
-        {/* Hero Visual Mockups Showcase */}
-        <HeroShowcase />
       </div>
     </section>
   );
 };
 
 export default HeroSection;
+

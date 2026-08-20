@@ -37,8 +37,8 @@ export const mockProfileData = {
 export const mockProfileThemes = [
   { id: "dark-luxe", name: "Midnight Obsidian", bg: "bg-slate-950 text-white", border: "border-[#00BCFF]/30", badge: "Most Popular" },
   { id: "neon-cyber", name: "Cyberpunk Glow", bg: "bg-black text-cyan-400", border: "border-cyan-500", badge: "Creator Favorite" },
-  { id: "sunset-amber", name: "Sahara Sunset", bg: "bg-gradient-to-br from-amber-950 via-slate-900 to-rose-950 text-amber-100", border: "border-amber-500/40", badge: "Warm" },
-  { id: "emerald-green", name: "Lagos Emerald", bg: "bg-gradient-to-br from-emerald-950 via-slate-900 to-teal-950 text-emerald-100", border: "border-emerald-500/40", badge: "Fresh" }
+  { id: "sunset-amber", name: "Sahara Sunset", bg: "bg-amber-950 text-amber-100", border: "border-amber-500/40", badge: "Warm" },
+  { id: "emerald-green", name: "Lagos Emerald", bg: "bg-emerald-950 text-emerald-100", border: "border-emerald-500/40", badge: "Fresh" }
 ];
 
 export const mockProfileLayouts = [
@@ -70,7 +70,7 @@ export const mockCardFinishes = [
     tagline: "Sleek, minimalist & ultra durable",
     price: 35000,
     color: "bg-slate-950 text-white",
-    cardGradient: "from-slate-900 via-slate-950 to-black",
+    cardGradient: "bg-slate-950",
     chipColor: "border-cyan-400/40 text-cyan-400",
     image: nfcMatteBlackImg,
     popular: true
@@ -82,8 +82,8 @@ export const mockCardFinishes = [
     material: "Laser-Engraved Anodized Steel",
     tagline: "Weighty executive premium finish",
     price: 65000,
-    color: "bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 text-white",
-    cardGradient: "from-slate-800 to-slate-950",
+    color: "bg-slate-800 text-white",
+    cardGradient: "bg-slate-900",
     chipColor: "border-amber-400/60 text-amber-300",
     image: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=400",
     popular: false
@@ -95,8 +95,8 @@ export const mockCardFinishes = [
     material: "Brushed Metallic Alloy",
     tagline: "Unforgettable luxury sheen",
     price: 55000,
-    color: "bg-gradient-to-r from-rose-900 to-amber-900 text-white",
-    cardGradient: "from-rose-950 via-slate-900 to-amber-950",
+    color: "bg-rose-950 text-white",
+    cardGradient: "bg-rose-950",
     chipColor: "border-rose-400/60 text-rose-300",
     image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&q=80&w=400",
     popular: false
@@ -109,7 +109,7 @@ export const mockCardFinishes = [
     tagline: "Organic texture & eco-friendly",
     price: 40000,
     color: "bg-amber-950 text-amber-100",
-    cardGradient: "from-amber-950 via-stone-900 to-amber-900",
+    cardGradient: "bg-amber-950",
     chipColor: "border-amber-500/50 text-amber-400",
     image: "https://images.unsplash.com/photo-1546484475-7f7bd55792da?auto=format&fit=crop&q=80&w=400",
     popular: false
@@ -121,8 +121,8 @@ export const mockCardFinishes = [
     material: "IP68 Waterproof Eco-Silicone",
     tagline: "Hands-free smart wearable for active networking",
     price: 28000,
-    color: "bg-gradient-to-r from-cyan-600 via-teal-600 to-blue-700 text-white",
-    cardGradient: "from-cyan-900 via-slate-900 to-teal-950",
+    color: "bg-cyan-700 text-white",
+    cardGradient: "bg-cyan-950",
     chipColor: "border-cyan-400/60 text-cyan-300",
     image: "https://images.unsplash.com/photo-1510017803434-a899398421b3?auto=format&fit=crop&q=80&w=400",
     popular: true

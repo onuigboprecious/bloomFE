@@ -89,7 +89,7 @@ export const AnalyticsTab = () => {
                 </div>
                 <div
                   style={{ height: `${heightPercent}%` }}
-                  className="w-full bg-gradient-to-t from-cyan-500 to-blue-600 rounded-t-xl group-hover:brightness-110 transition-all min-h-[12px]"
+                  className="w-full bg-cyan-500 rounded-t-xl group-hover:brightness-110 transition-all min-h-[12px]"
                 />
                 <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 truncate">
                   {item.hour}

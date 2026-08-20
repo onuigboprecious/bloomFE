@@ -1,5 +1,5 @@
 import React from 'react';
-import { CreditCard, Check, ShieldCheck, Download, Zap, Sparkles, Star } from 'lucide-react';
+import { CreditCard, Check, ShieldCheck, Download, Zap } from 'lucide-react';
 import Button from '../ui/Button';
 import { useApp } from '../../context/AppContext';
 import { mockPricingTiers } from '../../data/mockData';
@@ -22,11 +22,11 @@ export const BillingTab = () => {
       </div>
 
       {/* Current Active Plan Card */}
-      <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-cyan-950 text-white p-6 sm:p-8 rounded-3xl border border-cyan-500/30 space-y-6 shadow-xl relative overflow-hidden">
+      <div className="bg-slate-950 text-white p-6 sm:p-8 rounded-3xl border border-cyan-500/30 space-y-6 shadow-xl relative overflow-hidden">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest block flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+              <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
               Active Individual Membership
             </span>
             <h4 className="text-2xl font-black text-white">
@@ -71,7 +71,7 @@ export const BillingTab = () => {
       {/* Pro Features Included */}
       <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
         <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <Star className="w-4 h-4 text-amber-400" />
+          <ShieldCheck className="w-4 h-4 text-cyan-500" />
           <span>Included in Bloom Pro Tier</span>
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">

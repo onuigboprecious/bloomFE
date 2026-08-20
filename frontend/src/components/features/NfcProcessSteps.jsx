@@ -102,13 +102,13 @@ export const NfcProcessSteps = () => {
           >
             <div className="absolute inset-0 rounded-[3.4rem] bg-cyan-400/20 blur-2xl pointer-events-none" />
 
-            <div className="relative p-[3.5px] rounded-[3.4rem] bg-gradient-to-b from-[#F4F4F5] via-[#A1A1AA] to-[#3F3F46] shadow-[0_25px_65px_-12px_rgba(0,0,0,0.65)]">
+            <div className="relative p-[3.5px] rounded-[3.4rem] bg-slate-700 shadow-[0_25px_65px_-12px_rgba(0,0,0,0.65)]">
 
               {/* Physical Side Buttons */}
-              <div className="absolute -right-[7px] top-32 w-[4px] h-14 bg-gradient-to-b from-[#E4E4E7] via-[#94A3B8] to-[#64748B] rounded-r-sm border-l border-slate-900 shadow-md" />
-              <div className="absolute -left-[7px] top-24 w-[4px] h-7 bg-gradient-to-b from-[#E4E4E7] via-[#94A3B8] to-[#64748B] rounded-l-sm border-r border-slate-900 shadow-md" />
-              <div className="absolute -left-[7px] top-36 w-[4px] h-11 bg-gradient-to-b from-[#E4E4E7] via-[#94A3B8] to-[#64748B] rounded-l-sm border-r border-slate-900 shadow-md" />
-              <div className="absolute -left-[7px] top-50 w-[4px] h-11 bg-gradient-to-b from-[#E4E4E7] via-[#94A3B8] to-[#64748B] rounded-l-sm border-r border-slate-900 shadow-md" />
+              <div className="absolute -right-[7px] top-32 w-[4px] h-14 bg-slate-600 rounded-r-sm border-l border-slate-900 shadow-md" />
+              <div className="absolute -left-[7px] top-24 w-[4px] h-7 bg-slate-600 rounded-l-sm border-r border-slate-900 shadow-md" />
+              <div className="absolute -left-[7px] top-36 w-[4px] h-11 bg-slate-600 rounded-l-sm border-r border-slate-900 shadow-md" />
+              <div className="absolute -left-[7px] top-50 w-[4px] h-11 bg-slate-600 rounded-l-sm border-r border-slate-900 shadow-md" />
 
               <div className="relative rounded-[3.2rem] overflow-hidden bg-black p-[2.5px]">
 

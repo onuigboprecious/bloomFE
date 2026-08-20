@@ -40,7 +40,7 @@ export const LoginPage = () => {
       <div className="max-w-7xl w-full mx-auto px-6 py-6 flex items-center justify-between z-10">
         <button
           onClick={() => setCurrentPage('home')}
-          className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 px-4 py-2 rounded-full shadow-xs transition-all hover:scale-105 cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-transparent hover:bg-slate-200/50 dark:hover:bg-slate-800/50 px-3.5 py-2 rounded-none hover:rounded-full transition-all duration-300 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Home</span>

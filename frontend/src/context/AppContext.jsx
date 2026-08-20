@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { mockProfileData, mockCardFinishes, mockRecentLeads } from '../data/mockData';
 import { loginApi, signupApi, logoutApi, getMeApi } from '../api/auth';
+import { createLeadApi, getLeadsApi } from '../api/leads';
+import ShareBackModal from '../components/ui/ShareBackModal';
 
 const AppContext = createContext();
 
@@ -16,8 +18,16 @@ export const AppProvider = ({ children }) => {
   const [isProUser, setIsProUser] = useState(true);
   const [selectedFinish, setSelectedFinish] = useState(mockCardFinishes[0]);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
+  const [isShareBackModalOpen, setIsShareBackModalOpen] = useState(false);
   const [isTapSimulating, setIsTapSimulating] = useState(false);
-  const [leads, setLeads] = useState(mockRecentLeads);
+  const [leads, setLeads] = useState(() => {
+    const saved = localStorage.getItem('bloom_leads');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return mockRecentLeads;
+  });
   const [isCardLinked, setIsCardLinked] = useState(true);
   const [activeCardUid, setActiveCardUid] = useState("BLM-9921-NFC");
   const [claimToast, setClaimToast] = useState({ show: false, message: '', uid: '' });
@@ -129,7 +139,13 @@ export const AppProvider = ({ children }) => {
     setTimeout(() => {
       setIsTapSimulating(false);
       claimAndLinkCard(activeCardUid || 'BLM-9921-NFC');
-    }, 1200);
+      saveContactToPhone();
+      setClaimToast({
+        show: true,
+        uid: activeCardUid || 'BLM-9921-NFC',
+        message: `📲 Contact Auto-Saved to Google & Phone Contacts!`
+      });
+    }, 1000);
   };
 
   const updateProfileField = (field, value) => {
@@ -149,27 +165,182 @@ export const AppProvider = ({ children }) => {
     }));
   };
 
-  const exportVCard = () => {
-    const handleUrl = `https://bloom.app/@${profile.username || 'precious'}`;
-    const vCardData = `BEGIN:VCARD
-VERSION:3.0
-FN:${profile.name}
-TITLE:${profile.title}
-ORG:${profile.company}
-EMAIL:${profile.email}
-TEL:${profile.phone}
-URL:${handleUrl}
-NOTE:${profile.bio}
-END:VCARD`;
+  const saveContactToPhone = (customContact = null) => {
+    const target = customContact || profile;
+    const handleUrl = `https://bloom.app/@${target.username || 'precious'}`;
+    const nameParts = (target.name || '').trim().split(' ');
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+    const firstName = nameParts[0] || '';
+
+    const vCardData = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      `N:${lastName};${firstName};;;`,
+      `FN:${target.name || ''}`,
+      `TITLE:${target.title || target.role || ''}`,
+      `ORG:${target.company || ''}`,
+      `TEL;TYPE=CELL,VOICE:${target.phone || ''}`,
+      `EMAIL;TYPE=INTERNET:${target.email || ''}`,
+      `URL:${handleUrl}`,
+      `NOTE:${target.bio || target.notes || 'Saved from Bloom Smart NFC Card'}`,
+      'END:VCARD'
+    ].join('\r\n');
 
     const blob = new Blob([vCardData], { type: 'text/vcard;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `${(profile.username || profile.name).replace(/\s+/g, '_')}_BloomCard.vcf`);
+    const fileName = `${(target.name || 'Contact').replace(/\s+/g, '_')}.vcf`;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 500);
+  };
+
+  const generateRawVCardString = (customTarget = null) => {
+    const target = customTarget || profile;
+    const handleUrl = `https://bloom.app/@${target.username || 'precious'}`;
+    const nameParts = (target.name || '').trim().split(' ');
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+    const firstName = nameParts[0] || '';
+
+    return [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      `N:${lastName};${firstName};;;`,
+      `FN:${target.name || ''}`,
+      `TITLE:${target.title || target.role || ''}`,
+      `ORG:${target.company || ''}`,
+      `TEL;TYPE=CELL,VOICE:${target.phone || ''}`,
+      `EMAIL;TYPE=INTERNET:${target.email || ''}`,
+      `URL:${handleUrl}`,
+      `NOTE:${target.bio || target.notes || 'Saved from Bloom Smart NFC Card'}`,
+      'END:VCARD'
+    ].join('\r\n');
+  };
+
+  const exportVCard = saveContactToPhone;
+
+  const addLead = async (leadData) => {
+    let createdLead = null;
+    try {
+      const res = await createLeadApi({
+        ...leadData,
+        cardUid: activeCardUid || 'BLM-9921-NFC',
+      });
+      if (res?.lead) {
+        createdLead = res.lead;
+      }
+    } catch (e) {
+      // Fallback local lead creation
+    }
+
+    const newLead = createdLead || {
+      id: 'lead-' + Date.now(),
+      name: leadData.name,
+      phone: leadData.phone,
+      email: leadData.email,
+      role: leadData.role || 'Tap Recipient',
+      notes: leadData.notes || '',
+      method: leadData.method || 'Share Back Form',
+      time: 'Just now',
+      createdAt: new Date().toISOString(),
+    };
+
+    setLeads((prev) => {
+      const updated = [newLead, ...prev];
+      localStorage.setItem('bloom_leads', JSON.stringify(updated));
+      return updated;
+    });
+
+    setProfile((prev) => ({
+      ...prev,
+      stats: {
+        ...prev.stats,
+        leadsCaptured: (prev.stats.leadsCaptured || 0) + 1,
+        totalTaps: (prev.stats.totalTaps || 0) + 1,
+      },
+    }));
+
+    setClaimToast({
+      show: true,
+      uid: newLead.name,
+      message: `New Lead! ${newLead.name} shared contact details back to your dashboard!`,
+    });
+    setTimeout(() => {
+      setClaimToast((prev) => ({ ...prev, show: false }));
+    }, 5000);
+
+    return newLead;
+  };
+
+  const deleteLead = (leadId) => {
+    setLeads((prev) => {
+      const updated = prev.filter((item) => item.id !== leadId);
+      localStorage.setItem('bloom_leads', JSON.stringify(updated));
+      return updated;
+    });
+    setProfile((prev) => ({
+      ...prev,
+      stats: {
+        ...prev.stats,
+        leadsCaptured: Math.max(0, (prev.stats.leadsCaptured || 1) - 1),
+      },
+    }));
+  };
+
+  const exportLeadsCSV = () => {
+    if (!leads.length) return;
+    const headers = ['ID', 'Name', 'Email', 'Phone', 'Role/Company', 'Method', 'Notes'];
+    const rows = leads.map((l) => [
+      l.id,
+      `"${(l.name || '').replace(/"/g, '""')}"`,
+      `"${(l.email || '').replace(/"/g, '""')}"`,
+      `"${(l.phone || '').replace(/"/g, '""')}"`,
+      `"${(l.role || '').replace(/"/g, '""')}"`,
+      `"${(l.method || '').replace(/"/g, '""')}"`,
+      `"${(l.notes || '').replace(/"/g, '""')}"`,
+    ]);
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Bloom_Captured_Leads_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const openShareBackModal = () => setIsShareBackModalOpen(true);
+  const closeShareBackModal = () => setIsShareBackModalOpen(false);
+  const openWaitlistModal = () => setIsWaitlistModalOpen(true);
+  const closeWaitlistModal = () => setIsWaitlistModalOpen(false);
+
+  const joinWaitlist = (data) => {
+    const existing = JSON.parse(localStorage.getItem('bloom_waitlist') || '[]');
+    const newEntry = {
+      id: 'waitlist-' + Date.now(),
+      name: data.name,
+      email: data.email,
+      phone: data.phone || '',
+      preferredFinish: data.preferredFinish || 'Stealth Matte Black',
+      createdAt: new Date().toISOString()
+    };
+    localStorage.setItem('bloom_waitlist', JSON.stringify([newEntry, ...existing]));
+
+    setClaimToast({
+      show: true,
+      uid: data.name,
+      message: `🎉 Joined VIP Waitlist! Check your inbox for launch details.`
+    });
+    setTimeout(() => {
+      setClaimToast((prev) => ({ ...prev, show: false }));
+    }, 5000);
+    return newEntry;
   };
 
   return (
@@ -199,6 +370,15 @@ END:VCARD`;
         setSelectedFinish,
         isOrderModalOpen,
         setIsOrderModalOpen,
+        isWaitlistModalOpen,
+        setIsWaitlistModalOpen,
+        openWaitlistModal,
+        closeWaitlistModal,
+        joinWaitlist,
+        isShareBackModalOpen,
+        setIsShareBackModalOpen,
+        openShareBackModal,
+        closeShareBackModal,
         isTapSimulating,
         triggerNfcTap,
         isCardLinked,
@@ -206,19 +386,30 @@ END:VCARD`;
         claimAndLinkCard,
         claimToast,
         leads,
-        exportVCard
+        addLead,
+        deleteLead,
+        exportLeadsCSV,
+        exportVCard,
+        saveContactToPhone,
+        generateRawVCardString
       }}
     >
       {children}
 
-      {/* Toast Notification when Card is Claimed & Linked Immediately */}
+      <ShareBackModal
+        isOpen={isShareBackModalOpen}
+        onClose={closeShareBackModal}
+        ownerName={profile.name}
+      />
+
+      {/* Toast Notification when Card is Claimed or New Lead is Captured */}
       {claimToast.show && (
         <div className="fixed bottom-6 right-6 z-50 bg-slate-900 border border-cyan-500/50 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4">
           <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0">
             <span className="font-bold text-sm">✓</span>
           </div>
           <div>
-            <span className="text-xs font-black text-cyan-400 uppercase tracking-wider block">Tap Successful</span>
+            <span className="text-xs font-black text-cyan-400 uppercase tracking-wider block">Realtime Alert</span>
             <span className="text-xs font-bold text-white block">{claimToast.message}</span>
           </div>
         </div>

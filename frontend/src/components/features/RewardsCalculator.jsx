@@ -24,7 +24,7 @@ export const RewardsCalculator = () => {
       <div className="relative z-10 max-w-4xl mx-auto">
         <div className="text-center space-y-3 mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Calculator className="w-3.5 h-3.5" />
             <span>Interactive Calculator</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
@@ -108,7 +108,7 @@ export const RewardsCalculator = () => {
           </div>
 
           {/* Results Side */}
-          <div className="md:col-span-5 bg-gradient-to-b from-slate-900 to-slate-950 p-6 rounded-2xl border border-slate-800 text-center space-y-4">
+          <div className="md:col-span-5 bg-slate-900 p-6 rounded-2xl border border-slate-800 text-center space-y-4">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">
               Estimated Yearly Benefit
             </span>

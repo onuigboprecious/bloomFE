@@ -146,7 +146,7 @@ export const CardCustomizer = () => {
           </div>
 
           {/* Real-time Visual Card Live Preview Column */}
-          <div className="lg:col-span-5 bg-gradient-to-b from-slate-900 to-slate-950 p-6 rounded-2xl border border-slate-800 text-center space-y-4 w-full">
+          <div className="lg:col-span-5 bg-slate-900 p-6 rounded-2xl border border-slate-800 text-center space-y-4 w-full">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block flex items-center justify-center gap-1">
               <Eye className="w-3.5 h-3.5 text-cyan-400" />
               Live Physical NFC Card Preview

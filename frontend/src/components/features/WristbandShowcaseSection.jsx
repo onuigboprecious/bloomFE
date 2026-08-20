@@ -26,7 +26,7 @@ export const WristbandShowcaseSection = () => {
       desc: "Pair your Bloom Card for formal meetings & your NFC Wristband for workout or VIP event networking."
     },
     {
-      icon: Sparkles,
+      icon: Rss,
       title: "Laser Precision Branding",
       desc: "Personalized laser etching with your name, company logo, or unique handle for high-impact presence."
     }

@@ -138,7 +138,7 @@ export const NfcCardsPage = () => {
                     </div>
                     {activeCard.popular && (
                       <span className="px-3 py-1 rounded-full bg-[#00BCFF] text-white text-[10px] font-extrabold uppercase tracking-wider shadow-md">
-                        ★ Most Popular
+                        Most Popular
                       </span>
                     )}
                   </div>

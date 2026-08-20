@@ -8,6 +8,7 @@ import Testimonials from './components/features/Testimonials';
 import FaqSection from './components/faq/FaqSection';
 import Footer from './components/layout/Footer';
 import OrderModal from './components/order-modal/OrderModal';
+import WaitlistModal from './components/ui/WaitlistModal';
 import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
 import DashboardPage from './components/dashboard/DashboardPage';
@@ -16,7 +17,7 @@ import NfcCardsPage from './components/products/NfcCardsPage';
 import NfcWristbandsPage from './components/products/NfcWristbandsPage';
 
 export const AppContent = () => {
-  const { currentPage } = useApp();
+  const { currentPage, isWaitlistModalOpen, closeWaitlistModal } = useApp();
 
   if (currentPage === 'login') {
     return <LoginPage />;
@@ -54,6 +55,7 @@ export const AppContent = () => {
       </main>
       <Footer />
       <OrderModal />
+      <WaitlistModal isOpen={isWaitlistModalOpen} onClose={closeWaitlistModal} />
     </div>
   );
 };

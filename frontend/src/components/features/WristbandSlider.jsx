@@ -76,8 +76,7 @@ export const WristbandSlider = () => {
       >
         {/* Subtle Ambient Color Glow behind wristband */}
         <div
-          className="absolute inset-0 pointer-events-none transition-all duration-700 opacity-50 blur-3xl rounded-3xl"
-          style={{ background: `radial-gradient(circle at 50% 50%, ${currentPreset.bgGlow} 0%, transparent 70%)` }}
+          className="absolute inset-0 pointer-events-none transition-all duration-700 opacity-20 blur-3xl rounded-3xl bg-cyan-500"
         />
 
         {/* Slanted Floating Badge 1: IP68 Waterproof (Top Left) */}

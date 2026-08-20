@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Rss, Star, CheckCircle2, ShieldCheck, Zap, Sparkles } from 'lucide-react';
+import { Rss, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
 import africanFounderImg from '../../assets/images/african_founder.png';
 import africanWomanImg from '../../assets/images/african_woman_executive.png';
 
@@ -17,7 +17,7 @@ export const Testimonials = () => {
       role: "VP Sales • Lagos",
       avatar: africanFounderImg,
       badge: "Stealth Edition",
-      bannerBg: "from-slate-900 via-slate-950 to-black"
+      bannerBg: "bg-slate-900"
     },
     {
       id: 2,
@@ -27,7 +27,7 @@ export const Testimonials = () => {
       role: "Founder & Fitness Lead • Abuja",
       avatar: africanWomanImg,
       badge: "Waterproof Wristband",
-      bannerBg: "from-cyan-900/60 via-slate-900 to-slate-950"
+      bannerBg: "bg-cyan-950"
     },
     {
       id: 3,
@@ -37,7 +37,7 @@ export const Testimonials = () => {
       role: "Creative Director • Accra",
       avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
       badge: "Steel Card",
-      bannerBg: "from-slate-800 via-slate-900 to-black"
+      bannerBg: "bg-slate-900"
     },
     {
       id: 4,
@@ -47,7 +47,7 @@ export const Testimonials = () => {
       role: "Event Director • Casablanca",
       avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300",
       badge: "Event Wristband",
-      bannerBg: "from-cyan-950 via-slate-900 to-slate-950"
+      bannerBg: "bg-cyan-950"
     },
     {
       id: 5,
@@ -57,7 +57,7 @@ export const Testimonials = () => {
       role: "Executive • London & Lagos",
       avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=300",
       badge: "Rose Gold Metal",
-      bannerBg: "from-rose-950 via-slate-900 to-black"
+      bannerBg: "bg-rose-950"
     },
     {
       id: 6,
@@ -67,7 +67,7 @@ export const Testimonials = () => {
       role: "Eco-Tech Founder • Ibadan",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
       badge: "Eco Bamboo",
-      bannerBg: "from-amber-950 via-stone-900 to-slate-950"
+      bannerBg: "bg-amber-950"
     }
   ];
 
@@ -130,7 +130,7 @@ export const Testimonials = () => {
                 className="w-[280px] sm:w-[320px] shrink-0 snap-align-start bg-slate-50/80 dark:bg-slate-900/80 rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between group"
               >
                 {/* Top Visual Banner: Testifier Avatar Image Prominently Displayed */}
-                <div className={`h-48 w-full relative bg-gradient-to-b ${card.bannerBg} flex items-center justify-center p-4 overflow-hidden border-b border-slate-800/80`}>
+                <div className={`h-48 w-full relative ${card.bannerBg} flex items-center justify-center p-4 overflow-hidden border-b border-slate-800/80`}>
                   
                   {/* Subtle Background Radial Glow */}
                   <div className="absolute inset-0 bg-cyan-500/10 blur-xl pointer-events-none" />
@@ -180,9 +180,6 @@ export const Testimonials = () => {
             ))}
           </div>
 
-          {/* Side Fading Indicators */}
-          <div className="absolute top-0 bottom-0 left-0 w-8 bg-gradient-to-r from-white dark:from-slate-950 to-transparent pointer-events-none" />
-          <div className="absolute top-0 bottom-0 right-0 w-8 bg-gradient-to-l from-white dark:from-slate-950 to-transparent pointer-events-none" />
         </div>
 
       </div>

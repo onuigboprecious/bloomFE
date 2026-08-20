@@ -5,6 +5,7 @@ import { useApp } from '../../context/AppContext';
 export const Navbar = () => {
   const {
     setIsOrderModalOpen,
+    openWaitlistModal,
     cardFinishes,
     setSelectedFinish,
     currentPage,
@@ -227,10 +228,10 @@ export const Navbar = () => {
             )}
 
             <button
-              onClick={() => setCurrentPage('signup')}
+              onClick={openWaitlistModal}
               className="px-5 py-2 rounded-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-400/25 transition-all active:scale-95 cursor-pointer"
             >
-              <span>get cards by bloom.</span>
+              <span>Join Waitlist</span>
             </button>
           </div>
 
@@ -355,11 +356,11 @@ export const Navbar = () => {
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  setCurrentPage('signup');
+                  openWaitlistModal();
                 }}
                 className="w-full py-2.5 rounded-full bg-[#00BCFF] text-white font-bold text-xs text-center shadow-sm cursor-pointer"
               >
-                get cards by bloom.
+                Join Waitlist
               </button>
             </div>
           </div>

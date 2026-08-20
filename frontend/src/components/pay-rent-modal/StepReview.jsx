@@ -59,7 +59,7 @@ export const StepReview = ({ onBack, onConfirm }) => {
       <div className="bg-cyan-50 border border-cyan-200 rounded-2xl p-3.5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-[#00bbf9] text-white flex items-center justify-center">
-            <Sparkles className="w-4 h-4" />
+            <ShieldCheck className="w-4 h-4" />
           </div>
           <div>
             <span className="text-xs font-extrabold text-cyan-900 block">Rewards Unlocked</span>

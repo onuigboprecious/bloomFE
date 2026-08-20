@@ -13,6 +13,7 @@ import (
 	_ "github.com/lib/pq" // or your chosen Postgres driver
 
 	"github.com/onuigboprecious/infarbloom/backend/internal/auth"
+	"github.com/onuigboprecious/infarbloom/backend/internal/leads"
 	"github.com/onuigboprecious/infarbloom/backend/internal/middleware"
 )
 
@@ -42,8 +43,7 @@ func main() {
 	}
 
 	authSvc := auth.New(db, env)
-	// cardsSvc := cards.New(db, authSvc)
-	// usersSvc := users.New(db, authSvc)
+	leadsSvc := leads.New(db)
 
 	mux := http.NewServeMux()
 
@@ -69,6 +69,10 @@ func main() {
 	mux.HandleFunc("POST /api/auth/login", authSvc.HandleLogin)
 	mux.HandleFunc("POST /api/auth/logout", authSvc.HandleLogout)
 	mux.HandleFunc("GET /api/auth/me", authSvc.HandleMe)
+
+	// Lead Capture Endpoints
+	mux.HandleFunc("POST /api/leads", leadsSvc.HandleCreateLead)
+	mux.HandleFunc("GET /api/leads", leadsSvc.HandleGetLeads)
 
 	// Example of a protected route once you add one:
 	// mux.HandleFunc("GET /api/dashboard", authSvc.RequireAuth(usersSvc.HandleDashboard))

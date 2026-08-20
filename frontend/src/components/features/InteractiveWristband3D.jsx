@@ -63,10 +63,7 @@ export const InteractiveWristband3D = () => {
 
         {/* Dynamic 3D Glare Reflection Layer */}
         <motion.div
-          style={{
-            background: `radial-gradient(circle at ${shineX} ${shineY}, rgba(255, 255, 255, 0.25) 0%, transparent 65%)`
-          }}
-          className="absolute inset-0 pointer-events-none rounded-3xl transition-opacity duration-300 opacity-60 dark:opacity-40"
+          className="absolute inset-0 pointer-events-none rounded-3xl transition-opacity duration-300 opacity-20 bg-white/10"
         />
       </motion.div>
     </div>
