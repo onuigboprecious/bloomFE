@@ -227,12 +227,6 @@ export const Navbar = () => {
               </button>
             )}
 
-            <button
-              onClick={openWaitlistModal}
-              className="px-5 py-2 rounded-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-400/25 transition-all active:scale-95 cursor-pointer"
-            >
-              <span>Join Waitlist</span>
-            </button>
           </div>
 
           {/* Mobile Hamburger Menu Button */}
