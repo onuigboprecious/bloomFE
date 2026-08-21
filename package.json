@@ -9,6 +9,7 @@
     "start": "npm run dev",
     "build": "npm --prefix frontend install && npm --prefix frontend run build",
     "lint": "npm --prefix frontend run lint",
+    "deploy": "npm run build && npx wrangler deploy",
     "preview": "npm --prefix frontend run preview"
   },
   "devDependencies": {
