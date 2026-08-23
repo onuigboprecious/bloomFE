@@ -1,7 +1,19 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { mockProfileData, mockCardFinishes, mockRecentLeads } from '../data/mockData';
-import { loginApi, signupApi, logoutApi, getMeApi } from '../api/auth';
-import { createLeadApi, getLeadsApi } from '../api/leads';
+import {
+  loginApi,
+  signupApi,
+  logoutApi,
+  getMeApi,
+  createLeadApi,
+  getLeadsApi,
+  deleteLeadApi,
+  claimCardApi,
+  recordTapApi,
+  joinWaitlistApi,
+  updateProfileApi,
+  checkHandleApi,
+} from '../api';
 import ShareBackModal from '../components/ui/ShareBackModal';
 
 const AppContext = createContext();
@@ -105,13 +117,23 @@ export const AppProvider = ({ children }) => {
     setUser(null);
   };
 
-  const checkUsernameAvailability = (username) => {
+  const checkUsernameAvailability = async (username) => {
+    try {
+      const res = await checkHandleApi(username);
+      if (res && typeof res.available === 'boolean') {
+        return res.available;
+      }
+    } catch (e) {}
     const taken = ['admin', 'bloom', 'support', 'help', 'api'];
     return !taken.includes(username.toLowerCase().trim());
   };
 
-  const claimAndLinkCard = (uid) => {
+  const claimAndLinkCard = async (uid) => {
     const cardId = uid || ('BLM-' + Math.floor(1000 + Math.random() * 9000) + '-NFC');
+    try {
+      await claimCardApi(cardId);
+    } catch (e) {}
+
     setIsCardLinked(true);
     setActiveCardUid(cardId);
     setProfile((prev) => ({
@@ -119,8 +141,8 @@ export const AppProvider = ({ children }) => {
       cardUid: cardId,
       stats: {
         ...prev.stats,
-        totalTaps: prev.stats.totalTaps + 1,
-        monthlyTaps: prev.stats.monthlyTaps + 1
+        totalTaps: (prev.stats.totalTaps || 0) + 1,
+        monthlyTaps: (prev.stats.monthlyTaps || 0) + 1
       }
     }));
     setClaimToast({
@@ -136,33 +158,41 @@ export const AppProvider = ({ children }) => {
 
   const triggerNfcTap = () => {
     setIsTapSimulating(true);
+    const cardId = activeCardUid || 'BLM-9921-NFC';
+    recordTapApi(cardId, 'NFC Tap').catch(() => {});
+
     setTimeout(() => {
       setIsTapSimulating(false);
-      claimAndLinkCard(activeCardUid || 'BLM-9921-NFC');
+      claimAndLinkCard(cardId);
       saveContactToPhone();
       setClaimToast({
         show: true,
-        uid: activeCardUid || 'BLM-9921-NFC',
+        uid: cardId,
         message: `📲 Contact Auto-Saved to Google & Phone Contacts!`
       });
     }, 1000);
   };
 
   const updateProfileField = (field, value) => {
-    setProfile((prev) => ({
-      ...prev,
-      [field]: value
-    }));
+    setProfile((prev) => {
+      const updated = { ...prev, [field]: value };
+      updateProfileApi(updated).catch(() => {});
+      return updated;
+    });
   };
 
   const updateSocialLink = (network, value) => {
-    setProfile((prev) => ({
-      ...prev,
-      socials: {
-        ...prev.socials,
-        [network]: value
-      }
-    }));
+    setProfile((prev) => {
+      const updated = {
+        ...prev,
+        socials: {
+          ...prev.socials,
+          [network]: value
+        }
+      };
+      updateProfileApi(updated).catch(() => {});
+      return updated;
+    });
   };
 
   const saveContactToPhone = (customContact = null) => {
@@ -278,6 +308,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const deleteLead = (leadId) => {
+    deleteLeadApi(leadId).catch(() => {});
     setLeads((prev) => {
       const updated = prev.filter((item) => item.id !== leadId);
       localStorage.setItem('bloom_leads', JSON.stringify(updated));
@@ -321,6 +352,7 @@ export const AppProvider = ({ children }) => {
   const closeWaitlistModal = () => setIsWaitlistModalOpen(false);
 
   const joinWaitlist = (data) => {
+    joinWaitlistApi(data).catch(() => {});
     const existing = JSON.parse(localStorage.getItem('bloom_waitlist') || '[]');
     const newEntry = {
       id: 'waitlist-' + Date.now(),
