@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import Navbar from './components/layout/Navbar';
 import HeroSection from './components/hero/HeroSection';
@@ -15,9 +15,27 @@ import DashboardPage from './components/dashboard/DashboardPage';
 import CardBuilderPage from './components/builder/CardBuilderPage';
 import NfcCardsPage from './components/products/NfcCardsPage';
 import NfcWristbandsPage from './components/products/NfcWristbandsPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import AboutUsPage from './pages/AboutUsPage';
+import PressMediaPage from './pages/PressMediaPage';
+import ContactSupportPage from './pages/ContactSupportPage';
+import LegalPage from './pages/LegalPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
+import SecurityPage from './pages/SecurityPage';
+import ReturnsGuaranteePage from './pages/ReturnsGuaranteePage';
 
 export const AppContent = () => {
-  const { currentPage, isWaitlistModalOpen, closeWaitlistModal } = useApp();
+  const { currentPage, setCurrentPage, isWaitlistModalOpen, closeWaitlistModal } = useApp();
+
+  useEffect(() => {
+    // Detect reset-password token in URL
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('token')) {
+      setCurrentPage('reset-password');
+    }
+  }, [setCurrentPage]);
 
   if (currentPage === 'login') {
     return <LoginPage />;
@@ -25,6 +43,14 @@ export const AppContent = () => {
 
   if (currentPage === 'signup') {
     return <SignUpPage />;
+  }
+
+  if (currentPage === 'forgot-password') {
+    return <ForgotPasswordPage />;
+  }
+
+  if (currentPage === 'reset-password') {
+    return <ResetPasswordPage />;
   }
 
   if (currentPage === 'dashboard') {
@@ -41,6 +67,38 @@ export const AppContent = () => {
 
   if (currentPage === 'wristbands') {
     return <NfcWristbandsPage />;
+  }
+
+  if (currentPage === 'about') {
+    return <AboutUsPage />;
+  }
+
+  if (currentPage === 'press') {
+    return <PressMediaPage />;
+  }
+
+  if (currentPage === 'support') {
+    return <ContactSupportPage />;
+  }
+
+  if (currentPage === 'legal') {
+    return <LegalPage />;
+  }
+
+  if (currentPage === 'privacy') {
+    return <PrivacyPolicyPage />;
+  }
+
+  if (currentPage === 'terms') {
+    return <TermsOfServicePage />;
+  }
+
+  if (currentPage === 'security') {
+    return <SecurityPage />;
+  }
+
+  if (currentPage === 'returns') {
+    return <ReturnsGuaranteePage />;
   }
 
   return (

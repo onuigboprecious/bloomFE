@@ -1,7 +1,10 @@
 import React from 'react';
 import { ShieldCheck, Lock } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 export const Footer = () => {
+  const { setCurrentPage } = useApp();
+
   return (
     <footer id="footer" className="bg-slate-900 text-white pt-16 pb-12 mt-24 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,10 +14,10 @@ export const Footer = () => {
           
           {/* Brand Col */}
           <div className="md:col-span-2 space-y-4">
-            <div className="flex items-center gap-0.5">
+            <button onClick={() => setCurrentPage('home')} className="flex items-center gap-0.5 text-left cursor-pointer">
               <span className="text-2xl font-black tracking-tight text-white font-['Plus_Jakarta_Sans']">bloom</span>
               <span className="text-2xl font-black text-[#00BCFF]">.</span>
-            </div>
+            </button>
             <p className="text-slate-400 text-sm max-w-sm leading-relaxed">
               Bloom Card is the next-generation NFC digital business card platform. Tap to share contacts, social links, portfolios, and capture leads effortlessly.
             </p>
@@ -28,10 +31,10 @@ export const Footer = () => {
           <div>
             <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">NFC Finishes</h4>
             <ul className="space-y-2.5 text-sm text-slate-400">
-              <li><a href="#customizer" className="hover:text-cyan-400 transition-colors">Stealth Matte Black</a></li>
-              <li><a href="#customizer" className="hover:text-cyan-400 transition-colors">Stainless Steel Edition</a></li>
-              <li><a href="#customizer" className="hover:text-cyan-400 transition-colors">Rose Gold Metallic</a></li>
-              <li><a href="#customizer" className="hover:text-cyan-400 transition-colors">Eco Bamboo Wood</a></li>
+              <li><button onClick={() => setCurrentPage('cards')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Stealth Matte Black</button></li>
+              <li><button onClick={() => setCurrentPage('cards')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Stainless Steel Edition</button></li>
+              <li><button onClick={() => setCurrentPage('cards')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Rose Gold Metallic</button></li>
+              <li><button onClick={() => setCurrentPage('wristbands')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Active Wristband</button></li>
             </ul>
           </div>
 
@@ -39,10 +42,10 @@ export const Footer = () => {
           <div>
             <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">Company</h4>
             <ul className="space-y-2.5 text-sm text-slate-400">
-              <li><a href="#" className="hover:text-cyan-400 transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-cyan-400 transition-colors">Corporate Teams</a></li>
-              <li><a href="#" className="hover:text-cyan-400 transition-colors">Press & Media</a></li>
-              <li><a href="#" className="hover:text-cyan-400 transition-colors">Contact Support</a></li>
+              <li><button onClick={() => setCurrentPage('about')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">About Us</button></li>
+              <li><button onClick={() => setCurrentPage('press')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Press & Media</button></li>
+              <li><button onClick={() => setCurrentPage('support')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Contact Support</button></li>
+              <li><button onClick={() => setCurrentPage('legal')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Legal Hub</button></li>
             </ul>
           </div>
 
@@ -50,10 +53,10 @@ export const Footer = () => {
           <div>
             <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">Legal</h4>
             <ul className="space-y-2.5 text-sm text-slate-400">
-              <li><a href="#" className="hover:text-cyan-400 transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-cyan-400 transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-cyan-400 transition-colors">Security & Encryption</a></li>
-              <li><a href="#" className="hover:text-cyan-400 transition-colors">Returns & Guarantee</a></li>
+              <li><button onClick={() => setCurrentPage('privacy')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Privacy Policy</button></li>
+              <li><button onClick={() => setCurrentPage('terms')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Terms of Service</button></li>
+              <li><button onClick={() => setCurrentPage('security')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Security & Encryption</button></li>
+              <li><button onClick={() => setCurrentPage('returns')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Returns & Guarantee</button></li>
             </ul>
           </div>
         </div>

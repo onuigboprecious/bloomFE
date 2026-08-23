@@ -114,9 +114,13 @@ export const LoginPage = () => {
                     <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                       Password
                     </label>
-                    <a href="#" className="text-xs font-bold text-[#00BCFF] hover:underline">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage('forgot-password')}
+                      className="text-xs font-bold text-[#00BCFF] hover:underline cursor-pointer"
+                    >
                       Forgot?
-                    </a>
+                    </button>
                   </div>
                   <div className="relative flex items-center">
                     <Lock className="absolute left-3.5 w-4 h-4 text-slate-400" />

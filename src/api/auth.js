@@ -25,3 +25,17 @@ export async function getMeApi() {
     method: 'GET',
   });
 }
+
+export async function forgotPasswordApi({ email }) {
+  return apiClient('/api/auth/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  });
+}
+
+export async function resetPasswordApi({ token, newPassword }) {
+  return apiClient('/api/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify({ token, newPassword }),
+  });
+}
