@@ -6,6 +6,13 @@ export async function getPublicProfileApi(username) {
   });
 }
 
+export async function getCardTapProfileApi(cardUid, sig = '') {
+  const query = sig ? `?sig=${encodeURIComponent(sig)}` : '';
+  return apiClient(`/api/profile/${cardUid}${query}`, {
+    method: 'GET',
+  });
+}
+
 export async function updateProfileApi(profileData) {
   return apiClient('/api/profile/me', {
     method: 'PUT',

@@ -25,17 +25,40 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
 import SecurityPage from './pages/SecurityPage';
 import ReturnsGuaranteePage from './pages/ReturnsGuaranteePage';
+import ClaimCardPage from './pages/ClaimCardPage';
+import InvalidCardPage from './pages/InvalidCardPage';
+import CardTapHandler from './pages/CardTapHandler';
 
 export const AppContent = () => {
   const { currentPage, setCurrentPage, isWaitlistModalOpen, closeWaitlistModal } = useApp();
 
   useEffect(() => {
-    // Detect reset-password token in URL
+    // Detect URL paths & search parameters for direct NFC taps, claims, or invalid card alerts
+    const pathname = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
-    if (params.get('token')) {
+
+    if (pathname.startsWith('/card/') || params.get('cardTap')) {
+      setCurrentPage('card-tap');
+    } else if (pathname === '/claim' || params.get('claimCard')) {
+      setCurrentPage('claim-card');
+    } else if (pathname === '/invalid-card' || params.get('invalidCard')) {
+      setCurrentPage('invalid-card');
+    } else if (params.get('token')) {
       setCurrentPage('reset-password');
     }
   }, [setCurrentPage]);
+
+  if (currentPage === 'card-tap') {
+    return <CardTapHandler />;
+  }
+
+  if (currentPage === 'claim-card') {
+    return <ClaimCardPage />;
+  }
+
+  if (currentPage === 'invalid-card') {
+    return <InvalidCardPage />;
+  }
 
   if (currentPage === 'login') {
     return <LoginPage />;
