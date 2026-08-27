@@ -15,11 +15,46 @@ export const ActivateCardModal = ({ isOpen, onClose }) => {
   const [fullName, setFullName] = useState(profile?.name || '');
   const [jobTitle, setJobTitle] = useState(profile?.title || '');
   const [company, setCompany] = useState(profile?.company || '');
+  const [scanStatus, setScanStatus] = useState('');
 
-  const handleSimulateScan = () => {
+  const handleSimulateScan = async () => {
     setIsScanning(true);
+    setScanStatus('');
+
+    // Check if Web NFC API (NDEFReader) is supported on device/browser
+    if (typeof window !== 'undefined' && 'NDEFReader' in window) {
+      try {
+        setScanStatus('Hold your physical Bloom NFC card near your phone...');
+        const ndef = new window.NDEFReader();
+        await ndef.scan();
+        ndef.onreading = (event) => {
+          const serialNumber = event.serialNumber;
+          const scannedUid = serialNumber 
+            ? `BLM-${serialNumber.replace(/:/g, '').slice(0, 4).toUpperCase()}-NFC` 
+            : ('BLM-' + Math.floor(1000 + Math.random() * 9000) + '-NFC');
+          setCardUid(scannedUid);
+          claimAndLinkCard(scannedUid);
+          setIsScanning(false);
+          setScanStatus('');
+          setStep(4);
+        };
+        ndef.onreadingerror = () => {
+          setScanStatus('Error reading tag. Using manual fallback code...');
+          fallbackScanSimulation();
+        };
+        return;
+      } catch (err) {
+        // Permission denied or non-HTTPS environment
+        setScanStatus('Web NFC permission error. Simulating NFC tap...');
+      }
+    }
+    fallbackScanSimulation();
+  };
+
+  const fallbackScanSimulation = () => {
     setTimeout(() => {
       setIsScanning(false);
+      setScanStatus('');
       const newUid = 'BLM-' + Math.floor(1000 + Math.random() * 9000) + '-NFC';
       setCardUid(newUid);
       claimAndLinkCard(newUid);
