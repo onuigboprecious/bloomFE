@@ -40,8 +40,12 @@ export const AppProvider = ({ children }) => {
     }
     return mockRecentLeads;
   });
-  const [isCardLinked, setIsCardLinked] = useState(true);
-  const [activeCardUid, setActiveCardUid] = useState("BLM-9921-NFC");
+  const [isCardLinked, setIsCardLinked] = useState(() => {
+    return localStorage.getItem('bloom_is_card_linked') !== 'false';
+  });
+  const [activeCardUid, setActiveCardUid] = useState(() => {
+    return localStorage.getItem('bloom_linked_card_uid') || "BLM-9921-NFC";
+  });
   const [claimToast, setClaimToast] = useState({ show: false, message: '', uid: '' });
 
   // Check active session on initial render
@@ -136,6 +140,8 @@ export const AppProvider = ({ children }) => {
 
     setIsCardLinked(true);
     setActiveCardUid(cardId);
+    localStorage.setItem('bloom_linked_card_uid', cardId);
+    localStorage.setItem('bloom_is_card_linked', 'true');
     setProfile((prev) => ({
       ...prev,
       cardUid: cardId,

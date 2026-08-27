@@ -7,10 +7,13 @@ import Input from '../ui/Input';
 import { useApp } from '../../context/AppContext';
 
 export const ActivateCardModal = ({ isOpen, onClose }) => {
-  const { updateProfileField, setCurrentPage, claimAndLinkCard } = useApp();
-  const [step, setStep] = useState(1); // 1: Scan/UID, 2: Complete
+  const { profile, updateProfileField, setCurrentPage, claimAndLinkCard } = useApp();
+  const [step, setStep] = useState(1); // 1: Scan/UID, 2: Complete, 3: Profile Setup, 4: Finish
   const [cardUid, setCardUid] = useState('');
   const [isScanning, setIsScanning] = useState(false);
+  const [fullName, setFullName] = useState(profile?.name || '');
+  const [jobTitle, setJobTitle] = useState(profile?.title || '');
+  const [company, setCompany] = useState(profile?.company || '');
 
   const handleSimulateScan = () => {
     setIsScanning(true);

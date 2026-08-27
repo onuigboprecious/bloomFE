@@ -233,7 +233,7 @@ export const DashboardPage = () => {
             {activeTab === 'profile' && <ProfileEditorTab />}
             {activeTab === 'leads' && <LeadsTab />}
             {activeTab === 'analytics' && <AnalyticsTab />}
-            {activeTab === 'cards' && <CardManagementTab />}
+            {activeTab === 'cards' && <CardManagementTab onOpenActivateModal={() => setIsActivationModalOpen(true)} />}
             {activeTab === 'billing' && <BillingTab />}
           </motion.div>
         </AnimatePresence>

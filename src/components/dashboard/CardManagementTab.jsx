@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
-import { CreditCard, RefreshCw, CheckCircle2, ShieldCheck, Plus, ArrowRight, Rss, Download, Copy, Check, Smartphone } from 'lucide-react';
+import { CreditCard, RefreshCw, CheckCircle2, ShieldCheck, Plus, ArrowRight, Rss, Download, Copy, Check, Smartphone, Link } from 'lucide-react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import { useApp } from '../../context/AppContext';
 
-export const CardManagementTab = () => {
-  const { profile, selectedFinish, saveContactToPhone, generateRawVCardString } = useApp();
-  const [activeCardUid, setActiveCardUid] = useState("BLM-9921-NFC");
+export const CardManagementTab = ({ onOpenActivateModal }) => {
+  const { profile, selectedFinish, saveContactToPhone, generateRawVCardString, activeCardUid, claimAndLinkCard } = useApp();
   const [reassignModalOpen, setReassignModalOpen] = useState(false);
   const [targetName, setTargetName] = useState("");
   const [reassignSuccess, setReassignSuccess] = useState(false);
   const [copiedPayload, setCopiedPayload] = useState(false);
+  
+  // Link New Card State
+  const [newUidInput, setNewUidInput] = useState("");
+  const [linkSuccess, setLinkSuccess] = useState(false);
+
+  const handleLinkNewCard = async (e) => {
+    e.preventDefault();
+    if (!newUidInput.trim()) return;
+    const cleanUid = newUidInput.trim().toUpperCase();
+    await claimAndLinkCard(cleanUid);
+    setLinkSuccess(true);
+    setNewUidInput("");
+    setTimeout(() => setLinkSuccess(false), 3000);
+  };
 
   const handleReassign = (e) => {
     e.preventDefault();
@@ -30,11 +43,21 @@ export const CardManagementTab = () => {
 
   return (
     <div className="space-y-8 max-w-4xl">
-      <div>
-        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">NFC Physical Card & Hardware Management</h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          Manage assigned NFC cards, configure automatic contact saving on scan, or reassign profiles.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">NFC Physical Card & Hardware Management</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Manage assigned NFC cards, configure automatic contact saving on scan, or bind new hardware cards.
+          </p>
+        </div>
+
+        <button
+          onClick={onOpenActivateModal}
+          className="px-4 py-2.5 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs flex items-center gap-2 cursor-pointer shadow-md transition-all shrink-0"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Scan / Tap to Activate Card</span>
+        </button>
       </div>
 
       {/* Primary Active Physical Card Widget */}
@@ -47,7 +70,7 @@ export const CardManagementTab = () => {
               </div>
             </div>
             <div>
-              <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest block">Active NFC Card</span>
+              <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest block">Active Linked Card</span>
               <h4 className="text-lg font-black text-white">{selectedFinish.name}</h4>
               <span className="text-xs text-slate-400 font-mono">UID: {activeCardUid}</span>
             </div>
@@ -83,6 +106,48 @@ export const CardManagementTab = () => {
             <span>Reassign Card to New Profile</span>
           </button>
         </div>
+      </div>
+
+      {/* Manual Card UID Binding Form */}
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-xs">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center font-bold">
+            <Link className="w-5 h-5" />
+          </div>
+          <div>
+            <h4 className="text-sm font-extrabold text-slate-900 dark:text-white">
+              Link & Bind New Physical Card UID
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Enter the activation serial code printed on your physical Bloom card or accessory to bind it immediately.
+            </p>
+          </div>
+        </div>
+
+        <form onSubmit={handleLinkNewCard} className="flex flex-col sm:flex-row gap-3 pt-2">
+          <input
+            type="text"
+            value={newUidInput}
+            onChange={(e) => setNewUidInput(e.target.value)}
+            placeholder="e.g. BLM-7788-NFC"
+            className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white px-4 py-2.5 rounded-xl text-xs uppercase font-mono font-bold focus:outline-none focus:border-[#00BCFF]"
+          />
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!newUidInput.trim()}
+            className="bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-extrabold text-xs px-6 py-2.5 whitespace-nowrap cursor-pointer"
+          >
+            {linkSuccess ? 'Card Bound Successfully!' : 'Bind Card to Profile'}
+          </Button>
+        </form>
+
+        {linkSuccess && (
+          <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+            <span>Success! Physical NFC Card is now active and linked to {profile.name}.</span>
+          </div>
+        )}
       </div>
 
       {/* Auto-Save on Scan Protocol Info */}
@@ -152,3 +217,4 @@ export const CardManagementTab = () => {
 };
 
 export default CardManagementTab;
+
