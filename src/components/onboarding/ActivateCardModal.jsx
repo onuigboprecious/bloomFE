@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Rss, CheckCircle2, ShieldCheck, User, Building2, Mail, Lock, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Rss, CheckCircle2, ShieldCheck, User, Building2, Mail, Lock, ArrowRight, ArrowLeft, Eye } from 'lucide-react';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
+import MobilePhonePreview from '../ui/MobilePhonePreview';
 import { useApp } from '../../context/AppContext';
 
 export const ActivateCardModal = ({ isOpen, onClose }) => {
@@ -195,25 +196,33 @@ export const ActivateCardModal = ({ isOpen, onClose }) => {
         </form>
       )}
 
-      {/* STEP 4: Complete */}
+      {/* STEP 4: Complete & Live Preview */}
       {step === 4 && (
-        <div className="text-center space-y-5 py-2">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
-            <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
+        <div className="text-center space-y-4 py-1 max-h-[80vh] overflow-y-auto custom-scrollbar px-1">
+          <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-md">
+            <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
           </div>
 
           <div className="space-y-1">
-            <h3 className="text-2xl font-black text-slate-900 dark:text-white">Bloom Card Activated!</h3>
+            <h3 className="text-xl font-black text-slate-900 dark:text-white">Bloom Card Activated!</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Your physical card is now linked to your digital profile and live for NFC tapping.
+              Below is the live preview of what people see when they tap your card:
             </p>
+          </div>
+
+          <div className="py-2">
+            <div className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-bold mb-3">
+              <Eye className="w-3 h-3" />
+              <span>Live Tap View Preview</span>
+            </div>
+            <MobilePhonePreview data={profile} className="scale-95" />
           </div>
 
           <Button
             variant="primary"
             size="lg"
             onClick={handleFinish}
-            className="w-full bg-[#00BCFF] hover:bg-cyan-500 font-bold cursor-pointer"
+            className="w-full bg-[#00BCFF] hover:bg-cyan-500 text-slate-950 font-black py-3 text-xs cursor-pointer shadow-md mt-2"
           >
             Go to My Dashboard
           </Button>

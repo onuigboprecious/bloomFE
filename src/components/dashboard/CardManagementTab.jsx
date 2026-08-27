@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { CreditCard, RefreshCw, CheckCircle2, ShieldCheck, Plus, ArrowRight, Rss, Download, Copy, Check, Smartphone, Link } from 'lucide-react';
+import { CreditCard, RefreshCw, CheckCircle2, ShieldCheck, Plus, ArrowRight, Rss, Download, Copy, Check, Smartphone, Link, Eye } from 'lucide-react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
+import Modal from '../ui/Modal';
+import MobilePhonePreview from '../ui/MobilePhonePreview';
 import { useApp } from '../../context/AppContext';
 
 export const CardManagementTab = ({ onOpenActivateModal }) => {
@@ -14,6 +16,9 @@ export const CardManagementTab = ({ onOpenActivateModal }) => {
   // Link New Card State
   const [newUidInput, setNewUidInput] = useState("");
   const [linkSuccess, setLinkSuccess] = useState(false);
+
+  // Tap Profile Preview Modal State
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   const handleLinkNewCard = async (e) => {
     e.preventDefault();
@@ -99,8 +104,16 @@ export const CardManagementTab = ({ onOpenActivateModal }) => {
 
         <div className="pt-2 flex flex-wrap gap-3">
           <button
+            onClick={() => setIsPreviewModalOpen(true)}
+            className="px-4 py-2.5 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs flex items-center gap-2 cursor-pointer transition-all shadow-md"
+          >
+            <Eye className="w-4 h-4" />
+            <span>Preview Public Tap Profile</span>
+          </button>
+
+          <button
             onClick={() => setReassignModalOpen(true)}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors"
+            className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5 text-cyan-400" />
             <span>Reassign Card to New Profile</span>
@@ -211,6 +224,26 @@ export const CardManagementTab = ({ onOpenActivateModal }) => {
           </div>
         </form>
       )}
+
+      {/* Live Tap Preview Modal */}
+      <Modal isOpen={isPreviewModalOpen} onClose={() => setIsPreviewModalOpen(false)} maxWidth="max-w-md">
+        <div className="text-center space-y-4 py-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold">
+            <Eye className="w-4 h-4" />
+            <span>What People See When Tapping Card #{activeCardUid}</span>
+          </div>
+
+          <MobilePhonePreview data={profile} />
+
+          <Button
+            variant="secondary"
+            onClick={() => setIsPreviewModalOpen(false)}
+            className="w-full text-xs font-bold cursor-pointer"
+          >
+            Close Preview
+          </Button>
+        </div>
+      </Modal>
 
     </div>
   );

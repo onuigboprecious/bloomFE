@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Sparkles, CheckCircle2, ShieldCheck, CreditCard, LogIn, UserPlus } from 'lucide-react';
+import { ArrowLeft, Sparkles, CheckCircle2, ShieldCheck, CreditCard, LogIn, UserPlus, Eye, LayoutDashboard } from 'lucide-react';
 import Button from '../components/ui/Button';
+import MobilePhonePreview from '../components/ui/MobilePhonePreview';
 import { useApp } from '../context/AppContext';
 import { claimCardApi } from '../api/profile';
 
 export const ClaimCardPage = ({ cardUid: initialUid }) => {
-  const { setCurrentPage, isAuthenticated, user, claimAndLinkCard } = useApp();
+  const { setCurrentPage, isAuthenticated, user, claimAndLinkCard, profile } = useApp();
   const [cardUid, setCardUid] = useState(initialUid || 'BLM-88A92K-NFC');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -32,9 +33,6 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
       await claimAndLinkCard(cardUid);
       localStorage.removeItem('pending_claim_cardUid');
       setClaimSuccess(true);
-      setTimeout(() => {
-        setCurrentPage('dashboard');
-      }, 1500);
     } catch (err) {
       setErrorMessage(err.message || 'Failed to claim card. It may already be linked to another account.');
     } finally {
@@ -104,15 +102,39 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
 
           {claimSuccess ? (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="py-4 space-y-3"
+              className="py-2 space-y-6 text-center"
             >
-              <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-lg">
-                <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
+              <div className="space-y-2">
+                <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-md">
+                  <CheckCircle2 className="w-7 h-7 stroke-[2.5]" />
+                </div>
+                <h3 className="text-xl font-black text-slate-900 dark:text-white">Card #{cardUid} Successfully Linked!</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                  Below is the live preview of what people see when they tap your physical Bloom card:
+                </p>
               </div>
-              <h3 className="text-xl font-black text-slate-900 dark:text-white">Card Claimed Successfully!</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Redirecting to your dashboard...</p>
+
+              {/* Live Mobile Tap Preview Screen */}
+              <div className="pt-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[11px] font-bold mb-4">
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Live Card Tap Preview</span>
+                </div>
+                <MobilePhonePreview data={profile} />
+              </div>
+
+              <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
+                <Button
+                  onClick={() => setCurrentPage('dashboard')}
+                  variant="primary"
+                  className="bg-[#00BCFF] hover:bg-cyan-500 text-slate-950 font-black py-3 px-6 text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span>Go to My Dashboard</span>
+                </Button>
+              </div>
             </motion.div>
           ) : (
             <div className="space-y-4 pt-2">

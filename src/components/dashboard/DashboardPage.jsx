@@ -15,7 +15,10 @@ import {
   Smartphone,
   Eye,
   TrendingUp,
-  Rss
+  Rss,
+  Sparkles,
+  X,
+  CheckCircle2
 } from 'lucide-react';
 import ProfileEditorTab from './ProfileEditorTab';
 import AnalyticsTab from './AnalyticsTab';
@@ -30,6 +33,7 @@ export const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'leads' | 'analytics' | 'cards' | 'billing'
   const [isActivationModalOpen, setIsActivationModalOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [showGuidePrompt, setShowGuidePrompt] = useState(true);
 
   const handleCopyProfileLink = () => {
     const handleUrl = `https://bloom.app/@${profile.username || 'precious'}`;
@@ -190,6 +194,110 @@ export const DashboardPage = () => {
           </div>
 
         </div>
+
+        {/* 2.5 Onboarding Prompt Banner: How Card Linking & NFC Tapping Works */}
+        <AnimatePresence>
+          {showGuidePrompt && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950 p-6 sm:p-7 rounded-3xl border border-cyan-500/30 text-white shadow-xl space-y-5"
+            >
+              {/* Background ambient lighting */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="flex items-start justify-between gap-4 relative z-10">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-2xl bg-[#00BCFF]/20 border border-[#00BCFF]/40 text-[#00BCFF] flex items-center justify-center shrink-0">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                      <span>How Your Bloom Profile & Card Work</span>
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      Linking your card & sharing your profile when people tap your card
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowGuidePrompt(false)}
+                  className="p-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  title="Dismiss guide"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Step Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+                
+                {/* Flow 1: Linking of Cards */}
+                <div className="bg-slate-900/80 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3">
+                  <div className="flex items-center gap-2 text-cyan-400 font-extrabold text-xs uppercase tracking-wider">
+                    <CreditCard className="w-4 h-4" />
+                    <span>1. Linking Your Physical Card</span>
+                  </div>
+                  <ul className="space-y-2.5 text-xs text-slate-300">
+                    <li className="flex items-start gap-2">
+                      <span className="w-4 h-4 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</span>
+                      <span>Click <strong>Activate New Card</strong> button at the top of your dashboard.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-4 h-4 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
+                      <span>Tap your physical Bloom card against your phone or enter the <strong>Card UID</strong> (e.g. <code>BLM-9921-NFC</code>).</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-4 h-4 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
+                      <span>Your card is permanently bound to <strong>@{profile.username || 'precious'}</strong>!</span>
+                    </li>
+                  </ul>
+                  <button
+                    onClick={() => setIsActivationModalOpen(true)}
+                    className="w-full py-2.5 px-4 rounded-xl bg-[#00BCFF] hover:bg-cyan-500 text-slate-950 font-black text-xs transition-all shadow-md shadow-cyan-500/20 flex items-center justify-center gap-1.5 cursor-pointer mt-1"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Link Card Now</span>
+                  </button>
+                </div>
+
+                {/* Flow 2: Tapping to Show Profile */}
+                <div className="bg-slate-900/80 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3">
+                  <div className="flex items-center gap-2 text-emerald-400 font-extrabold text-xs uppercase tracking-wider">
+                    <Smartphone className="w-4 h-4" />
+                    <span>2. Let People View Your Profile on Tap</span>
+                  </div>
+                  <ul className="space-y-2.5 text-xs text-slate-300">
+                    <li className="flex items-start gap-2">
+                      <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</span>
+                      <span>Tap your card against any smartphone (iOS or Android).</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
+                      <span>A instant pop-up notification opens your live digital profile—<strong>no app needed!</strong></span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
+                      <span>They can tap <strong>Save Contact (.vcf)</strong> or send their details back to your dashboard.</span>
+                    </li>
+                  </ul>
+                  <button
+                    onClick={triggerNfcTap}
+                    disabled={isTapSimulating}
+                    className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition-all flex items-center justify-center gap-1.5 cursor-pointer mt-1 disabled:opacity-50"
+                  >
+                    <Rss className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>Test Tap Profile View</span>
+                  </button>
+                </div>
+
+              </div>
+
+            </motion.div>
+          )}
+        </AnimatePresence>
+
 
         {/* 3. Desktop Tab Navigation Segmented Bar */}
         <div className="hidden md:flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar border-b border-slate-200 dark:border-slate-800">
