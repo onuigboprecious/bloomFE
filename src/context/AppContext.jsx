@@ -72,6 +72,19 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    if (isAuthenticated) {
+      getLeadsApi()
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setLeads(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isAuthenticated]);
+
+
+  useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('bloom_theme', 'dark');
@@ -275,8 +288,9 @@ export const AppProvider = ({ children }) => {
     try {
       const res = await createLeadApi({
         ...leadData,
-        cardUid: activeCardUid || 'BLM-9921-NFC',
+        cardUid: leadData.cardUid || activeCardUid || 'BLM-9921-NFC',
       });
+
       if (res?.lead) {
         createdLead = res.lead;
       }

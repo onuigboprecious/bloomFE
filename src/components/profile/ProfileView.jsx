@@ -544,7 +544,10 @@ export const ProfileView = ({ data }) => {
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
         ownerName={profile.name}
+        cardUid={profile.cardUid}
+        username={profile.username}
       />
+
     </div>
   );
 };

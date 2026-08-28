@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, User, Phone, Mail, Briefcase, MessageSquare, CheckCircle2, Download } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
-export const ShareBackModal = ({ isOpen, onClose, ownerName }) => {
+export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }) => {
   const { addLead, exportVCard, profile } = useApp();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -43,7 +43,10 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName }) => {
         role: role.trim() || 'Tap Recipient',
         notes: notes.trim(),
         method: 'Share Back Form',
+        cardUid: cardUid || profile?.cardUid,
+        username: username || profile?.username,
       });
+
       setIsSubmitting(false);
       setIsSuccess(true);
     } catch (err) {
