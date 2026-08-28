@@ -94,12 +94,15 @@ export const NfcWristbandsPage = () => {
               <span>Order NFC Wristband</span>
               <ArrowRight className="w-4 h-4" />
             </button>
-            <a
-              href="#interactive-3d"
+            <button
+              onClick={() => {
+                const el = document.getElementById('interactive-3d');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
               className="px-7 py-3.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-white text-slate-900 dark:text-white font-extrabold text-sm transition-all active:scale-95 flex items-center gap-2 cursor-pointer bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm"
             >
               <span>View 3D Interactive Model</span>
-            </a>
+            </button>
           </div>
         </div>
       </section>

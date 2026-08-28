@@ -21,7 +21,12 @@ export const LoginPage = () => {
       await loginUser({ email, password });
       setLoginSuccess(true);
       setTimeout(() => {
-        setCurrentPage('dashboard');
+        const pendingCardUid = localStorage.getItem('pending_claim_cardUid');
+        if (pendingCardUid) {
+          setCurrentPage('claim-card');
+        } else {
+          setCurrentPage('dashboard');
+        }
       }, 1000);
     } catch (err) {
       setErrorMessage(err.message || 'Login failed. Please check your credentials.');
@@ -29,6 +34,7 @@ export const LoginPage = () => {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex flex-col justify-between relative overflow-hidden transition-colors">

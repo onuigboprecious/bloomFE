@@ -8,21 +8,26 @@ import { claimCardApi } from '../api/profile';
 
 export const ClaimCardPage = ({ cardUid: initialUid }) => {
   const { setCurrentPage, isAuthenticated, user, claimAndLinkCard, profile } = useApp();
-  const [cardUid, setCardUid] = useState(initialUid || 'BLM-88A92K-NFC');
+  const [cardUid, setCardUid] = useState(initialUid || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [claimSuccess, setClaimSuccess] = useState(false);
 
   useEffect(() => {
-    // Extract cardUid from URL query string ?cardUid=... or fallback to initialUid or localStorage
+    // Prioritize passed initialUid prop -> URL query string ?cardUid=... -> fallback pending_claim_cardUid from localStorage
     const params = new URLSearchParams(window.location.search);
-    const uidFromUrl = params.get('cardUid') || localStorage.getItem('pending_claim_cardUid');
-    if (uidFromUrl) {
-      setCardUid(uidFromUrl);
-    } else if (initialUid) {
+    const uidFromUrl = params.get('cardUid');
+    const pendingFromStorage = localStorage.getItem('pending_claim_cardUid');
+
+    if (initialUid) {
       setCardUid(initialUid);
+    } else if (uidFromUrl) {
+      setCardUid(uidFromUrl);
+    } else if (pendingFromStorage) {
+      setCardUid(pendingFromStorage);
     }
   }, [initialUid]);
+
 
   const handleClaimCard = async () => {
     setIsSubmitting(true);

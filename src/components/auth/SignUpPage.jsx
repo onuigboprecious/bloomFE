@@ -22,7 +22,12 @@ export const SignUpPage = () => {
       await signupUser({ email, password, name: fullName });
       setSignupSuccess(true);
       setTimeout(() => {
-        setCurrentPage('dashboard');
+        const pendingCardUid = localStorage.getItem('pending_claim_cardUid');
+        if (pendingCardUid) {
+          setCurrentPage('claim-card');
+        } else {
+          setCurrentPage('onboarding');
+        }
       }, 1200);
     } catch (err) {
       setErrorMessage(err.message || 'Failed to create account. Please try again.');
@@ -30,6 +35,7 @@ export const SignUpPage = () => {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex flex-col justify-between relative overflow-hidden transition-colors">

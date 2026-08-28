@@ -47,6 +47,11 @@ export const Navbar = () => {
               Home
             </button>
 
+            <button onClick={() => setCurrentPage('dashboard')} className="hover:text-[#00BCFF] dark:hover:text-[#00BCFF] transition-colors cursor-pointer flex items-center gap-1.5 font-bold text-slate-900 dark:text-white">
+              <LayoutDashboard className="w-3.5 h-3.5 text-[#00BCFF]" />
+              <span>Dashboard</span>
+            </button>
+
             {/* Products Dropdown */}
             <div className="relative">
               <button

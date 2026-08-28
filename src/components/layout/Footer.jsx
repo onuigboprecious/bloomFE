@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Lock } from 'lucide-react';
+import { ShieldCheck, Lock, MapPin, Mail, Phone } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export const Footer = () => {
@@ -29,23 +29,29 @@ export const Footer = () => {
 
           {/* Products */}
           <div>
-            <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">NFC Finishes</h4>
+            <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">NFC Products</h4>
             <ul className="space-y-2.5 text-sm text-slate-400">
-              <li><button onClick={() => setCurrentPage('cards')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Stealth Matte Black</button></li>
-              <li><button onClick={() => setCurrentPage('cards')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Stainless Steel Edition</button></li>
-              <li><button onClick={() => setCurrentPage('cards')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Rose Gold Metallic</button></li>
+              <li><button onClick={() => setCurrentPage('cards')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">NFC Cards</button></li>
               <li><button onClick={() => setCurrentPage('wristbands')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Active Wristband</button></li>
             </ul>
           </div>
 
-          {/* Company */}
+          {/* Direct Contact Info */}
           <div>
-            <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">Company</h4>
-            <ul className="space-y-2.5 text-sm text-slate-400">
-              <li><button onClick={() => setCurrentPage('about')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">About Us</button></li>
-              <li><button onClick={() => setCurrentPage('press')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Press & Media</button></li>
-              <li><button onClick={() => setCurrentPage('support')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Contact Support</button></li>
-              <li><button onClick={() => setCurrentPage('legal')} className="hover:text-cyan-400 transition-colors cursor-pointer text-left">Legal Hub</button></li>
+            <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">Contact Info</h4>
+            <ul className="space-y-3 text-sm text-slate-400">
+              <li className="flex items-start gap-2 text-xs">
+                <MapPin className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                <span>Victoria Island, Lagos & CBD, Abuja, Nigeria</span>
+              </li>
+              <li className="flex items-center gap-2 text-xs">
+                <Mail className="w-4 h-4 text-cyan-400 shrink-0" />
+                <a href="mailto:support@bloom.app" className="hover:text-cyan-400 transition-colors">support@bloom.app</a>
+              </li>
+              <li className="flex items-center gap-2 text-xs">
+                <Phone className="w-4 h-4 text-cyan-400 shrink-0" />
+                <a href="tel:+2348031234567" className="hover:text-cyan-400 transition-colors">+234 803 123 4567</a>
+              </li>
             </ul>
           </div>
 

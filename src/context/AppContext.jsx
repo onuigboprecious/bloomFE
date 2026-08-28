@@ -203,7 +203,8 @@ export const AppProvider = ({ children }) => {
 
   const saveContactToPhone = (customContact = null) => {
     const target = customContact || profile;
-    const handleUrl = `https://bloom.app/@${target.username || 'precious'}`;
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const profileUrl = target.website || target.profileUrl || origin;
     const nameParts = (target.name || '').trim().split(' ');
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
     const firstName = nameParts[0] || '';
@@ -217,7 +218,7 @@ export const AppProvider = ({ children }) => {
       `ORG:${target.company || ''}`,
       `TEL;TYPE=CELL,VOICE:${target.phone || ''}`,
       `EMAIL;TYPE=INTERNET:${target.email || ''}`,
-      `URL:${handleUrl}`,
+      `URL:${profileUrl}`,
       `NOTE:${target.bio || target.notes || 'Saved from Bloom Smart NFC Card'}`,
       'END:VCARD'
     ].join('\r\n');
@@ -238,7 +239,8 @@ export const AppProvider = ({ children }) => {
 
   const generateRawVCardString = (customTarget = null) => {
     const target = customTarget || profile;
-    const handleUrl = `https://bloom.app/@${target.username || 'precious'}`;
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const profileUrl = target.website || target.profileUrl || origin;
     const nameParts = (target.name || '').trim().split(' ');
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
     const firstName = nameParts[0] || '';

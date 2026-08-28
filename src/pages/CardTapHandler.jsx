@@ -19,10 +19,11 @@ export const CardTapHandler = () => {
     const match = pathname.match(/\/card\/([^\/]+)/);
     const searchParams = new URLSearchParams(window.location.search);
     
-    const uid = match ? match[1] : (searchParams.get('cardUid') || 'BLM-88A92K-NFC');
+    const uid = match ? match[1] : (searchParams.get('cardUid') || '');
     const sig = searchParams.get('sig') || '';
     
     setCardUid(uid);
+
 
     async function fetchTapProfile() {
       try {

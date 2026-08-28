@@ -11,8 +11,8 @@ import OrderModal from './components/order-modal/OrderModal';
 import WaitlistModal from './components/ui/WaitlistModal';
 import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
-import DashboardPage from './components/dashboard/DashboardPage';
-import CardBuilderPage from './components/builder/CardBuilderPage';
+import DashboardPage from './pages/DashboardPage';
+import OnboardingSetupPage from './pages/OnboardingSetupPage';
 import NfcCardsPage from './components/products/NfcCardsPage';
 import NfcWristbandsPage from './components/products/NfcWristbandsPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -41,6 +41,10 @@ export const AppContent = () => {
       setCurrentPage('card-tap');
     } else if (pathname === '/claim' || params.get('claimCard')) {
       setCurrentPage('claim-card');
+    } else if (pathname === '/dashboard') {
+      setCurrentPage('dashboard');
+    } else if (pathname === '/onboarding' || pathname === '/setup-profile') {
+      setCurrentPage('onboarding');
     } else if (pathname === '/invalid-card' || params.get('invalidCard')) {
       setCurrentPage('invalid-card');
     } else if (params.get('token')) {
@@ -54,6 +58,10 @@ export const AppContent = () => {
 
   if (currentPage === 'claim-card') {
     return <ClaimCardPage />;
+  }
+
+  if (currentPage === 'onboarding') {
+    return <OnboardingSetupPage />;
   }
 
   if (currentPage === 'invalid-card') {
@@ -80,9 +88,9 @@ export const AppContent = () => {
     return <DashboardPage />;
   }
 
-  if (currentPage === 'customizer') {
-    return <CardBuilderPage />;
-  }
+  // if (currentPage === 'customizer') {
+  //   return <CardBuilderPage />;
+  // }
 
   if (currentPage === 'cards') {
     return <NfcCardsPage />;

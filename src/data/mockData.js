@@ -133,7 +133,7 @@ export const mockNfcFaqs = [
   {
     id: "faq-1",
     question: "Do people need an app to read my Bloom Card?",
-    answer: "No app required! Bloom Card works natively with 100% of modern iPhones and Android smartphones. Just tap your physical card against the back of their phone, and your custom profile (bloom.app/@username) opens instantly in their web browser."
+    answer: "No app required! Bloom Card works natively with 100% of modern iPhones and Android smartphones. Just tap your physical card against the back of their phone, and your custom digital profile opens instantly in their web browser."
   },
   {
     id: "faq-2",
