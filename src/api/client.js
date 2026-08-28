@@ -3,16 +3,21 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://bloombe.onrender.c
 export async function apiClient(endpoint, options = {}) {
   const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
   
+  const token = localStorage.getItem('bloom_auth_token');
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+    ...options.headers,
+  };
+
   const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    credentials: 'include',
     ...options,
+    headers,
+    credentials: 'include',
   };
 
   const response = await fetch(url, config);
+
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {

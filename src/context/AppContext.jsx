@@ -85,13 +85,16 @@ export const AppProvider = ({ children }) => {
 
   const loginUser = async ({ email, password }) => {
     const userData = await loginApi({ email, password });
+    if (userData?.token) {
+      localStorage.setItem('bloom_auth_token', userData.token);
+    }
     setIsAuthenticated(true);
-    setUser(userData);
-    if (userData?.name) {
+    setUser(userData?.user || userData);
+    if (userData?.name || userData?.user?.name) {
       setProfile((prev) => ({
         ...prev,
-        name: userData.name,
-        email: userData.email || email,
+        name: userData.name || userData.user.name,
+        email: userData.email || userData.user?.email || email,
       }));
     }
     return userData;
@@ -99,8 +102,11 @@ export const AppProvider = ({ children }) => {
 
   const signupUser = async ({ email, password, name }) => {
     const userData = await signupApi({ email, password, name });
+    if (userData?.token) {
+      localStorage.setItem('bloom_auth_token', userData.token);
+    }
     setIsAuthenticated(true);
-    setUser(userData);
+    setUser(userData?.user || userData);
     if (name) {
       setProfile((prev) => ({
         ...prev,
@@ -117,9 +123,11 @@ export const AppProvider = ({ children }) => {
     } catch (e) {
       // Continue client logout even if API call fails
     }
+    localStorage.removeItem('bloom_auth_token');
     setIsAuthenticated(false);
     setUser(null);
   };
+
 
   const checkUsernameAvailability = async (username) => {
     try {
