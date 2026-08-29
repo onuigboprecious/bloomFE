@@ -20,7 +20,7 @@ export const CardCustomizer = () => {
             <span>Interactive Card Studio</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Build your custom Bloom NFC profile
+            Build your custom Enlazer NFC profile
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
             Test how your digital business card and physical NFC card look in real time.
@@ -38,37 +38,32 @@ export const CardCustomizer = () => {
                 1. Select Physical NFC Finish
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {cardFinishes.map((finish) => {
-                  const isSelected = selectedFinish.id === finish.id;
-                  return (
-                    <div
-                      key={finish.id}
-                      onClick={() => setSelectedFinish(finish)}
-                      className={`p-3 rounded-2xl border text-left cursor-pointer transition-all ${
-                        isSelected
-                          ? 'border-cyan-400 bg-cyan-500/10 ring-1 ring-cyan-400/50 shadow-md'
-                          : 'border-slate-800 bg-slate-900/60 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="h-10 w-full rounded-lg bg-slate-800 mb-2 overflow-hidden relative">
-                        <img src={finish.image} alt={finish.name} className="w-full h-full object-cover" />
-                      </div>
-                      <span className="text-xs font-bold text-white block leading-tight truncate">
-                        {finish.name}
+                {cardFinishes.slice(0, 4).map((finish) => (
+                  <button
+                    key={finish.id}
+                    onClick={() => setSelectedFinish(finish)}
+                    className={`p-3 rounded-2xl border text-left transition-all cursor-pointer relative ${
+                      selectedFinish.id === finish.id
+                        ? 'border-cyan-400 bg-cyan-950/50 shadow-md shadow-cyan-500/20'
+                        : 'border-slate-800 bg-slate-900 hover:border-slate-700'
+                    }`}
+                  >
+                    {selectedFinish.id === finish.id && (
+                      <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-cyan-400 text-slate-950 flex items-center justify-center text-[10px]">
+                        <Check className="w-3 h-3 stroke-[3]" />
                       </span>
-                      <span className="text-[10px] font-bold text-cyan-400 block mt-0.5 font-mono">
-                        ₦{finish.price.toLocaleString()}
-                      </span>
-                    </div>
-                  );
-                })}
+                    )}
+                    <span className="text-xs font-bold text-white block truncate">{finish.name}</span>
+                    <span className="text-[10px] text-slate-400 block mt-1">₦{finish.price.toLocaleString()}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Profile Input Controls */}
-            <div className="space-y-4 pt-2 border-t border-slate-800">
+            {/* Live Profile Information Controls */}
+            <div className="space-y-4 pt-4 border-t border-slate-800">
               <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
-                2. Customize Contact Details
+                2. Customize Profile Information
               </label>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -125,22 +120,20 @@ export const CardCustomizer = () => {
                 <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">
                   Bio / Tagline
                 </label>
-                <input
-                  type="text"
+                <textarea
+                  rows={2}
                   value={profile.bio}
                   onChange={(e) => updateProfileField('bio', e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 text-white rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-cyan-400"
+                  className="w-full bg-slate-900 border border-slate-800 text-white rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-cyan-400 resize-none"
                 />
               </div>
             </div>
 
             <Button
-              variant="primary"
-              size="lg"
               className="w-full bg-[#00BCFF] hover:bg-cyan-400 text-white font-bold py-3.5 cursor-pointer"
               onClick={() => setIsOrderModalOpen(true)}
             >
-              Order Custom Bloom Card (₦{selectedFinish.price.toLocaleString()})
+              Order Custom Enlazer Card (₦{selectedFinish.price.toLocaleString()})
             </Button>
 
           </div>
@@ -162,7 +155,7 @@ export const CardCustomizer = () => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <span className="font-black text-2xl tracking-tight font-['Plus_Jakarta_Sans']">bloom</span>
+                  <span className="font-black text-2xl tracking-tight font-['Plus_Jakarta_Sans']">enlazer</span>
                   <span className="font-black text-2xl text-cyan-400">.</span>
                 </div>
                 <div className="w-7 h-7 rounded-full border border-white/30 flex items-center justify-center bg-white/10 backdrop-blur-xs">
@@ -177,7 +170,7 @@ export const CardCustomizer = () => {
 
               <div className="flex items-center justify-between text-[10px] text-slate-400 z-10 pt-3 border-t border-white/10">
                 <span>NFC TAP READY</span>
-                <span className="font-mono text-cyan-400">bloomcard.me/{profile.name.toLowerCase().replace(/\s+/g, '')}</span>
+                <span className="font-mono text-cyan-400">enlazer.app/{profile.name.toLowerCase().replace(/\s+/g, '')}</span>
               </div>
             </motion.div>
 

@@ -1,5 +1,28 @@
 import React, { useState } from 'react';
-import { ChevronDown, Menu, X, ArrowUpRight, Sun, Moon, LayoutDashboard, Settings, LogOut, User, Sliders, CreditCard, Watch, Sparkles, ChevronRight } from 'lucide-react';
+import {
+  ChevronDown,
+  Menu,
+  X,
+  ArrowUpRight,
+  Sun,
+  Moon,
+  LayoutDashboard,
+  Settings,
+  LogOut,
+  User,
+  Sliders,
+  CreditCard,
+  Watch,
+  Sparkles,
+  ChevronRight,
+  Building2,
+  Users,
+  Zap,
+  HelpCircle,
+  Newspaper,
+  ShieldCheck,
+  BookOpen
+} from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export const Navbar = () => {
@@ -19,22 +42,24 @@ export const Navbar = () => {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
+  const [solutionsOpen, setSolutionsOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   const nfcCards = cardFinishes.filter((f) => f.category !== 'wristband');
   const nfcWristbands = cardFinishes.filter((f) => f.category === 'wristband');
 
   return (
-    <header className="sticky top-0 z-40 w-full pt-5 pb-3 px-4 sm:px-6 lg:px-8 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md transition-colors">
+    <header className="sticky top-0 z-40 w-full pt-4 pb-2 px-4 sm:px-6 lg:px-8 bg-transparent transition-colors">
       <div className="max-w-6xl mx-auto">
 
         {/* Floating Capsule Bar Container */}
-        <div className="bg-[#F1F3F6] dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 rounded-full px-6 sm:px-8 py-3 flex items-center justify-between shadow-xs transition-colors">
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-full px-6 sm:px-8 py-3 flex items-center justify-between shadow-sm hover:shadow-md transition-all">
 
           {/* Brand Logo */}
           <a href="#" onClick={() => setCurrentPage('home')} className="flex items-center gap-0.5 group">
             <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-white font-['Plus_Jakarta_Sans']">
-              bloom
+              enlazer
             </span>
             <span className="text-2xl font-black text-[#00BCFF] group-hover:scale-125 transition-transform">
               .
@@ -43,10 +68,6 @@ export const Navbar = () => {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-8 lg:gap-10 text-[13px] font-semibold text-slate-500 dark:text-slate-400">
-            <button onClick={() => setCurrentPage('home')} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
-              Home
-            </button>
-
             <button onClick={() => setCurrentPage('dashboard')} className="hover:text-[#00BCFF] dark:hover:text-[#00BCFF] transition-colors cursor-pointer flex items-center gap-1.5 font-bold text-slate-900 dark:text-white">
               <LayoutDashboard className="w-3.5 h-3.5 text-[#00BCFF]" />
               <span>Dashboard</span>
@@ -57,55 +78,57 @@ export const Navbar = () => {
               <button
                 onClick={() => {
                   setProductsOpen(!productsOpen);
+                  setSolutionsOpen(false);
+                  setResourcesOpen(false);
                   setProfileDropdownOpen(false);
                 }}
                 className="flex items-center gap-1 hover:text-slate-900 dark:hover:text-white transition-colors py-1 cursor-pointer"
               >
-                <span>NFC Products</span>
+                <span>Products</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${productsOpen ? 'rotate-180 text-[#00BCFF]' : 'text-slate-400'}`} />
               </button>
 
               {productsOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-80 sm:w-96 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200 space-y-2">
+                <div className="absolute top-full left-0 mt-5 w-72 sm:w-80 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 space-y-1">
                   {/* NFC Cards Link Card */}
                   <button
                     onClick={() => {
                       setCurrentPage('cards');
                       setProductsOpen(false);
                     }}
-                    className="w-full text-left p-3.5 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3.5 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
                   >
-                    <div className="p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-[#00BCFF] group-hover:scale-110 transition-transform shrink-0 mt-0.5">
-                      <CreditCard className="w-5 h-5" />
+                    <div className="p-2 rounded-lg bg-[#00BCFF]/10 text-[#00BCFF] group-hover:scale-105 transition-transform shrink-0 mt-0.5">
+                      <CreditCard className="w-4 h-4 text-[#00BCFF]" />
                     </div>
                     <div className="space-y-0.5 flex-1">
                       <div className="flex items-center justify-between">
-                        <span className="font-extrabold text-slate-900 dark:text-white text-sm group-hover:text-[#00BCFF] transition-colors">NFC Cards</span>
-                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                        <span className="font-extrabold text-slate-900 dark:text-white text-xs group-hover:text-[#00BCFF] transition-colors">NFC Cards</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
                         Sleek matte PVC, stainless steel, rose gold & bamboo digital business cards.
                       </p>
                     </div>
                   </button>
 
-                  {/* NFC Wristbands Link Card */}
+                  {/* NFC Wearables Link Card */}
                   <button
                     onClick={() => {
                       setCurrentPage('wristbands');
                       setProductsOpen(false);
                     }}
-                    className="w-full text-left p-3.5 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3.5 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
                   >
-                    <div className="p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-[#00BCFF] group-hover:scale-110 transition-transform shrink-0 mt-0.5">
-                      <Watch className="w-5 h-5" />
+                    <div className="p-2 rounded-lg bg-[#00BCFF]/10 text-[#00BCFF] group-hover:scale-105 transition-transform shrink-0 mt-0.5">
+                      <Watch className="w-4 h-4 text-[#00BCFF]" />
                     </div>
                     <div className="space-y-0.5 flex-1">
                       <div className="flex items-center justify-between">
-                        <span className="font-extrabold text-slate-900 dark:text-white text-sm group-hover:text-[#00BCFF] transition-colors">NFC Wristbands</span>
-                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                        <span className="font-extrabold text-slate-900 dark:text-white text-xs group-hover:text-[#00BCFF] transition-colors">NFC Wearables</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
                         IP68 waterproof eco-silicone smart wearables for active hands-free networking.
                       </p>
                     </div>
@@ -114,25 +137,204 @@ export const Navbar = () => {
               )}
             </div>
 
-            <a href="#features" className="hover:text-slate-900 dark:hover:text-white transition-colors">
-              Features
-            </a>
-            <a href="#faq" className="hover:text-slate-900 dark:hover:text-white transition-colors">
-              FAQ
-            </a>
+            {/* Solutions Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setSolutionsOpen(!solutionsOpen);
+                  setProductsOpen(false);
+                  setResourcesOpen(false);
+                  setProfileDropdownOpen(false);
+                }}
+                className="flex items-center gap-1 hover:text-slate-900 dark:hover:text-white transition-colors py-1 cursor-pointer"
+              >
+                <span>Solutions</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${solutionsOpen ? 'rotate-180 text-[#00BCFF]' : 'text-slate-400'}`} />
+              </button>
+
+              {solutionsOpen && (
+                <div className="absolute top-full left-0 mt-5 w-72 sm:w-80 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 space-y-1">
+                  {/* Teams & Enterprises */}
+                  <button
+                    onClick={() => {
+                      setCurrentPage('cards');
+                      setSolutionsOpen(false);
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                  >
+                    <div className="p-2 rounded-lg bg-[#00BCFF]/10 text-[#00BCFF] group-hover:scale-105 transition-transform shrink-0 mt-0.5">
+                      <Building2 className="w-4 h-4 text-[#00BCFF]" />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold text-slate-900 dark:text-white text-xs group-hover:text-[#00BCFF] transition-colors">Teams & Enterprises</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
+                        Centralized digital card management and team lead capturing at scale.
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Creators & Professionals */}
+                  <button
+                    onClick={() => {
+                      setCurrentPage('onboarding');
+                      setSolutionsOpen(false);
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                  >
+                    <div className="p-2 rounded-lg bg-[#00BCFF]/10 text-[#00BCFF] group-hover:scale-105 transition-transform shrink-0 mt-0.5">
+                      <Zap className="w-4 h-4 text-[#00BCFF]" />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold text-slate-900 dark:text-white text-xs group-hover:text-[#00BCFF] transition-colors">Creators & Professionals</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
+                        Custom linktrees, instant portfolios & dynamic bio sharing.
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Events & Hospitality */}
+                  <button
+                    onClick={() => {
+                      setCurrentPage('wristbands');
+                      setSolutionsOpen(false);
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                  >
+                    <div className="p-2 rounded-lg bg-[#00BCFF]/10 text-[#00BCFF] group-hover:scale-105 transition-transform shrink-0 mt-0.5">
+                      <Users className="w-4 h-4 text-[#00BCFF]" />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold text-slate-900 dark:text-white text-xs group-hover:text-[#00BCFF] transition-colors">Events & Hospitality</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
+                        Wearable contactless wristbands for event check-in & VIP networking.
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Resources Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setResourcesOpen(!resourcesOpen);
+                  setProductsOpen(false);
+                  setSolutionsOpen(false);
+                  setProfileDropdownOpen(false);
+                }}
+                className="flex items-center gap-1 hover:text-slate-900 dark:hover:text-white transition-colors py-1 cursor-pointer"
+              >
+                <span>Resources</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${resourcesOpen ? 'rotate-180 text-[#00BCFF]' : 'text-slate-400'}`} />
+              </button>
+
+              {resourcesOpen && (
+                <div className="absolute top-full left-0 mt-5 w-72 sm:w-80 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 space-y-1">
+                  {/* Help & Support */}
+                  <button
+                    onClick={() => {
+                      setCurrentPage('support');
+                      setResourcesOpen(false);
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                  >
+                    <div className="p-2 rounded-lg bg-[#00BCFF]/10 text-[#00BCFF] group-hover:scale-105 transition-transform shrink-0 mt-0.5">
+                      <HelpCircle className="w-4 h-4 text-[#00BCFF]" />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold text-slate-900 dark:text-white text-xs group-hover:text-[#00BCFF] transition-colors">Help & Support</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
+                        Contact 24/7 support, view FAQs, and step-by-step setup guides.
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Press & Media */}
+                  <button
+                    onClick={() => {
+                      setCurrentPage('press');
+                      setResourcesOpen(false);
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                  >
+                    <div className="p-2 rounded-lg bg-[#00BCFF]/10 text-[#00BCFF] group-hover:scale-105 transition-transform shrink-0 mt-0.5">
+                      <Newspaper className="w-4 h-4 text-[#00BCFF]" />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold text-slate-900 dark:text-white text-xs group-hover:text-[#00BCFF] transition-colors">Press & Media</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
+                        Download brand assets, press kits, and company announcements.
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Security & Guarantee */}
+                  <button
+                    onClick={() => {
+                      setCurrentPage('security');
+                      setResourcesOpen(false);
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                  >
+                    <div className="p-2 rounded-lg bg-[#00BCFF]/10 text-[#00BCFF] group-hover:scale-105 transition-transform shrink-0 mt-0.5">
+                      <ShieldCheck className="w-4 h-4 text-[#00BCFF]" />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold text-slate-900 dark:text-white text-xs group-hover:text-[#00BCFF] transition-colors">Security & Trust</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
+                        Hardware security specs, NTAG216 chip encryption & guarantees.
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* About Us */}
+                  <button
+                    onClick={() => {
+                      setCurrentPage('about');
+                      setResourcesOpen(false);
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                  >
+                    <div className="p-2 rounded-lg bg-[#00BCFF]/10 text-[#00BCFF] group-hover:scale-105 transition-transform shrink-0 mt-0.5">
+                      <BookOpen className="w-4 h-4 text-[#00BCFF]" />
+                    </div>
+                    <div className="space-y-0.5 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold text-slate-900 dark:text-white text-xs group-hover:text-[#00BCFF] transition-colors">About Enlazer</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
+                        Learn about our story, leadership team, and physical hardware vision.
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+
           </nav>
 
-          {/* Right Action Buttons, Theme Toggle & Profile Dropdown */}
+          {/* Right Action Buttons & Profile Dropdown */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-full border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-all cursor-pointer"
-              title="Toggle Dark/Light Mode"
-            >
-              {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
-            </button>
-
             {isAuthenticated ? (
               /* AUTHENTICATED: Profile Avatar & Dropdown Menu */
               <div className="relative">
@@ -140,6 +342,8 @@ export const Navbar = () => {
                   onClick={() => {
                     setProfileDropdownOpen(!profileDropdownOpen);
                     setProductsOpen(false);
+                    setSolutionsOpen(false);
+                    setResourcesOpen(false);
                   }}
                   className="flex items-center gap-2 p-1 pl-1.5 pr-2.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-800 dark:hover:border-slate-400 bg-white dark:bg-slate-950 cursor-pointer transition-all"
                 >
@@ -156,10 +360,10 @@ export const Navbar = () => {
 
                 {/* Profile Dropdown Menu */}
                 {profileDropdownOpen && (
-                  <div className="absolute top-full right-0 mt-3 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 space-y-1">
+                  <div className="absolute top-full right-0 mt-5 w-60 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 space-y-1">
 
                     {/* User Header */}
-                    <div className="p-3 border-b border-slate-100 dark:border-slate-800">
+                    <div className="p-2.5 border-b border-slate-100 dark:border-slate-800">
                       <span className="font-extrabold text-slate-900 dark:text-white text-xs block truncate">
                         {profile.name}
                       </span>
@@ -174,7 +378,7 @@ export const Navbar = () => {
                         setCurrentPage('dashboard');
                         setProfileDropdownOpen(false);
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
                     >
                       <LayoutDashboard className="w-4 h-4 text-[#00BCFF]" />
                       <span>Dashboard</span>
@@ -186,9 +390,9 @@ export const Navbar = () => {
                         setCurrentPage('customizer');
                         setProfileDropdownOpen(false);
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
                     >
-                      <Sliders className="w-4 h-4 text-emerald-500" />
+                      <Sliders className="w-4 h-4 text-[#00BCFF]" />
                       <span>Card Builder</span>
                     </button>
 
@@ -198,9 +402,9 @@ export const Navbar = () => {
                         setCurrentPage('dashboard');
                         setProfileDropdownOpen(false);
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
                     >
-                      <Settings className="w-4 h-4 text-indigo-500" />
+                      <Settings className="w-4 h-4 text-[#00BCFF]" />
                       <span>Settings</span>
                     </button>
 
@@ -212,7 +416,7 @@ export const Navbar = () => {
                           setCurrentPage('home');
                           setProfileDropdownOpen(false);
                         }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors text-left cursor-pointer"
+                        className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors text-left cursor-pointer"
                       >
                         <LogOut className="w-4 h-4" />
                         <span>Log Out</span>
@@ -237,15 +441,8 @@ export const Navbar = () => {
           {/* Mobile Hamburger Menu Button */}
           <div className="md:hidden flex items-center gap-2">
             <button
-              onClick={toggleDarkMode}
-              className="p-1.5 rounded-full border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
-            >
-              {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
-            </button>
-
-            <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 text-slate-700 dark:text-slate-300"
+              className="p-1.5 text-slate-700 dark:text-slate-300 cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -255,19 +452,9 @@ export const Navbar = () => {
         {/* Mobile Menu Dropdown */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 rounded-3xl mt-3 p-5 shadow-xl space-y-3">
-            <button
-              onClick={() => {
-                setCurrentPage('home');
-                setMobileMenuOpen(false);
-              }}
-              className="block w-full text-left py-2 text-sm font-semibold text-slate-800 dark:text-white hover:text-[#00BCFF]"
-            >
-              Home
-            </button>
-
-            {/* Mobile NFC Products Links */}
-            <div className="py-2 border-y border-slate-100 dark:border-slate-800/80 space-y-1">
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">NFC Products</span>
+            {/* Mobile Products Links */}
+            <div className="py-2 border-b border-slate-100 dark:border-slate-800/80 space-y-1">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">Products</span>
               <button
                 onClick={() => {
                   setCurrentPage('cards');
@@ -289,10 +476,111 @@ export const Navbar = () => {
                 className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <Watch className="w-4 h-4 text-emerald-500" />
-                  <span>NFC Wristbands</span>
+                  <Watch className="w-4 h-4 text-[#00BCFF]" />
+                  <span>NFC Wearables</span>
                 </div>
-                <span className="text-[11px] text-emerald-500">View Page →</span>
+                <span className="text-[11px] text-[#00BCFF]">View Page →</span>
+              </button>
+            </div>
+
+            {/* Mobile Solutions Section */}
+            <div className="py-2 border-b border-slate-100 dark:border-slate-800/80 space-y-1">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">Solutions</span>
+              <button
+                onClick={() => {
+                  setCurrentPage('cards');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-[#00BCFF]" />
+                  <span>Teams & Enterprises</span>
+                </div>
+                <span className="text-[11px] text-[#00BCFF]">View →</span>
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentPage('onboarding');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-[#00BCFF]" />
+                  <span>Creators & Professionals</span>
+                </div>
+                <span className="text-[11px] text-[#00BCFF]">View →</span>
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentPage('wristbands');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-[#00BCFF]" />
+                  <span>Events & Hospitality</span>
+                </div>
+                <span className="text-[11px] text-[#00BCFF]">View →</span>
+              </button>
+            </div>
+
+            {/* Mobile Resources Section */}
+            <div className="py-2 border-b border-slate-100 dark:border-slate-800/80 space-y-1">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">Resources</span>
+              <button
+                onClick={() => {
+                  setCurrentPage('support');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <HelpCircle className="w-4 h-4 text-[#00BCFF]" />
+                  <span>Help & Support</span>
+                </div>
+                <span className="text-[11px] text-[#00BCFF]">View →</span>
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentPage('press');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <Newspaper className="w-4 h-4 text-[#00BCFF]" />
+                  <span>Press & Media</span>
+                </div>
+                <span className="text-[11px] text-[#00BCFF]">View →</span>
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentPage('security');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-[#00BCFF]" />
+                  <span>Security & Trust</span>
+                </div>
+                <span className="text-[11px] text-[#00BCFF]">View →</span>
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentPage('about');
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-[#00BCFF]" />
+                  <span>About Bloom</span>
+                </div>
+                <span className="text-[11px] text-[#00BCFF]">View →</span>
               </button>
             </div>
 
@@ -371,3 +659,4 @@ export const Navbar = () => {
 };
 
 export default Navbar;
+

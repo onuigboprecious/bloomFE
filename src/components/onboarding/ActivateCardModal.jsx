@@ -89,7 +89,7 @@ export const ActivateCardModal = ({ isOpen, onClose }) => {
           </div>
 
           <div className="space-y-1">
-            <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">Activate Your Bloom Card</h3>
+            <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">Activate Your Enlazer Card</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               Tap your physical NFC card against your phone or enter the activation code on the back.
             </p>

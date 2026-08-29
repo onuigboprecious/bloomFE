@@ -5,7 +5,7 @@ import { Sparkles, Zap, ShieldCheck, TrendingUp } from 'lucide-react';
 
 export const HeroSection = () => {
   return (
-    <section id="hero" className="relative pt-6 sm:pt-10 md:pt-16 pb-8 sm:pb-12 md:pb-16 overflow-hidden bg-white dark:bg-slate-950 transition-colors min-h-[560px] sm:min-h-[620px] md:min-h-[680px] flex items-center justify-center">
+    <section id="hero" className="relative -mt-20 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 md:pb-16 overflow-hidden bg-[#F8FAFC] dark:bg-slate-950 transition-colors min-h-[560px] sm:min-h-[620px] md:min-h-[680px] flex items-center justify-center">
 
       {/* 4x Scaled 3D Globe Network Arcs Layered Directly Behind Main Headline */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] sm:w-[1400px] md:w-[1600px] h-[780px] pointer-events-none opacity-85 z-0 flex items-center justify-center">

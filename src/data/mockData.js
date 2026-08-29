@@ -6,10 +6,10 @@ export const mockProfileData = {
   name: "Precious Onuigbo",
   username: "precious",
   title: "Product Designer & Creator",
-  company: "Bloom Labs",
+  company: "Enlazer Labs",
   bio: "Designing digital experiences & building next-gen physical NFC networking tools across Africa. Tap to connect or book a call!",
   avatar: africanFounderImg,
-  email: "precious@bloomlabs.africa",
+  email: "precious@enlazerlabs.africa",
   phone: "+234 803 123 4567",
   website: "https://precious.design",
   location: "Lagos & Abuja, Nigeria",
@@ -53,7 +53,7 @@ export const mockPricingTiers = {
   proTierMonthly: 3500,
   proTierAnnual: 35000,
   proFeatures: [
-    "Custom @username handle (bloom.app/@yourname)",
+    "Custom @username handle (enlazer.app/@yourname)",
     "Real-time tap analytics & location insights",
     "Custom profile themes & layout switching",
     "Unlimited social & booking links (Calendly, WhatsApp, TikTok)",
@@ -116,7 +116,7 @@ export const mockCardFinishes = [
   },
   {
     id: "finish-5",
-    name: "Bloom Active NFC Wristband",
+    name: "Enlazer Active NFC Wristband",
     category: "wristband",
     material: "IP68 Waterproof Eco-Silicone",
     tagline: "Hands-free smart wearable for active networking",
@@ -132,28 +132,28 @@ export const mockCardFinishes = [
 export const mockNfcFaqs = [
   {
     id: "faq-1",
-    question: "Do people need an app to read my Bloom Card?",
-    answer: "No app required! Bloom Card works natively with 100% of modern iPhones and Android smartphones. Just tap your physical card against the back of their phone, and your custom digital profile opens instantly in their web browser."
+    question: "Do people need an app to read my Enlazer Card?",
+    answer: "No app required! Enlazer Card works natively with 100% of modern iPhones and Android smartphones. Just tap your physical card against the back of their phone, and your custom digital profile opens instantly in their web browser."
   },
   {
     id: "faq-2",
     question: "Can I update my links & handle after purchasing?",
-    answer: "Yes! Your physical Bloom Card links to your dynamic personal profile. You can update your phone, Instagram, TikTok, Calendly, or portfolio anytime from your Bloom dashboard, and your card reflects changes live."
+    answer: "Yes! Your physical Enlazer Card links to your dynamic personal profile. You can update your phone, Instagram, TikTok, Calendly, or portfolio anytime from your Enlazer dashboard, and your card reflects changes live."
   },
   {
     id: "faq-3",
     question: "What if someone's phone doesn't support NFC tap?",
-    answer: "Every physical Bloom Card includes a crisp dynamic QR code on the back. People can scan it with their standard camera app."
+    answer: "Every physical Enlazer Card includes a crisp dynamic QR code on the back. People can scan it with their standard camera app."
   },
   {
     id: "faq-4",
-    question: "Who is Bloom built for?",
-    answer: "Bloom is designed for high-networking individuals: Content Creators, Freelancers, Consultants (photographers, real estate agents, designers), and event-goers in Lagos & Abuja who want an unforgettable personal impression."
+    question: "Who is Enlazer built for?",
+    answer: "Enlazer is designed for high-networking individuals: Content Creators, Freelancers, Consultants (photographers, real estate agents, designers), and event-goers in Lagos & Abuja who want an unforgettable personal impression."
   },
   {
     id: "faq-5",
     question: "How does pricing work?",
-    answer: "Simple! Pay once for your custom physical NFC card (₦35,000). You get a free digital profile forever. Upgrade to Bloom Pro (₦3,500/mo) for a custom @username handle, deep analytics, and premium profile customization."
+    answer: "Simple! Pay once for your custom physical NFC card (₦35,000). You get a free digital profile forever. Upgrade to Enlazer Pro (₦3,500/mo) for a custom @username handle, deep analytics, and premium profile customization."
   }
 ];
 
@@ -188,10 +188,10 @@ export const mockTeamCards = [
   {
     id: "team-1",
     name: "Precious Onuigbo",
-    email: "precious@bloomlabs.africa",
+    email: "precious@enlazerlabs.africa",
     title: "Founder & CPO",
     department: "Executive",
-    cardUid: "BLM-9921-NFC",
+    cardUid: "ENL-9921-NFC",
     finish: "Stealth Matte Black",
     status: "Active",
     taps: 1422
@@ -199,10 +199,10 @@ export const mockTeamCards = [
   {
     id: "team-2",
     name: "Amina Bello",
-    email: "amina@bloomlabs.africa",
+    email: "amina@enlazerlabs.africa",
     title: "Chief Operating Officer",
     department: "Operations",
-    cardUid: "BLM-8842-NFC",
+    cardUid: "ENL-8842-NFC",
     finish: "Stainless Steel Edition",
     status: "Active",
     taps: 984
@@ -210,10 +210,10 @@ export const mockTeamCards = [
   {
     id: "team-3",
     name: "Chidi Okafor",
-    email: "chidi@bloomlabs.africa",
+    email: "chidi@enlazerlabs.africa",
     title: "Head of Enterprise Sales",
     department: "Sales",
-    cardUid: "BLM-7714-NFC",
+    cardUid: "ENL-7714-NFC",
     finish: "Stealth Matte Black",
     status: "Active",
     taps: 712
@@ -221,10 +221,10 @@ export const mockTeamCards = [
   {
     id: "team-4",
     name: "Tariq Danjuma",
-    email: "tariq@bloomlabs.africa",
+    email: "tariq@enlazerlabs.africa",
     title: "Lead Frontend Engineer",
     department: "Engineering",
-    cardUid: "BLM-6630-NFC",
+    cardUid: "ENL-6630-NFC",
     finish: "Eco Bamboo Wood",
     status: "Deactivated",
     taps: 320

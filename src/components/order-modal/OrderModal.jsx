@@ -38,7 +38,7 @@ export const OrderModal = () => {
       {step === 1 && (
         <div className="space-y-5">
           <div className="text-center space-y-1">
-            <h4 className="text-xl font-extrabold text-slate-900">get cards by bloom.</h4>
+            <h4 className="text-xl font-extrabold text-slate-900">get cards by enlazer.</h4>
             <p className="text-xs text-slate-500">Choose your physical NFC card finish & material</p>
           </div>
 

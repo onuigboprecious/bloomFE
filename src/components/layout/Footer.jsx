@@ -15,11 +15,11 @@ export const Footer = () => {
           {/* Brand Col */}
           <div className="md:col-span-2 space-y-4">
             <button onClick={() => setCurrentPage('home')} className="flex items-center gap-0.5 text-left cursor-pointer">
-              <span className="text-2xl font-black tracking-tight text-white font-['Plus_Jakarta_Sans']">bloom</span>
+              <span className="text-2xl font-black tracking-tight text-white font-['Plus_Jakarta_Sans']">enlazer</span>
               <span className="text-2xl font-black text-[#00BCFF]">.</span>
             </button>
             <p className="text-slate-400 text-sm max-w-sm leading-relaxed">
-              Bloom Card is the next-generation NFC digital business card platform. Tap to share contacts, social links, portfolios, and capture leads effortlessly.
+              Enlazer Card is the next-generation NFC digital business card platform. Tap to share contacts, social links, portfolios, and capture leads effortlessly.
             </p>
             <div className="flex items-center gap-4 text-slate-400 text-xs pt-2">
               <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5 text-cyan-400" /> NTAG216 High-Speed Chip</span>
@@ -46,7 +46,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2 text-xs">
                 <Mail className="w-4 h-4 text-cyan-400 shrink-0" />
-                <a href="mailto:support@bloom.app" className="hover:text-cyan-400 transition-colors">support@bloom.app</a>
+                <a href="mailto:support@enlazer.app" className="hover:text-cyan-400 transition-colors">support@enlazer.app</a>
               </li>
               <li className="flex items-center gap-2 text-xs">
                 <Phone className="w-4 h-4 text-cyan-400 shrink-0" />
@@ -69,7 +69,7 @@ export const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} Bloom Card Technologies Ltd. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Enlazer Card Technologies Ltd. All rights reserved.</p>
           <div className="flex items-center gap-3">
             <span className="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-mono">NFC ENABLED</span>
             <span className="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-mono">iOS & ANDROID</span>

@@ -23,9 +23,14 @@ export const AppProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [user, setUser] = useState(null);
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('bloom_theme') === 'dark';
-  });
+  const [darkMode, setDarkMode] = useState(true);
+
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('bloom_theme', 'dark');
+  }, []);
+
+  const toggleDarkMode = () => {};
   const [profile, setProfile] = useState(mockProfileData);
   const [isProUser, setIsProUser] = useState(true);
   const [selectedFinish, setSelectedFinish] = useState(mockCardFinishes[0]);
@@ -83,18 +88,6 @@ export const AppProvider = ({ children }) => {
     }
   }, [isAuthenticated]);
 
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('bloom_theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('bloom_theme', 'light');
-    }
-  }, [darkMode]);
-
-  const toggleDarkMode = () => setDarkMode((prev) => !prev);
 
   const loginUser = async ({ email, password }) => {
     const userData = await loginApi({ email, password });

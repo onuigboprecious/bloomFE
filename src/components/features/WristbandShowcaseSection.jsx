@@ -33,25 +33,30 @@ export const WristbandShowcaseSection = () => {
   ];
 
   return (
-    <section id="wristbands" className="pt-20 pb-12 bg-slate-50 dark:bg-slate-950 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+    <section id="wristbands" className="relative -mt-20 pt-24 sm:pt-28 md:pt-32 pb-16 bg-[#F8FAFC] dark:bg-slate-950 transition-colors overflow-hidden">
+      {/* Ambient Backdrop Glow for Seamless Navbar Blend */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-cyan-400/15 via-cyan-400/5 to-transparent pointer-events-none z-0 blur-3xl" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#00BCFF]">
-            NFC Wearable Ecosystem
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Wear Your Network. Tap Hands-Free Anywhere.
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base max-w-2xl mx-auto font-medium">
-            Not just cards! Meet the Bloom NFC Wristband—crafted for active creators, founders, fitness pros, and VIP event-goers who demand instant connections on the go.
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-16">
+
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+            Your Hustle Deserves <br className="hidden sm:inline" />
+            <span className="text-[#00BCFF]">a Better Handshake.</span>
+          </h1>
+
+          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base max-w-2xl mx-auto font-medium leading-relaxed">
+            <strong className="text-slate-900 dark:text-white block mb-1 text-base font-bold">Meet the Enlazer NFC Wristband</strong>
+            Built for the mover, the founder, the creative building something real. One tap and they've got everything: your business, your brand, your next connection.
           </p>
         </div>
 
         {/* Main Grid: Visual Product Showcase + Detail Breakdown */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          
+
           {/* Left Column: Interactive Wristband Color Slider */}
           <div className="lg:col-span-6">
             <WristbandSlider />
@@ -59,7 +64,7 @@ export const WristbandShowcaseSection = () => {
 
           {/* Right Column: Features & Models List */}
           <div className="lg:col-span-6 space-y-8">
-            
+
             {/* Feature Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {features.map((feat) => {
@@ -84,7 +89,7 @@ export const WristbandShowcaseSection = () => {
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
                 Available NFC Wristband Models
               </span>
-              
+
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div className="flex-1">
                   {wristbandProducts.slice(0, 1).map((wb) => (
