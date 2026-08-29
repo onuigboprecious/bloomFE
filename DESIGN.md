@@ -61,7 +61,7 @@ The hero section draws inspiration from modern high-converting fintech and SaaS 
 
 ## 🔒 4. NFC Card Tap Routing & Security Gatekeeper
 
-When a physical Bloom card is tapped against an NFC-enabled smartphone (e.g. `https://capstone-project.name.ng/card/BLM-88A92K-NFC?sig=a9f4c3b2`), the client evaluates the backend response (`GET /api/profile/:cardUid?sig=:sig`).
+When a physical Bloom card is tapped against an NFC-enabled smartphone (e.g. `https://www.enlazer.com.ng/card/BLM-88A92K-NFC?sig=a9f4c3b2`), the client evaluates the backend response (`GET /api/profile/:cardUid?sig=:sig`).
 
 ```
                               [ Physical NFC Card Tap ]

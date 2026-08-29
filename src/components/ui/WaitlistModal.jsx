@@ -36,7 +36,7 @@ export const WaitlistModal = ({ isOpen, onClose }) => {
 
   const handleCopyLink = () => {
     const handle = (formData.name || 'member').toLowerCase().replace(/\s+/g, '');
-    const refUrl = `https://bloom.app/waitlist?ref=${handle}`;
+    const refUrl = `https://enlazer.app/waitlist?ref=${handle}`;
     navigator.clipboard.writeText(refUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -250,7 +250,7 @@ export const WaitlistModal = ({ isOpen, onClose }) => {
                   <input
                     type="text"
                     readOnly
-                    value={`https://bloom.app/waitlist?ref=${(formData.name || 'member').toLowerCase().replace(/\s+/g, '')}`}
+                    value={`https://enlazer.app/waitlist?ref=${(formData.name || 'member').toLowerCase().replace(/\s+/g, '')}`}
                     className="flex-1 px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300"
                   />
                   <button

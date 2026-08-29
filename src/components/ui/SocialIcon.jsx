@@ -1,7 +1,8 @@
 import React from 'react';
 
-export const SocialIcon = ({ platform, className = 'w-4 h-4' }) => {
-  switch (platform?.toLowerCase()) {
+export const SocialIcon = ({ platform, network, className = 'w-4 h-4' }) => {
+  const iconKey = (platform || network || '').toLowerCase();
+  switch (iconKey) {
     case 'instagram':
       return (
         <svg className={className} viewBox="0 0 24 24" fill="currentColor">

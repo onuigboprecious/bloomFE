@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Download, User, Mail, Phone, Globe, MapPin, Share2, MessageCircle,
-  ExternalLink, CheckCircle2, ShieldCheck, Sparkles, Building2, Briefcase, Calendar
+  ExternalLink, CheckCircle2, ShieldCheck, Sparkles, Building2, Briefcase, Calendar, Link as LinkIcon
 } from 'lucide-react';
 import SocialIcon from '../ui/SocialIcon';
 import ShareBackModal from '../ui/ShareBackModal';
@@ -148,25 +148,19 @@ export const ProfileView = ({ data }) => {
   const [savedContact, setSavedContact] = useState(false);
 
   const profile = data || {
-    name: "Precious Onuigbo",
-    username: "precious",
-    title: "Product Designer & Creator",
-    company: "Bloom Labs",
-    bio: "Designing digital experiences & building next-gen physical NFC networking tools across Africa.",
+    name: "no data yet",
+    username: "no data yet",
+    title: "no data yet",
+    company: "no data yet",
+    bio: "no data yet",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400",
-    email: "precious@bloomlabs.africa",
-    phone: "+234 803 123 4567",
-    website: "https://precious.design",
-    location: "Lagos & Abuja, Nigeria",
+    email: "no data yet",
+    phone: "no data yet",
+    website: "no data yet",
+    location: "no data yet",
     theme: "dark-luxe",
     layout: "stack",
-    socials: {
-      instagram: "precious.design",
-      tiktok: "@precious_creator",
-      twitter: "preciousonuigbo",
-      whatsapp: "+2348031234567",
-      linkedin: "preciousonuigbo"
-    }
+    socials: {}
   };
 
   const themeKey = profile.theme || 'dark-luxe';
@@ -193,7 +187,7 @@ export const ProfileView = ({ data }) => {
       {/* Top Bar Header */}
       <div className="max-w-md mx-auto w-full flex items-center justify-between mb-6 z-10">
         <div className="flex items-center gap-0.5">
-          <span className={`text-xl font-black tracking-tight font-['Plus_Jakarta_Sans'] ${theme.textPrimary}`}>bloom</span>
+          <span className={`text-xl font-black tracking-tight font-['Plus_Jakarta_Sans'] ${theme.textPrimary}`}>enlazer</span>
           <span className="text-xl font-black text-[#00BCFF]">.</span>
         </div>
         <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full ${theme.badgeBg} border ${theme.badgeBorder} text-[10px] font-bold ${theme.badgeText} shadow-xs`}>
@@ -326,7 +320,7 @@ export const ProfileView = ({ data }) => {
                     className={`w-full py-3 px-4 rounded-2xl ${theme.socialBg} ${theme.socialHover} border ${theme.socialBorder} ${theme.textPrimary} font-semibold flex items-center justify-between transition-all text-xs`}
                   >
                     <div className="flex items-center gap-2.5 capitalize">
-                      <SocialIcon network={network} className="w-4 h-4" />
+                      <SocialIcon platform={network} network={network} className="w-4 h-4" />
                       <span>{network}</span>
                     </div>
                     <span className={`text-[11px] ${theme.textMuted} truncate max-w-[120px]`}>{val}</span>
@@ -411,7 +405,7 @@ export const ProfileView = ({ data }) => {
                           rel="noreferrer"
                           className={`w-10 h-10 rounded-2xl ${theme.socialBg} ${theme.socialHover} border ${theme.socialBorder} flex items-center justify-center transition-all hover:scale-110`}
                         >
-                          <SocialIcon network={network} className="w-5 h-5" />
+                          <SocialIcon platform={network} network={network} className="w-5 h-5" />
                         </a>
                       );
                     })}
@@ -483,6 +477,27 @@ export const ProfileView = ({ data }) => {
                     <ExternalLink className="w-3.5 h-3.5 text-slate-500 ml-auto" />
                   </a>
                 )}
+
+                {/* Custom Bio Linktree Buttons */}
+                {profile.customLinks && profile.customLinks.length > 0 && (
+                  <div className="space-y-2 pt-2">
+                    {profile.customLinks.map((linkItem, idx) => (
+                      <a
+                        key={linkItem.id || idx}
+                        href={linkItem.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`flex items-center justify-between p-3 rounded-xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} text-xs font-extrabold transition-colors ${theme.textPrimary}`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <LinkIcon className="w-4 h-4 text-[#00BCFF] shrink-0" />
+                          <span className="truncate">{linkItem.label}</span>
+                        </div>
+                        <ExternalLink className="w-3.5 h-3.5 text-slate-500 shrink-0 ml-2" />
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Social Icons Grid */}
@@ -503,7 +518,7 @@ export const ProfileView = ({ data }) => {
                           rel="noreferrer"
                           className={`w-10 h-10 rounded-2xl ${theme.socialBg} ${theme.socialHover} border ${theme.socialBorder} flex items-center justify-center transition-all hover:scale-110`}
                         >
-                          <SocialIcon network={network} className="w-5 h-5" />
+                          <SocialIcon platform={network} network={network} className="w-5 h-5" />
                         </a>
                       );
                     })}
@@ -537,7 +552,7 @@ export const ProfileView = ({ data }) => {
 
       {/* Footer Powered By */}
       <div className={`text-center pt-8 text-xs ${theme.footerText} z-10`}>
-        Powered by <span className={`font-bold ${theme.textPrimary}`}>bloom.app</span> • Smart NFC Card Technology
+        Powered by <span className={`font-bold ${theme.textPrimary}`}>enlazer.app</span> • Smart NFC Technology
       </div>
 
       <ShareBackModal

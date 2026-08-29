@@ -143,7 +143,7 @@ export const OnboardingSetupPage = () => {
 
   const shareableUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/card/${activeCardUid || 'BLM-9921-NFC'}`
-    : `https://capstone-project.name.ng/card/${activeCardUid || 'BLM-9921-NFC'}`;
+    : `https://www.enlazer.com.ng/card/${activeCardUid || 'BLM-9921-NFC'}`;
 
   // NFC Scan Handler
   const handleScanCard = async () => {

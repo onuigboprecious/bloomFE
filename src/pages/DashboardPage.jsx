@@ -31,11 +31,9 @@ import {
   MapPin,
   ArrowUpRight,
   Activity,
-  Clock,
-  Laptop
+  Inbox,
+  Settings
 } from 'lucide-react';
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
 import MobilePhonePreview from '../components/ui/MobilePhonePreview';
 import ActivateCardModal from '../components/onboarding/ActivateCardModal';
 import SocialIcon from '../components/ui/SocialIcon';
@@ -50,7 +48,8 @@ export const DashboardPage = () => {
     activeCardUid,
     claimAndLinkCard,
     leads,
-    setCurrentPage
+    setCurrentPage,
+    logoutUser
   } = useApp();
 
   const [activeTab, setActiveTab] = useState('creators'); // 'creators' | 'cards' | 'leads' | 'analytics'
@@ -161,13 +160,13 @@ export const DashboardPage = () => {
   const navTabs = [
     { id: 'creators', label: 'Profile Studio', icon: User },
     { id: 'cards', label: 'My Physical Cards', icon: CreditCard },
-    { id: 'leads', label: 'Captured Leads', icon: Users, count: leads.length },
-    { id: 'analytics', label: 'Tap Analytics', icon: TrendingUp }
+    { id: 'leads', label: 'Received Contacts', icon: Users, count: leads.length },
+    { id: 'analytics', label: 'Tap Analytics', icon: TrendingUp },
+    { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors">
-      <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-24">
 
@@ -292,6 +291,18 @@ export const DashboardPage = () => {
                     <Plus className="w-4 h-4 text-cyan-400" />
                     <span>Activate New Card</span>
                   </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileSidebarOpen(false);
+                      logoutUser();
+                      setCurrentPage('home');
+                    }}
+                    className="w-full py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold text-xs border border-red-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4 text-rose-400" />
+                    <span>Log Out</span>
+                  </button>
                 </div>
               </motion.div>
             </div>
@@ -372,6 +383,17 @@ export const DashboardPage = () => {
                 <Plus className="w-4 h-4 text-cyan-400" />
                 <span>Activate New Card</span>
               </button>
+
+              <button
+                onClick={() => {
+                  logoutUser();
+                  setCurrentPage('home');
+                }}
+                className="w-full py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 dark:text-red-400 font-extrabold text-xs border border-red-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <LogOut className="w-4 h-4 text-rose-500" />
+                <span>Log Out</span>
+              </button>
             </div>
 
           </aside>
@@ -401,22 +423,6 @@ export const DashboardPage = () => {
                         <CheckCircle2 className="w-3.5 h-3.5" /> Saved!
                       </span>
                     )}
-                  </div>
-
-                  {/* 1. Handle Customization */}
-                  <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 space-y-2">
-                    <label className="text-xs font-black uppercase text-slate-900 dark:text-white block">
-                      Custom Profile Handle URL
-                    </label>
-                    <div className="flex items-center gap-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2">
-                      <span className="text-xs font-mono text-slate-500 dark:text-slate-400 font-bold shrink-0">enlazer.app/@</span>
-                      <input
-                        type="text"
-                        value={customHandle}
-                        onChange={(e) => setCustomHandle(e.target.value.toLowerCase().replace(/\s+/g, ''))}
-                        className="w-full bg-transparent text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400 focus:outline-none"
-                      />
-                    </div>
                   </div>
 
                   {/* 2. Profile Details Form */}
@@ -737,35 +743,66 @@ export const DashboardPage = () => {
               </div>
             )}
 
-            {/* TAB 3: CAPTURED LEADS */}
+            {/* TAB 3: RECEIVED CONTACTS */}
             {activeTab === 'leads' && (
-              <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6">
-                <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+              <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6 animate-in fade-in duration-300">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
                   <div>
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white">Captured Leads</h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">People who tapped your card and shared their details back.</p>
+                    <h3 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <Users className="w-5 h-5 text-[#00BCFF]" />
+                      <span>Received Contacts</span>
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Contact details, roles, and notes shared back by people when they tap your Enlazer card.</p>
                   </div>
                   <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-[#00BCFF] font-bold text-xs">
-                    {leads.length} Total Leads
+                    {leads.length} Received Contacts
                   </span>
                 </div>
 
+                {/* Received Contacts Cards List */}
                 {leads.length === 0 ? (
                   <div className="text-center py-12 space-y-3">
                     <Users className="w-12 h-12 text-slate-400 mx-auto opacity-50" />
-                    <p className="text-xs text-slate-500 font-bold">No leads captured yet. Tap your card against a phone to start receiving contact details!</p>
+                    <p className="text-xs text-slate-500 font-bold">No received contacts yet. Tap your card against a phone to start receiving contact details!</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {leads.map((lead, idx) => (
-                      <div key={idx} className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
-                        <div className="flex items-center justify-between">
-                          <h4 className="text-sm font-black text-slate-900 dark:text-white">{lead.name}</h4>
-                          <span className="text-[10px] text-slate-400 font-mono">{lead.date || 'Today'}</span>
+                    {leads.map((item, idx) => (
+                      <div key={idx} className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+                        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-xl bg-cyan-500/10 text-[#00BCFF] font-black text-xs flex items-center justify-center">
+                              {item.name ? item.name.charAt(0).toUpperCase() : 'U'}
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-black text-slate-900 dark:text-white">{item.name}</h4>
+                              {(item.role || item.title) && <p className="text-[10px] text-slate-500 font-semibold">{item.role || item.title}</p>}
+                            </div>
+                          </div>
+                          <span className="text-[10px] text-slate-400 font-mono">{item.date || 'Today'}</span>
                         </div>
-                        <p className="text-xs text-[#00BCFF] font-bold">{lead.email}</p>
-                        {lead.phone && <p className="text-xs text-slate-400 font-mono">{lead.phone}</p>}
-                        {lead.note && <p className="text-xs italic text-slate-500 dark:text-slate-400 pt-1">"{lead.note}"</p>}
+
+                        <div className="space-y-1.5 text-xs">
+                          {item.email && (
+                            <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                              <Mail className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                              <span className="font-mono text-cyan-600 dark:text-cyan-400 font-bold truncate">{item.email}</span>
+                            </div>
+                          )}
+                          {item.phone && (
+                            <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                              <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                              <span className="font-mono">{item.phone}</span>
+                            </div>
+                          )}
+                          {(item.notes || item.note) && (
+                            <div className="pt-1.5 border-t border-slate-200/60 dark:border-slate-800/60">
+                              <p className="text-xs italic text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                                "{item.notes || item.note}"
+                              </p>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1041,6 +1078,57 @@ export const DashboardPage = () => {
               </div>
             )}
 
+            {/* TAB 5: SETTINGS STUDIO */}
+            {activeTab === 'settings' && (
+              <div className="space-y-6 animate-in fade-in duration-300">
+                <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6 shadow-sm">
+                  <div className="border-b border-slate-200 dark:border-slate-800/80 pb-4">
+                    <h3 className="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                      <Settings className="w-5 h-5 text-[#00BCFF]" />
+                      <span>Account & Studio Settings</span>
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Manage your account security, handle username, and profile preferences.</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Public Username Handle Settings */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Enlazer Digital Handle</label>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-mono text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700">enlazer.app/@</span>
+                        <input
+                          type="text"
+                          value={customHandle}
+                          onChange={(e) => setCustomHandle(e.target.value.toLowerCase().trim())}
+                          className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-xs font-bold focus:outline-none focus:border-[#00BCFF]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Email Account */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Account Email</label>
+                      <input
+                        type="email"
+                        value={profile.email || ''}
+                        readOnly
+                        className="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 rounded-xl px-3.5 py-2.5 text-xs font-bold"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+                    <button
+                      onClick={handleSaveProfile}
+                      className="px-6 py-3 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-extrabold text-xs transition-all shadow-md cursor-pointer"
+                    >
+                      Save Settings Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
 
         </div>
@@ -1052,8 +1140,6 @@ export const DashboardPage = () => {
         isOpen={isActivateModalOpen}
         onClose={() => setIsActivateModalOpen(false)}
       />
-
-      <Footer />
     </div>
   );
 };

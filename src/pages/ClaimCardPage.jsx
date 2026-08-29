@@ -67,7 +67,7 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
         </button>
 
         <button onClick={() => setCurrentPage('home')} className="flex items-center gap-0.5 group">
-          <span className="text-2xl font-black tracking-tight text-slate-950 dark:text-white font-['Plus_Jakarta_Sans']">bloom</span>
+          <span className="text-2xl font-black tracking-tight text-slate-950 dark:text-white font-['Plus_Jakarta_Sans']">enlazer</span>
           <span className="text-2xl font-black text-[#00BCFF] group-hover:scale-125 transition-transform">.</span>
         </button>
       </div>

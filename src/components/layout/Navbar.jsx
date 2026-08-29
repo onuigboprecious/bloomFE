@@ -546,42 +546,42 @@ export const Navbar = () => {
               >
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-[#00BCFF]" />
-                  <span>About Bloom</span>
+                  <span>About Enlazer</span>
                 </div>
                 <span className="text-[11px] text-[#00BCFF]">View →</span>
               </button>
             </div>
 
             {isAuthenticated && (
-              <>
+              <div className="py-2 border-b border-slate-100 dark:border-slate-800/80 space-y-1">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">Account & Studio</span>
                 <button
                   onClick={() => {
                     setCurrentPage('dashboard');
                     setMobileMenuOpen(false);
                   }}
-                  className="block w-full text-left py-2 text-sm font-semibold text-slate-800 dark:text-white hover:text-[#00BCFF]"
+                  className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
                 >
-                  Dashboard
+                  <div className="flex items-center gap-2">
+                    <LayoutDashboard className="w-4 h-4 text-[#00BCFF]" />
+                    <span>Dashboard</span>
+                  </div>
+                  <span className="text-[11px] text-[#00BCFF]">Open →</span>
                 </button>
                 <button
                   onClick={() => {
                     setCurrentPage('customizer');
                     setMobileMenuOpen(false);
                   }}
-                  className="block w-full text-left py-2 text-sm font-semibold text-slate-800 dark:text-white hover:text-[#00BCFF]"
+                  className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
                 >
-                  Card Builder
+                  <div className="flex items-center gap-2">
+                    <Palette className="w-4 h-4 text-[#00BCFF]" />
+                    <span>Card Builder</span>
+                  </div>
+                  <span className="text-[11px] text-[#00BCFF]">Design →</span>
                 </button>
-                <button
-                  onClick={() => {
-                    setCurrentPage('dashboard');
-                    setMobileMenuOpen(false);
-                  }}
-                  className="block w-full text-left py-2 text-sm font-semibold text-slate-800 dark:text-white hover:text-[#00BCFF]"
-                >
-                  Settings
-                </button>
-              </>
+              </div>
             )}
 
             <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
@@ -592,9 +592,10 @@ export const Navbar = () => {
                     setCurrentPage('home');
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full py-2.5 rounded-full border border-rose-300 dark:border-rose-800 text-rose-600 font-bold text-xs text-center cursor-pointer"
+                  className="w-full py-2.5 rounded-full border border-rose-300 dark:border-rose-800 text-rose-600 font-bold text-xs text-center cursor-pointer flex items-center justify-center gap-1.5"
                 >
-                  Log Out
+                  <LogOut className="w-4 h-4" />
+                  <span>Log Out</span>
                 </button>
               ) : (
                 <button
@@ -611,11 +612,11 @@ export const Navbar = () => {
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  openWaitlistModal();
+                  setCurrentPage('customizer');
                 }}
-                className="w-full py-2.5 rounded-full bg-[#00BCFF] text-white font-bold text-xs text-center shadow-sm cursor-pointer"
+                className="w-full py-2.5 rounded-full bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-extrabold text-xs text-center shadow-md cursor-pointer transition-all active:scale-95"
               >
-                Join Waitlist
+                Get Enlazer Card
               </button>
             </div>
           </div>
