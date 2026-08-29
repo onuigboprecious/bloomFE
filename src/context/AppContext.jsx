@@ -8,6 +8,7 @@ import {
   createLeadApi,
   getLeadsApi,
   deleteLeadApi,
+  activateCardApi,
   claimCardApi,
   recordTapApi,
   joinWaitlistApi,
@@ -147,10 +148,14 @@ export const AppProvider = ({ children }) => {
   };
 
   const claimAndLinkCard = async (uid) => {
-    const cardId = uid || ('BLM-' + Math.floor(1000 + Math.random() * 9000) + '-NFC');
+    const cardId = uid || ('ENL-' + Math.floor(1000 + Math.random() * 9000) + '-NFC');
     try {
-      await claimCardApi(cardId);
-    } catch (e) {}
+      await activateCardApi(cardId);
+    } catch (e) {
+      try {
+        await claimCardApi(cardId);
+      } catch (err) {}
+    }
 
     setIsCardLinked(true);
     setActiveCardUid(cardId);

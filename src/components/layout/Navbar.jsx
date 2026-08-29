@@ -176,27 +176,7 @@ export const Navbar = () => {
                     </div>
                   </button>
 
-                  {/* Creators & Professionals */}
-                  <button
-                    onClick={() => {
-                      setCurrentPage('onboarding');
-                      setSolutionsOpen(false);
-                    }}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group flex items-start gap-3 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
-                  >
-                    <div className="p-2 rounded-lg bg-[#00BCFF]/10 text-[#00BCFF] group-hover:scale-105 transition-transform shrink-0 mt-0.5">
-                      <Zap className="w-4 h-4 text-[#00BCFF]" />
-                    </div>
-                    <div className="space-y-0.5 flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-extrabold text-slate-900 dark:text-white text-xs group-hover:text-[#00BCFF] transition-colors">Creators & Professionals</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
-                        Custom linktrees, instant portfolios & dynamic bio sharing.
-                      </p>
-                    </div>
-                  </button>
+
 
                   {/* Events & Hospitality */}
                   <button
@@ -499,19 +479,7 @@ export const Navbar = () => {
                 </div>
                 <span className="text-[11px] text-[#00BCFF]">View →</span>
               </button>
-              <button
-                onClick={() => {
-                  setCurrentPage('onboarding');
-                  setMobileMenuOpen(false);
-                }}
-                className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
-              >
-                <div className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-[#00BCFF]" />
-                  <span>Creators & Professionals</span>
-                </div>
-                <span className="text-[11px] text-[#00BCFF]">View →</span>
-              </button>
+
               <button
                 onClick={() => {
                   setCurrentPage('wristbands');
