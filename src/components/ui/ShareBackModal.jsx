@@ -28,7 +28,7 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }
       setErrorMessage('Please enter your phone number');
       return;
     }
-    if (!email.trim() || !email.includes('@')) {
+    if (email.trim() && !email.includes('@')) {
       setErrorMessage('Please enter a valid email address');
       return;
     }
@@ -86,7 +86,7 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden z-10 text-white"
+          className="relative w-full max-w-lg bg-slate-900 rounded-3xl overflow-hidden z-10 text-white"
         >
           {/* Close button */}
           <button
@@ -100,7 +100,7 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }
             <div className="p-6 sm:p-8 space-y-6">
               {/* Header */}
               <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-wider">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold uppercase tracking-wider">
                   <User className="w-3.5 h-3.5" />
                   <span>2-Way Contact Exchange</span>
                 </div>
@@ -138,7 +138,7 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                      <Phone className="w-3.5 h-3.5 text-[#00BCFF]" />
                       <span>Phone Number *</span>
                     </label>
                     <input
@@ -153,12 +153,11 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }
 
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                      <Mail className="w-3.5 h-3.5 text-indigo-400" />
-                      <span>Email Address *</span>
+                      <Mail className="w-3.5 h-3.5 text-[#00BCFF]" />
+                      <span>Email Address (Optional)</span>
                     </label>
                     <input
                       type="email"
-                      required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="e.g. amaka@company.com"
@@ -169,7 +168,7 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                    <Briefcase className="w-3.5 h-3.5 text-amber-400" />
+                    <Briefcase className="w-3.5 h-3.5 text-[#00BCFF]" />
                     <span>Role & Company (Optional)</span>
                   </label>
                   <input
@@ -183,7 +182,7 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                    <MessageSquare className="w-3.5 h-3.5 text-purple-400" />
+                    <MessageSquare className="w-3.5 h-3.5 text-[#00BCFF]" />
                     <span>Quick Note or Request (Optional)</span>
                   </label>
                   <textarea

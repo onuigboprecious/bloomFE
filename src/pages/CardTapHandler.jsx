@@ -16,13 +16,23 @@ export const CardTapHandler = () => {
   useEffect(() => {
     // Parse cardUid and sig from window.location.pathname (/card/:cardUid) and search params (?sig=...)
     const pathname = window.location.pathname;
-    const match = pathname.match(/\/card\/([^\/]+)/);
     const searchParams = new URLSearchParams(window.location.search);
+    const cardMatch = pathname.match(/\/card\/([^\/]+)/);
+    const handleMatch = pathname.match(/\/@?([^\/]+)/);
     
-    const uid = match ? match[1] : (searchParams.get('cardUid') || '');
+    let identifier = '';
+    if (cardMatch) {
+      identifier = cardMatch[1];
+    } else if (searchParams.get('cardUid')) {
+      identifier = searchParams.get('cardUid');
+    } else if (searchParams.get('username')) {
+      identifier = searchParams.get('username');
+    } else if (handleMatch && handleMatch[1]) {
+      identifier = handleMatch[1];
+    }
+    
     const sig = searchParams.get('sig') || '';
-    
-    setCardUid(uid);
+    setCardUid(identifier);
 
 
     async function fetchTapProfile() {

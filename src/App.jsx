@@ -32,11 +32,20 @@ export const AppContent = () => {
   const { currentPage, setCurrentPage, isWaitlistModalOpen, closeWaitlistModal } = useApp();
 
   useEffect(() => {
-    // Detect URL paths & search parameters for direct NFC taps, claims, or invalid card alerts
+    // Detect URL paths & search parameters for direct NFC taps, handle links (@username), claims, or invalid card alerts
     const pathname = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
 
-    if (pathname.startsWith('/card/') || params.get('cardTap')) {
+    const knownRoutes = [
+      '/', '/login', '/signup', '/dashboard', '/onboarding', '/setup-profile',
+      '/claim', '/invalid-card', '/forgot-password', '/reset-password',
+      '/cards', '/wristbands', '/about', '/press', '/support', '/legal',
+      '/privacy', '/terms', '/security', '/returns'
+    ];
+
+    if (pathname.startsWith('/card/') || pathname.startsWith('/@') || params.get('cardTap') || params.get('username')) {
+      setCurrentPage('card-tap');
+    } else if (pathname.length > 1 && !knownRoutes.includes(pathname.toLowerCase()) && !pathname.includes('.')) {
       setCurrentPage('card-tap');
     } else if (pathname === '/claim' || params.get('claimCard')) {
       setCurrentPage('claim-card');

@@ -46,7 +46,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2 text-xs">
                 <Mail className="w-4 h-4 text-cyan-400 shrink-0" />
-                <a href="mailto:support@enlazer.app" className="hover:text-cyan-400 transition-colors">support@enlazer.app</a>
+                <a href="mailto:support@enlazer.com.ng" className="hover:text-cyan-400 transition-colors">support@enlazer.com.ng</a>
               </li>
               <li className="flex items-center gap-2 text-xs">
                 <Phone className="w-4 h-4 text-cyan-400 shrink-0" />

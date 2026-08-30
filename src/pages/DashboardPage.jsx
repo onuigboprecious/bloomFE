@@ -178,7 +178,7 @@ export const DashboardPage = () => {
   };
 
   const handleCopyProfileLink = () => {
-    const profileUrl = `https://enlazer.app/@${customHandle}`;
+    const profileUrl = `https://www.enlazer.com.ng/@${customHandle}`;
     navigator.clipboard.writeText(profileUrl);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
@@ -304,7 +304,7 @@ export const DashboardPage = () => {
                       <div className="space-y-1 min-w-0">
                         <h3 className="font-extrabold text-sm text-white truncate">{profile.name}</h3>
                         <div className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-lg">
-                          <span className="text-[10px] font-mono text-[#00BCFF] font-bold truncate">enlazer.app/@{customHandle}</span>
+                          <span className="text-[10px] font-mono text-[#00BCFF] font-bold truncate">www.enlazer.com.ng/@{customHandle}</span>
                           <button
                             onClick={handleCopyProfileLink}
                             className="p-0.5 hover:bg-cyan-500/20 rounded text-[#00BCFF] transition-colors cursor-pointer shrink-0"
@@ -1218,7 +1218,7 @@ export const DashboardPage = () => {
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Enlazer Digital Handle</label>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700">enlazer.app/@</span>
+                        <span className="text-xs font-mono text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700">www.enlazer.com.ng/@</span>
                         <input
                           type="text"
                           value={customHandle}

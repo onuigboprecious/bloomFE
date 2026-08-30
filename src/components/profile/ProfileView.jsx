@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Download, User, Mail, Phone, Globe, MapPin, Share2, MessageCircle,
-  ExternalLink, CheckCircle2, ShieldCheck, Sparkles, Building2, Briefcase, Calendar, Link as LinkIcon
+  ExternalLink, CheckCircle2, ShieldCheck, Sparkles, Building2, Briefcase, Calendar, Link as LinkIcon, Check
 } from 'lucide-react';
 import SocialIcon from '../ui/SocialIcon';
 import ShareBackModal from '../ui/ShareBackModal';
@@ -213,7 +213,7 @@ export const ProfileView = ({ data }) => {
                 className="w-full h-full rounded-full object-cover border-4 border-[#00BCFF]/40 shadow-xl"
               />
               <div className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#00BCFF] text-slate-950 flex items-center justify-center shadow-md">
-                <Sparkles className="w-4 h-4 fill-current" />
+                <Check className="w-5 h-5 text-slate-950 stroke-[3]" />
               </div>
             </div>
 
@@ -504,7 +504,7 @@ export const ProfileView = ({ data }) => {
               {profile.socials && Object.keys(profile.socials).length > 0 && (
                 <div className={`mt-6 pt-6 border-t ${theme.itemBorder}`}>
                   <h4 className={`text-[10px] font-bold uppercase tracking-wider ${theme.textMuted} mb-3 text-center`}>
-                    Social Profiles & Connect
+                    Find me elsewhere
                   </h4>
                   <div className="flex flex-wrap items-center justify-center gap-3">
                     {Object.entries(profile.socials).map(([network, value]) => {
@@ -552,7 +552,7 @@ export const ProfileView = ({ data }) => {
 
       {/* Footer Powered By */}
       <div className={`text-center pt-8 text-xs ${theme.footerText} z-10`}>
-        Powered by <span className={`font-bold ${theme.textPrimary}`}>enlazer.app</span> • Smart NFC Technology
+        Powered by <span className={`font-bold ${theme.textPrimary}`}>www.enlazer.com.ng</span> • Smart NFC Technology
       </div>
 
       <ShareBackModal
