@@ -136,23 +136,22 @@ export const ResetPasswordPage = () => {
               {/* Password Inputs */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    New Password (Min 6 characters)
+                  <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 text-left">
+                    New Password
                   </label>
-                  <div className="relative flex items-center">
-                    <Lock className="absolute left-3.5 w-4 h-4 text-slate-400" />
+                  <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       required
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Enter new password"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl pl-10 pr-10 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#00BCFF]/40 focus:border-[#00BCFF]"
+                      placeholder="At least 6 characters"
+                      className="w-full px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-[#00BCFF] transition-colors pr-10"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -160,20 +159,17 @@ export const ResetPasswordPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5 text-left">
                     Confirm New Password
                   </label>
-                  <div className="relative flex items-center">
-                    <Lock className="absolute left-3.5 w-4 h-4 text-slate-400" />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      required
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Re-enter new password"
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl pl-10 pr-10 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#00BCFF]/40 focus:border-[#00BCFF]"
-                    />
-                  </div>
+                  <input
+                    type="password"
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Re-enter password"
+                    className="w-full px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-[#00BCFF] transition-colors"
+                  />
                 </div>
               </div>
 
@@ -183,15 +179,18 @@ export const ResetPasswordPage = () => {
                 variant="primary"
                 size="lg"
                 disabled={isSubmitting}
-                className="w-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold py-3.5 text-sm shadow-md shadow-cyan-400/30 cursor-pointer"
+                className="w-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold py-4 text-sm shadow-lg shadow-cyan-400/30 cursor-pointer flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
+                  <span className="flex items-center gap-2">
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Updating Password...
+                    Resetting Password...
                   </span>
                 ) : (
-                  'Reset Password'
+                  <>
+                    <KeyRound className="w-4 h-4" />
+                    <span>Reset Password</span>
+                  </>
                 )}
               </Button>
             </form>
@@ -201,7 +200,7 @@ export const ResetPasswordPage = () => {
 
       {/* Footer copyright */}
       <div className="text-center py-6 text-xs text-slate-400 dark:text-slate-500 z-10">
-        © {new Date().getFullYear()} Bloom Card Technologies Ltd. All rights reserved.
+        © {new Date().getFullYear()} Enlazer Card Technologies Ltd. All rights reserved.
       </div>
     </div>
   );

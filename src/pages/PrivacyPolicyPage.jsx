@@ -24,10 +24,10 @@ export const PrivacyPolicyPage = () => {
           <section className="space-y-3 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-cyan-400" />
-              1. Information We Collect
+              1. Data We Collect
             </h2>
             <p>
-              When you create a Bloom account, order a physical NFC card, or customize your digital profile handle (`bloom.app/@username`), we collect:
+              When you create an Enlazer account, order a physical NFC card, or customize your digital profile handle (`enlazer.com.ng/@username`), we collect:
             </p>
             <ul className="list-disc pl-5 space-y-1">
               <li><strong>Account Credentials:</strong> Name, email address, hashed passwords, and handle.</li>

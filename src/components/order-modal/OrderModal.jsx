@@ -162,7 +162,7 @@ export const OrderModal = () => {
           </div>
 
           <div className="space-y-1">
-            <h4 className="text-2xl font-black text-slate-900">Bloom Card Ordered!</h4>
+            <h4 className="text-2xl font-black text-slate-900">Enlazer Card Ordered!</h4>
             <p className="text-xs text-slate-500">
               Your custom {selectedFinish.name} is now being precision laser-engraved.
             </p>

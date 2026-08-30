@@ -108,7 +108,7 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }
                   Share Your Details Back
                 </h3>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Send your contact card directly to <strong className="text-white">{displayName}</strong>'s Bloom dashboard so you can stay in touch!
+                  Send your contact card directly to <strong className="text-white">{displayName}</strong>'s Enlazer account so you can stay in touch!
                 </p>
               </div>
 
@@ -226,7 +226,7 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }
               </motion.div>
 
               <div className="space-y-2">
-                <h3 className="text-2xl font-black text-white">Contact Shared! 🎉</h3>
+                <h3 className="text-2xl font-black text-white">Contact Shared!</h3>
                 <p className="text-xs text-slate-300 leading-relaxed max-w-sm mx-auto">
                   Your contact card was delivered to <strong className="text-cyan-400">{displayName}</strong>'s dashboard.
                 </p>

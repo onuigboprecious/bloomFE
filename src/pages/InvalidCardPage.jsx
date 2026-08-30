@@ -34,7 +34,7 @@ export const InvalidCardPage = ({ reason: propReason, message: propMessage }) =>
 
     return {
       title: 'Unregistered NFC Card',
-      body: customMessage || 'This card has not been provisioned by Bloom or has an invalid signature. Make sure you are using an official Bloom NFC card.',
+      body: customMessage || 'This card has not been provisioned by Enlazer or has an invalid signature. Make sure you are using an official Enlazer NFC card.',
       badge: 'Unverified Hardware Card',
     };
   };
@@ -93,7 +93,7 @@ export const InvalidCardPage = ({ reason: propReason, message: propMessage }) =>
 
           <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 flex items-center gap-2 text-left">
             <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0" />
-            <span>Official Bloom cards include laser-engraved security UIDs and signed digital certificates.</span>
+            <span>Official Enlazer cards include laser-engraved security UIDs and signed digital certificates.</span>
           </div>
 
           <div className="pt-2">
@@ -104,7 +104,7 @@ export const InvalidCardPage = ({ reason: propReason, message: propMessage }) =>
               className="w-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold py-4 text-sm shadow-lg shadow-cyan-400/30 flex items-center justify-center gap-2 cursor-pointer"
             >
               <ShoppingBag className="w-4 h-4" />
-              <span>Order Official Bloom Card</span>
+              <span>Order Official Enlazer Card</span>
             </Button>
           </div>
         </motion.div>
@@ -112,7 +112,7 @@ export const InvalidCardPage = ({ reason: propReason, message: propMessage }) =>
 
       {/* Footer copyright */}
       <div className="text-center py-6 text-xs text-slate-400 dark:text-slate-500 z-10">
-        © {new Date().getFullYear()} Bloom Card Technologies Ltd. All rights reserved.
+        © {new Date().getFullYear()} Enlazer Card Technologies Ltd. All rights reserved.
       </div>
     </div>
   );

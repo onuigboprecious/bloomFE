@@ -82,7 +82,7 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
         >
           {/* Welcome Banner */}
           <div className="p-4 rounded-2xl bg-cyan-50 dark:bg-slate-800/80 border border-cyan-200 dark:border-slate-700 text-cyan-800 dark:text-cyan-300 text-xs sm:text-sm font-bold flex items-center justify-center gap-2">
-            <span>Welcome to Bloom! You've tapped a brand new NFC Card.</span>
+            <span>Welcome to Enlazer! You've tapped a brand new NFC Card.</span>
           </div>
 
           <div className="w-16 h-16 rounded-2xl bg-slate-950 text-[#00BCFF] border border-cyan-500/30 flex items-center justify-center mx-auto shadow-xl">
@@ -91,7 +91,7 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
 
           <div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              Claim Your Bloom Card
+              Claim Your Enlazer Card
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono">
               Hardware ID: <strong className="text-slate-900 dark:text-white">{cardUid}</strong>
@@ -116,7 +116,7 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
                 </div>
                 <h3 className="text-xl font-black text-slate-900 dark:text-white">Card #{cardUid} Successfully Linked!</h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                  Below is the live preview of what people see when they tap your physical Bloom card:
+                  Below is the live preview of what people see when they tap your physical Enlazer card:
                 </p>
               </div>
 
@@ -172,7 +172,7 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
                 /* Unauthenticated State */
                 <div className="space-y-3">
                   <p className="text-xs text-slate-600 dark:text-slate-300">
-                    Log in or create a free Bloom account to associate this physical NFC card with your profile.
+                    Log in or create a free Enlazer account to associate this physical NFC card with your profile.
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     <Button
@@ -201,7 +201,7 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
 
       {/* Footer copyright */}
       <div className="text-center py-6 text-xs text-slate-400 dark:text-slate-500 z-10">
-        © {new Date().getFullYear()} Bloom Card Technologies Ltd. All rights reserved.
+        © {new Date().getFullYear()} Enlazer Card Technologies Ltd. All rights reserved.
       </div>
     </div>
   );

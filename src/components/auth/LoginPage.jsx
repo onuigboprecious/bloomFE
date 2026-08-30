@@ -76,14 +76,14 @@ export const LoginPage = () => {
                 <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 dark:text-white">Welcome Back!</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Log in successful. Redirecting to your Bloom dashboard...</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Log in successful. Redirecting to your Enlazer dashboard...</p>
             </motion.div>
           ) : (
             <form onSubmit={handleLogin} className="space-y-6">
               {/* Header Title */}
               <div className="text-center space-y-2">
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                  Welcome to Bloom
+                  Welcome to Enlazer
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   Log in to manage your NFC card & digital contacts
@@ -181,7 +181,7 @@ export const LoginPage = () => {
 
               {/* Switch to Sign Up */}
               <div className="text-center text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
-                Don't have a Bloom Card yet?{' '}
+                Don't have an Enlazer Card yet?{' '}
                 <button
                   type="button"
                   onClick={() => setCurrentPage('signup')}
@@ -197,7 +197,7 @@ export const LoginPage = () => {
 
       {/* Footer copyright */}
       <div className="text-center py-6 text-xs text-slate-400 dark:text-slate-500 z-10">
-        © {new Date().getFullYear()} Bloom Card Technologies Ltd. All rights reserved.
+        © {new Date().getFullYear()} Enlazer Card Technologies Ltd. All rights reserved.
       </div>
     </div>
   );

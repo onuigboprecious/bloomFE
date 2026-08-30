@@ -12,7 +12,7 @@ export const Testimonials = () => {
     {
       id: 1,
       title: "Stealth Black NFC Card",
-      desc: "My Stealth Black Bloom Card is an absolute magnet at client pitch meetings. One tap instantly transfers my profile & vCard into their address book!",
+      desc: "My Stealth Black Enlazer Card is an absolute magnet at client pitch meetings. One tap instantly transfers my profile & vCard into their address book!",
       name: "Chidi Okafor",
       role: "VP Sales • Lagos",
       avatar: africanFounderImg,
@@ -22,7 +22,7 @@ export const Testimonials = () => {
     {
       id: 2,
       title: "IP68 NFC Wristband",
-      desc: "I wear my Bloom NFC Wristband to marathon events & gym sessions. I network hands-free without carrying a wallet or phone case!",
+      desc: "I wear my Enlazer NFC Wristband to marathon events & gym sessions. I network hands-free without carrying a wallet or phone case!",
       name: "Amina Bello",
       role: "Founder & Fitness Lead • Abuja",
       avatar: africanWomanImg,
@@ -32,7 +32,7 @@ export const Testimonials = () => {
     {
       id: 3,
       title: "Stainless Steel Edition",
-      desc: "The laser-engraved Stainless Steel Bloom Card gets an instant 'Woah, how did you do that?' reaction every time I tap it at VIP summits.",
+      desc: "The laser-engraved Stainless Steel Enlazer Card gets an instant 'Woah, how did you do that?' reaction every time I tap it at VIP summits.",
       name: "Kofi Mensah",
       role: "Creative Director • Accra",
       avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
@@ -42,7 +42,7 @@ export const Testimonials = () => {
     {
       id: 4,
       title: "Cyber Cyan NFC Wristband",
-      desc: "The Bloom NFC Wristband is a game-changer for high-volume summit check-ins. Swap handles and social contacts in 2 seconds flat.",
+      desc: "The Enlazer NFC Wristband is a game-changer for high-volume summit check-ins. Swap handles and social contacts in 2 seconds flat.",
       name: "Fatima Zahra",
       role: "Event Director • Casablanca",
       avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300",
@@ -52,7 +52,7 @@ export const Testimonials = () => {
     {
       id: 5,
       title: "Rose Gold Metal Card",
-      desc: "Equipped our entire international executive team with Bloom Cards & Wristbands. Real-time CRM lead capture with zero paper waste!",
+      desc: "Equipped our entire international executive team with Enlazer Cards & Wristbands. Real-time CRM lead capture with zero paper waste!",
       name: "Dr. Sarah Jenkins",
       role: "Executive • London & Lagos",
       avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=300",
@@ -62,7 +62,7 @@ export const Testimonials = () => {
     {
       id: 6,
       title: "Eco Bamboo Wood Card",
-      desc: "Love the organic texture of the Bamboo Bloom Card. Perfect blend of eco-friendly sustainability and high-speed NTAG216 chip technology.",
+      desc: "Love the organic texture of the Bamboo Enlazer Card. Perfect blend of eco-friendly sustainability and high-speed NTAG216 chip technology.",
       name: "Tobi Adebayo",
       role: "Eco-Tech Founder • Ibadan",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
@@ -100,10 +100,10 @@ export const Testimonials = () => {
         {/* Section Header */}
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <span className="text-xs font-bold uppercase tracking-widest text-[#00BCFF]">
-            Verified Bloom NFC Experience
+            Verified Enlazer NFC Experience
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Loved by founders & leaders using Bloom Cards & Wristbands
+            Loved by founders & leaders using Enlazer Cards & Wristbands
           </h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">
             Swipe or let it auto-play to discover how professionals elevate their networking with our NFC ecosystem.

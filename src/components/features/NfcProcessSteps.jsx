@@ -17,7 +17,7 @@ export const NfcProcessSteps = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-14 sm:mb-18">
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            How networking with <span className="text-[#00BCFF]">Bloom works?</span>
+            How networking with <span className="text-[#00BCFF]">Enlazer works?</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base font-medium max-w-2xl mx-auto">
             Ditch paper business cards forever. Make unforgettable connections in seconds with NFC Cards & Wristbands.
@@ -168,7 +168,7 @@ export const NfcProcessSteps = () => {
                         Dynamic Handle
                       </label>
                       <div className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50/80 text-xs font-semibold text-slate-800 shadow-2xs">
-                        bloom.app/@precious
+                        enlazer.com.ng/@precious
                       </div>
                     </div>
 
@@ -177,7 +177,7 @@ export const NfcProcessSteps = () => {
                         Company / Role
                       </label>
                       <div className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50/80 text-xs font-semibold text-slate-800 shadow-2xs">
-                        Founder & Designer • Bloom Labs
+                        Founder & Designer • Enlazer Labs
                       </div>
                     </div>
                   </div>
@@ -214,7 +214,7 @@ export const NfcProcessSteps = () => {
                 Tap Card or NFC Wristband
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Hover your physical Bloom Card or NFC Wristband against the back of any iPhone or Android phone.
+                Hover your physical Enlazer Card or NFC Wristband against the back of any iPhone or Android phone.
               </p>
             </motion.div>
 

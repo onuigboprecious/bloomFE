@@ -143,7 +143,7 @@ export const ForgotPasswordPage = () => {
 
       {/* Footer copyright */}
       <div className="text-center py-6 text-xs text-slate-400 dark:text-slate-500 z-10">
-        © {new Date().getFullYear()} Bloom Card Technologies Ltd. All rights reserved.
+        © {new Date().getFullYear()} Enlazer Card Technologies Ltd. All rights reserved.
       </div>
     </div>
   );

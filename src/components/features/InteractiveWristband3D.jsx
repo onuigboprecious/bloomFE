@@ -57,7 +57,7 @@ export const InteractiveWristband3D = () => {
         {/* High-Fidelity Studio Wristband Render (Zero Mesh Distortion, 100% Sharp) */}
         <img
           src={wristbandShowcaseImg}
-          alt="Bloom Interactive 3D NFC Wristbands"
+          alt="Enlazer Interactive 3D NFC Wristbands"
           className="w-full h-auto object-contain rounded-3xl pointer-events-none drop-shadow-2xl"
         />
 

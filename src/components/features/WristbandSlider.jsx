@@ -137,7 +137,7 @@ export const WristbandSlider = () => {
                 {/* Official nfc_wristband_showcase.png Image */}
                 <img
                   src={wristbandShowcaseImg}
-                  alt={`Bloom NFC Wristbands - ${currentPreset.name}`}
+                  alt={`Enlazer NFC Wristbands - ${currentPreset.name}`}
                   style={{ filter: currentPreset.filter }}
                   className="w-full h-auto object-contain pointer-events-none drop-shadow-md transition-all duration-300"
                 />

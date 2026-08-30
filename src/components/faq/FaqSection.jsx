@@ -24,7 +24,7 @@ export const FaqSection = () => {
             Frequently Asked Questions
           </h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">
-            Everything you need to know about Bloom NFC Digital Business Cards.
+            Everything you need to know about Enlazer NFC Digital Business Cards.
           </p>
         </div>
 

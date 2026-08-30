@@ -60,7 +60,7 @@ export const AboutUsPage = () => {
           <div className="text-center space-y-4 max-w-2xl mx-auto relative z-10">
             <div className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-extrabold bg-cyan-50 dark:bg-cyan-950/60 text-[#00BCFF] border border-cyan-200 dark:border-cyan-800/60 shadow-xs">
               <Globe2 className="w-3.5 h-3.5 mr-2" />
-              <span>About Bloom Card</span>
+              <span>About Enlazer Card</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
@@ -68,7 +68,7 @@ export const AboutUsPage = () => {
             </h1>
 
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl mx-auto">
-              Bloom Card is building Africa's premier smart NFC business card and digital identity platform, replacing paper waste with instant, high-converting digital connections.
+              Enlazer Card is building Africa's premier smart NFC business card and digital identity platform, replacing paper waste with instant, high-converting digital connections.
             </p>
 
             <div className="pt-4">
@@ -102,7 +102,7 @@ export const AboutUsPage = () => {
               </div>
               <h3 className="text-xl font-black text-slate-900 dark:text-white">Mission</h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Over 10 billion paper business cards are printed globally every year, with 88% thrown away within a week. Bloom was created to give creators, founders, executives, and freelancers a sustainable, high-impact alternative.
+                Over 10 billion paper business cards are printed globally every year, with 88% thrown away within a week. Enlazer was created to give creators, founders, executives, and freelancers a sustainable, high-impact alternative.
               </p>
             </div>
 
@@ -132,7 +132,7 @@ export const AboutUsPage = () => {
         </div>
 
 
-        {/* SECTION 3: FEATURE HUB FLOW DIAGRAM ("WHY THOUSANDS TRUST BLOOM CARD") */}
+        {/* SECTION 3: FEATURE HUB FLOW DIAGRAM ("WHY THOUSANDS TRUST ENLAZER CARD") */}
         <div className="space-y-12">
           
           {/* Header */}
@@ -141,7 +141,7 @@ export const AboutUsPage = () => {
               Why Choose Us
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-              Why Thousands Trust Bloom Card
+              Why Thousands Trust Enlazer Card
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
               Combining aerospace-grade NFC hardware with instant profile sharing, modern analytics, and zero app requirements.
@@ -163,7 +163,7 @@ export const AboutUsPage = () => {
             <div className="flex justify-center my-8 md:my-0 relative z-20">
               <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#00BCFF] via-cyan-400 to-cyan-300 text-slate-950 flex flex-col items-center justify-center shadow-[0_0_50px_rgba(0,188,255,0.4)] border-4 border-white dark:border-slate-900 transition-transform hover:scale-110">
                 <Rss className="w-9 h-9 stroke-[2.5]" />
-                <span className="text-[9px] font-black tracking-widest uppercase mt-0.5">Bloom NFC</span>
+                <span className="text-[9px] font-black tracking-widest uppercase mt-0.5">Enlazer NFC</span>
               </div>
             </div>
 

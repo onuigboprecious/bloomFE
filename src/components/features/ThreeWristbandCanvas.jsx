@@ -85,8 +85,8 @@ export const ThreeWristbandCanvas = () => {
     scene.add(group);
 
     // Textures
-    const cyanTexture = createWristbandTexture('bloom.', '#00BCFF', '#FFFFFF');
-    const whiteTexture = createWristbandTexture('bloom.', '#F8FAFC', '#00BCFF');
+    const cyanTexture = createWristbandTexture('enlazer.', '#00BCFF', '#FFFFFF');
+    const whiteTexture = createWristbandTexture('enlazer.', '#F8FAFC', '#00BCFF');
 
     // 1. TOP WRISTBAND (Cyan Blue)
     const bandGeo = new THREE.TorusGeometry(1.35, 0.28, 32, 100);

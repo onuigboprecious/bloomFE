@@ -77,14 +77,14 @@ export const SignUpPage = () => {
                 <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 dark:text-white">Account Created!</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Welcome to Bloom. Redirecting to your digital card...</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Welcome to Enlazer. Redirecting to your digital card...</p>
             </motion.div>
           ) : (
             <form onSubmit={handleSignUp} className="space-y-5">
               {/* Header Title */}
               <div className="text-center space-y-2">
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                  Get Your Bloom Card
+                  Get Your Enlazer Card
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   Create your digital contact profile in 60 seconds
@@ -188,7 +188,7 @@ export const SignUpPage = () => {
 
       {/* Footer copyright */}
       <div className="text-center py-6 text-xs text-slate-400 dark:text-slate-500 z-10">
-        © {new Date().getFullYear()} Bloom Card Technologies Ltd. All rights reserved.
+        © {new Date().getFullYear()} Enlazer Card Technologies Ltd. All rights reserved.
       </div>
     </div>
   );

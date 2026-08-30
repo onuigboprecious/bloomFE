@@ -18,7 +18,7 @@ export const saveContactToPhone = async (customContact) => {
     `TEL;TYPE=CELL,VOICE:${customContact.phone || ''}`,
     `EMAIL;TYPE=INTERNET:${customContact.email || ''}`,
     `URL:${profileUrl}`,
-    `NOTE:${customContact.bio || customContact.notes || 'Saved from Bloom Smart NFC Card'}`,
+    `NOTE:${customContact.bio || customContact.notes || 'Saved from Enlazer Smart NFC Card'}`,
     'END:VCARD'
   ];
 
