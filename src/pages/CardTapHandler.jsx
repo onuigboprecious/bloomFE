@@ -32,10 +32,18 @@ export const CardTapHandler = () => {
     }
     
     const sig = searchParams.get('sig') || '';
-    setCardUid(identifier);
-
+    const uid = identifier;
+    setCardUid(uid);
 
     async function fetchTapProfile() {
+      if (!uid) {
+        setInvalidReason('unregistered_card');
+        setErrorMessage('No card UID or identifier found in URL');
+        setStatus('invalid');
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await getCardTapProfileApi(uid, sig);
         setProfileData(response);
