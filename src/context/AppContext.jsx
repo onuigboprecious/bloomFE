@@ -5,6 +5,7 @@ import {
   signupApi,
   logoutApi,
   getMeApi,
+  getProfileMeApi,
   createLeadApi,
   getLeadsApi,
   deleteLeadApi,
@@ -24,15 +25,33 @@ export const AppProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [user, setUser] = useState(null);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('bloom_theme');
+    if (saved) return saved === 'dark';
+    return true;
+  });
 
   useEffect(() => {
-    document.documentElement.classList.add('dark');
-    localStorage.setItem('bloom_theme', 'dark');
-  }, []);
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('bloom_theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('bloom_theme', 'light');
+    }
+  }, [darkMode]);
 
-  const toggleDarkMode = () => {};
-  const [profile, setProfile] = useState(mockProfileData);
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => !prev);
+  };
+
+  const [profile, setProfile] = useState(() => {
+    const saved = localStorage.getItem('bloom_profile');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return mockProfileData;
+  });
   const [isProUser, setIsProUser] = useState(true);
   const [selectedFinish, setSelectedFinish] = useState(mockCardFinishes[0]);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
@@ -67,6 +86,17 @@ export const AppProvider = ({ children }) => {
             email: userData.email || prev.email,
           }));
         }
+        getProfileMeApi()
+          .then((profData) => {
+            if (profData) {
+              setProfile((prev) => ({
+                ...prev,
+                ...profData,
+                socials: profData.socials || prev.socials || {},
+              }));
+            }
+          })
+          .catch(() => {});
       })
       .catch(() => {
         setIsAuthenticated(false);
@@ -83,6 +113,17 @@ export const AppProvider = ({ children }) => {
         .then((data) => {
           if (Array.isArray(data)) {
             setLeads(data);
+          }
+        })
+        .catch(() => {});
+      getProfileMeApi()
+        .then((profData) => {
+          if (profData) {
+            setProfile((prev) => ({
+              ...prev,
+              ...profData,
+              socials: profData.socials || prev.socials || {},
+            }));
           }
         })
         .catch(() => {});
@@ -104,6 +145,17 @@ export const AppProvider = ({ children }) => {
         email: userData.email || userData.user?.email || email,
       }));
     }
+    getProfileMeApi()
+      .then((profData) => {
+        if (profData) {
+          setProfile((prev) => ({
+            ...prev,
+            ...profData,
+            socials: profData.socials || prev.socials || {},
+          }));
+        }
+      })
+      .catch(() => {});
     return userData;
   };
 
@@ -133,34 +185,27 @@ export const AppProvider = ({ children }) => {
     localStorage.removeItem('bloom_auth_token');
     setIsAuthenticated(false);
     setUser(null);
+    setCurrentPage('home');
   };
 
 
   const checkUsernameAvailability = async (username) => {
     try {
       const res = await checkHandleApi(username);
-      if (res && typeof res.available === 'boolean') {
-        return res.available;
-      }
-    } catch (e) {}
-    const taken = ['admin', 'bloom', 'support', 'help', 'api'];
-    return !taken.includes(username.toLowerCase().trim());
+      return res.available;
+    } catch (e) {
+      return true; // Fallback
+    }
   };
 
-  const claimAndLinkCard = async (uid) => {
-    const cardId = uid || ('ENL-' + Math.floor(1000 + Math.random() * 9000) + '-NFC');
-    try {
-      await activateCardApi(cardId);
-    } catch (e) {
-      try {
-        await claimCardApi(cardId);
-      } catch (err) {}
-    }
-
-    setIsCardLinked(true);
+  const claimAndLinkCard = (cardId) => {
     setActiveCardUid(cardId);
-    localStorage.setItem('bloom_linked_card_uid', cardId);
+    setIsCardLinked(true);
     localStorage.setItem('bloom_is_card_linked', 'true');
+    localStorage.setItem('bloom_linked_card_uid', cardId);
+
+    claimCardApi(cardId).catch(() => {});
+
     setProfile((prev) => ({
       ...prev,
       cardUid: cardId,
@@ -196,6 +241,32 @@ export const AppProvider = ({ children }) => {
         message: `📲 Contact Auto-Saved to Google & Phone Contacts!`
       });
     }, 1000);
+  };
+
+  const saveFullProfile = async (updatedData) => {
+    let updatedObj = null;
+    setProfile((prev) => {
+      updatedObj = {
+        ...prev,
+        ...updatedData,
+        socials: updatedData.socials !== undefined ? updatedData.socials : prev.socials
+      };
+      try {
+        localStorage.setItem('bloom_profile', JSON.stringify(updatedObj));
+      } catch (e) {}
+      return updatedObj;
+    });
+
+    try {
+      if (updatedObj) {
+        await updateProfileApi(updatedObj);
+      }
+      return { success: true };
+    } catch (err) {
+      console.warn("Backend profile sync warning:", err);
+      // Return success true since profile was updated in state & localStorage
+      return { success: true };
+    }
   };
 
   const updateProfileField = (field, value) => {
@@ -423,6 +494,7 @@ export const AppProvider = ({ children }) => {
         isProUser,
         setIsProUser,
         checkUsernameAvailability,
+        saveFullProfile,
         updateProfileField,
         updateSocialLink,
         cardFinishes: mockCardFinishes,

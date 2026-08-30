@@ -102,6 +102,7 @@ const ONBOARDING_FAQS = [
 export const OnboardingSetupPage = () => {
   const {
     profile,
+    saveFullProfile,
     updateProfileField,
     updateSocialLink,
     claimAndLinkCard,
@@ -208,12 +209,19 @@ export const OnboardingSetupPage = () => {
 
   const handleStep2Submit = (e) => {
     e.preventDefault();
-    if (website) updateProfileField('website', website);
-    if (linkedin) updateSocialLink('linkedin', linkedin);
-    if (twitter) updateSocialLink('twitter', twitter);
-    if (instagram) updateSocialLink('instagram', instagram);
-    if (github) updateSocialLink('github', github);
-    if (whatsapp) updateSocialLink('whatsapp', whatsapp);
+    const updatedSocials = {
+      ...(profile?.socials || {})
+    };
+    if (linkedin) updatedSocials.linkedin = linkedin;
+    if (twitter) updatedSocials.twitter = twitter;
+    if (instagram) updatedSocials.instagram = instagram;
+    if (github) updatedSocials.github = github;
+    if (whatsapp) updatedSocials.whatsapp = whatsapp;
+
+    saveFullProfile({
+      website,
+      socials: updatedSocials
+    });
     setCurrentStep(3);
   };
 

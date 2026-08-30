@@ -21,7 +21,8 @@ import {
   HelpCircle,
   Newspaper,
   ShieldCheck,
-  BookOpen
+  BookOpen,
+  Palette
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -328,8 +329,8 @@ export const Navbar = () => {
                   className="flex items-center gap-2 p-1 pl-1.5 pr-2.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-800 dark:hover:border-slate-400 bg-white dark:bg-slate-950 cursor-pointer transition-all"
                 >
                   <img
-                    src={profile.avatar}
-                    alt={profile.name}
+                    src={profile?.avatar || null}
+                    alt={profile?.name || 'User Profile'}
                     className="w-7 h-7 rounded-full object-cover border border-slate-200 dark:border-slate-800"
                   />
                   <span className="text-xs font-bold text-slate-900 dark:text-white max-w-[100px] truncate">

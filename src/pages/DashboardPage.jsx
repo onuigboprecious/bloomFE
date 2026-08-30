@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   User,
@@ -33,7 +33,10 @@ import {
   Inbox,
   Settings,
   Sun,
-  Moon
+  Moon,
+  AlertCircle,
+  Loader2,
+  Activity
 } from 'lucide-react';
 import MobilePhonePreview from '../components/ui/MobilePhonePreview';
 import ActivateCardModal from '../components/onboarding/ActivateCardModal';
@@ -44,6 +47,7 @@ import { mockAnalyticsHourly } from '../data/mockData';
 export const DashboardPage = () => {
   const {
     profile,
+    saveFullProfile,
     updateProfileField,
     updateSocialLink,
     activeCardUid,
@@ -63,6 +67,7 @@ export const DashboardPage = () => {
   const [cardLinkMsg, setCardLinkMsg] = useState('');
 
   // Profile Form States
+  const [avatar, setAvatar] = useState(profile?.avatar || '');
   const [name, setName] = useState(profile?.name || '');
   const [title, setTitle] = useState(profile?.title || '');
   const [company, setCompany] = useState(profile?.company || '');
@@ -89,7 +94,88 @@ export const DashboardPage = () => {
   const [newLinkLabel, setNewLinkLabel] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
 
-  const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
+  const [toast, setToast] = useState({ show: false, type: 'success', message: '' });
+  const [isSaving, setIsSaving] = useState(false);
+
+  const showToastNotification = (type, message) => {
+    setToast({ show: true, type, message });
+    setTimeout(() => setToast({ show: false, type: 'success', message: '' }), 4000);
+  };
+
+  const handleSaveProfile = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setIsSaving(true);
+
+    const updatedSocials = {};
+    socialHandlesList.forEach((item) => {
+      if (item.handle) {
+        updatedSocials[item.platform] = item.handle;
+      }
+    });
+
+    try {
+      const res = await saveFullProfile({
+        avatar,
+        name,
+        title,
+        company,
+        phone,
+        bio,
+        website,
+        location,
+        username: customHandle,
+        socials: updatedSocials,
+        customLinks
+      });
+
+      if (res && res.success === false) {
+        showToastNotification('error', res.error || 'Failed to save profile changes.');
+      } else {
+        showToastNotification('success', 'Profile updated successfully!');
+      }
+    } catch (err) {
+      showToastNotification('error', err?.message || 'An unexpected error occurred while saving.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Keep local form fields in sync when profile state is updated from backend
+  useEffect(() => {
+    if (profile) {
+      if (profile.avatar) setAvatar(profile.avatar);
+      if (profile.name) setName(profile.name);
+      if (profile.title) setTitle(profile.title);
+      if (profile.company) setCompany(profile.company);
+      if (profile.phone) setPhone(profile.phone);
+      if (profile.bio) setBio(profile.bio);
+      if (profile.website) setWebsite(profile.website);
+      if (profile.location) setLocation(profile.location);
+      if (profile.username) setCustomHandle(profile.username);
+      if (profile.customLinks) setCustomLinks(profile.customLinks);
+
+      if (profile.socials && Object.keys(profile.socials).length > 0) {
+        setSocialHandlesList(
+          Object.entries(profile.socials).map(([platform, handle], i) => ({
+            id: `s-${i}-${platform}`,
+            platform,
+            handle
+          }))
+        );
+      }
+    }
+  }, [profile]);
+
+  const handleAvatarFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleCopyProfileLink = () => {
     const profileUrl = `https://enlazer.app/@${customHandle}`;
@@ -116,29 +202,7 @@ export const DashboardPage = () => {
     setSocialHandlesList(socialHandlesList.map((s) => s.id === id ? { ...s, handle: val } : s));
   };
 
-  const handleSaveProfile = (e) => {
-    e.preventDefault();
-    if (name) updateProfileField('name', name);
-    if (title) updateProfileField('title', title);
-    if (company) updateProfileField('company', company);
-    if (phone) updateProfileField('phone', phone);
-    if (bio) updateProfileField('bio', bio);
-    if (website) updateProfileField('website', website);
-    if (location) updateProfileField('location', location);
-    if (customHandle) updateProfileField('username', customHandle);
 
-    const updatedSocials = {};
-    socialHandlesList.forEach((item) => {
-      if (item.handle) {
-        updatedSocials[item.platform] = item.handle;
-      }
-    });
-    updateProfileField('socials', updatedSocials);
-    updateProfileField('customLinks', customLinks);
-
-    setSaveSuccessMsg(true);
-    setTimeout(() => setSaveSuccessMsg(false), 3000);
-  };
 
   const handleAddCustomLink = (e) => {
     e.preventDefault();
@@ -164,26 +228,37 @@ export const DashboardPage = () => {
   const navTabs = [
     { id: 'creators', label: 'Profile Studio', icon: User },
     { id: 'cards', label: 'My Physical Cards', icon: CreditCard },
-    { id: 'leads', label: 'Received Contacts', icon: Users, count: leads.length },
+    { id: 'leads', label: 'Received Contacts', icon: Users, count: (leads || []).length },
     { id: 'analytics', label: 'Tap Analytics', icon: TrendingUp },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex items-center justify-center p-4 text-center">
+        <div className="space-y-4">
+          <div className="w-12 h-12 border-4 border-[#00BCFF] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-xs font-bold text-slate-500">Loading your Enlazer dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-24">
+      <div className="w-full max-w-[1700px] mx-auto px-3 sm:px-4 lg:px-6 pt-3 pb-20">
 
         {/* Mobile Sticky Top Header with Sidebar Drawer Toggle */}
         <div className="md:hidden flex items-center justify-between bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 mb-6 shadow-sm">
           <div className="flex items-center gap-3">
             <img
-              src={profile.avatar}
-              alt={profile.name}
+              src={profile?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400"}
+              alt={profile?.name || 'User'}
               className="w-10 h-10 rounded-xl object-cover border border-cyan-400"
             />
             <div>
-              <h2 className="text-sm font-black text-slate-900 dark:text-white leading-tight">{profile.name}</h2>
+              <h2 className="text-sm font-black text-slate-900 dark:text-white leading-tight">{profile?.name || 'User'}</h2>
               <span className="text-[10px] text-cyan-500 font-extrabold uppercase">
                 {navTabs.find((t) => t.id === activeTab)?.label}
               </span>
@@ -191,14 +266,6 @@ export const DashboardPage = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 cursor-pointer"
-              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
-            </button>
-
             <button
               onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
               className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 cursor-pointer"
@@ -233,7 +300,7 @@ export const DashboardPage = () => {
                   {/* User Info Header */}
                   <div className="flex items-center justify-between pb-4 border-b border-slate-800">
                     <div className="flex items-center gap-3">
-                      <img src={profile.avatar} alt={profile.name} className="w-12 h-12 rounded-xl object-cover border-2 border-cyan-400 shrink-0" />
+                      <img src={profile?.avatar || null} alt={profile?.name || 'User'} className="w-12 h-12 rounded-xl object-cover border-2 border-cyan-400 shrink-0" />
                       <div className="space-y-1 min-w-0">
                         <h3 className="font-extrabold text-sm text-white truncate">{profile.name}</h3>
                         <div className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-lg">
@@ -324,34 +391,26 @@ export const DashboardPage = () => {
         </AnimatePresence>
 
         {/* Main Dashboard Layout (Desktop Sidebar + Content Area) */}
-        <div className="flex flex-col md:flex-row gap-8 items-start">
+        <div className="flex flex-col md:flex-row gap-5 items-start">
 
-          {/* Desktop Left Sidebar (Fixed / Sticky) */}
-          <aside className="hidden md:flex flex-col w-64 shrink-0 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-5 space-y-6 shadow-sm sticky top-24">
+          {/* Desktop Left Sidebar (Fixed / Sticky, Auto Height) */}
+          <aside className="hidden md:flex flex-col w-64 shrink-0 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-5 space-y-6 shadow-sm sticky top-3 h-fit">
 
             {/* User Profile Badge & Theme Toggle */}
             <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800/80">
               <div className="flex items-center gap-3 min-w-0">
                 <img
-                  src={profile.avatar}
-                  alt={profile.name}
+                  src={profile?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400"}
+                  alt={profile?.name || 'User'}
                   className="w-11 h-11 rounded-2xl object-cover border-2 border-cyan-400 shadow-xs shrink-0"
                 />
                 <div className="space-y-1 min-w-0 flex-1">
-                  <h3 className="font-extrabold text-sm text-slate-900 dark:text-white truncate">{profile.name}</h3>
+                  <h3 className="font-extrabold text-sm text-slate-900 dark:text-white truncate">{profile?.name || 'User'}</h3>
                   <span className="text-[10px] font-semibold text-emerald-500 dark:text-emerald-400 flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" /> Tag #{activeCardUid}
                   </span>
                 </div>
               </div>
-
-              <button
-                onClick={toggleDarkMode}
-                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700 cursor-pointer shrink-0 transition-all active:scale-95"
-                title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              >
-                {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
-              </button>
             </div>
 
             {/* Navigation Tabs */}
@@ -419,7 +478,7 @@ export const DashboardPage = () => {
 
             {/* UNIFIED TAB 1: CREATOR BIO & PROFILE STUDIO */}
             {activeTab === 'creators' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
                 {/* Left Side: Combined Creator Bio & Profile Details Editor */}
                 <div className="lg:col-span-7 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6 shadow-sm">
@@ -432,19 +491,42 @@ export const DashboardPage = () => {
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400">All-in-one editor for handle, contact details, social links & bio buttons.</p>
                     </div>
-                    {saveSuccessMsg && (
-                      <span className="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Saved!
-                      </span>
-                    )}
                   </div>
 
                   {/* 2. Profile Details Form */}
-                  <form onSubmit={handleSaveProfile} className="space-y-4 pt-2">
+                  <div className="space-y-4 pt-2">
                     <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-2">
                       <User className="w-4 h-4 text-[#00BCFF]" />
                       <span>Personal & Contact Information</span>
                     </h4>
+
+                    {/* Profile Picture Upload Section */}
+                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
+                      <label className="text-xs font-black uppercase text-slate-700 dark:text-slate-300 block">
+                        Profile Picture / Avatar
+                      </label>
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#00BCFF] shrink-0 group">
+                          <img
+                            src={avatar || profile?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400"}
+                            alt="Avatar preview"
+                            className="w-full h-full object-cover"
+                          />
+                          <label className="absolute inset-0 bg-slate-950/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                            <Camera className="w-5 h-5 text-white" />
+                            <input type="file" accept="image/*" onChange={handleAvatarFileChange} className="hidden" />
+                          </label>
+                        </div>
+                        <div className="flex-1 space-y-2">
+                          <label className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-extrabold text-xs cursor-pointer transition-all active:scale-95 shadow-xs">
+                            <Camera className="w-4 h-4" />
+                            <span>Upload New Photo</span>
+                            <input type="file" accept="image/*" onChange={handleAvatarFileChange} className="hidden" />
+                          </label>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Supports JPG, PNG, GIF or WebP. Updates live instantly!</p>
+                        </div>
+                      </div>
+                    </div>
 
                     <div>
                       <label className="text-xs font-extrabold uppercase text-slate-700 dark:text-slate-300 block mb-1">
@@ -608,7 +690,7 @@ export const DashboardPage = () => {
                         </button>
                       </form>
                     </div>
-                  </form>
+                  </div>
 
                   {/* 3. Custom Linktree Buttons Builder */}
                   <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
@@ -633,6 +715,7 @@ export const DashboardPage = () => {
                               <span className="text-[10px] font-mono text-cyan-500 truncate block">{linkItem.url}</span>
                             </div>
                             <button
+                              type="button"
                               onClick={() => handleRemoveCustomLink(linkItem.id)}
                               className="p-2 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                             >
@@ -678,16 +761,24 @@ export const DashboardPage = () => {
                     <button
                       onClick={handleSaveProfile}
                       type="button"
-                      className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs transition-all shadow-lg shadow-cyan-500/20 cursor-pointer active:scale-95 text-center"
+                      disabled={isSaving}
+                      className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00BCFF] hover:bg-cyan-400 disabled:opacity-50 text-slate-950 font-black text-xs transition-all shadow-lg shadow-cyan-500/20 cursor-pointer active:scale-95 text-center flex items-center justify-center gap-2"
                     >
-                      Save Profile Updates
+                      {isSaving ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                          <span>Saving Updates...</span>
+                        </>
+                      ) : (
+                        <span>Save Profile Updates</span>
+                      )}
                     </button>
                   </div>
 
                 </div>
 
                 {/* Right Side: Mobile Phone Live Preview */}
-                <div className="lg:col-span-5 sticky top-24">
+                <div className="lg:col-span-5 sticky top-3 h-fit">
                   <div className="bg-slate-950 p-6 rounded-3xl border border-slate-800 shadow-2xl space-y-4 text-center">
                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-cyan-400 flex items-center justify-center gap-1.5">
                       <Smartphone className="w-3.5 h-3.5" /> Live Profile Preview
@@ -695,6 +786,7 @@ export const DashboardPage = () => {
                     <MobilePhonePreview
                       data={{
                         ...profile,
+                        avatar: avatar || profile?.avatar,
                         name: name !== '' ? name : profile?.name,
                         title: title !== '' ? title : profile?.title,
                         company: company !== '' ? company : profile?.company,
@@ -1148,6 +1240,68 @@ export const DashboardPage = () => {
                     </div>
                   </div>
 
+                  {/* Appearance & Theme Preference */}
+                  <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
+                          {darkMode ? <Moon className="w-4 h-4 text-[#00BCFF]" /> : <Sun className="w-4 h-4 text-amber-400" />}
+                          <span>Appearance & Theme Preference</span>
+                        </h4>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Choose your preferred visual theme for the Enlazer Dashboard & Studio.</p>
+                      </div>
+                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        {darkMode ? 'Dark Mode Active' : 'Light Mode Active'}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                      {/* Dark Mode Card Option */}
+                      <button
+                        type="button"
+                        onClick={() => { if (!darkMode) toggleDarkMode(); }}
+                        className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between ${
+                          darkMode
+                            ? 'bg-slate-900 border-[#00BCFF] ring-2 ring-[#00BCFF]/20 text-white'
+                            : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-400'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="p-2.5 rounded-xl bg-slate-800 text-amber-400 border border-slate-700">
+                            <Moon className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className="text-xs font-extrabold block">Dark Theme</span>
+                            <span className="text-[10px] opacity-75">Sleek obsidian dark UI with vibrant neon accents.</span>
+                          </div>
+                        </div>
+                        {darkMode && <CheckCircle2 className="w-4 h-4 text-[#00BCFF] shrink-0" />}
+                      </button>
+
+                      {/* Light Mode Card Option */}
+                      <button
+                        type="button"
+                        onClick={() => { if (darkMode) toggleDarkMode(); }}
+                        className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between ${
+                          !darkMode
+                            ? 'bg-white border-[#00BCFF] ring-2 ring-[#00BCFF]/20 text-slate-900 shadow-sm'
+                            : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-400'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="p-2.5 rounded-xl bg-amber-100 text-amber-600 border border-amber-200">
+                            <Sun className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className="text-xs font-extrabold block">Light Theme</span>
+                            <span className="text-[10px] opacity-75">Clean high-contrast light mode layout.</span>
+                          </div>
+                        </div>
+                        {!darkMode && <CheckCircle2 className="w-4 h-4 text-[#00BCFF] shrink-0" />}
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end">
                     <button
                       onClick={handleSaveProfile}
@@ -1171,6 +1325,46 @@ export const DashboardPage = () => {
         isOpen={isActivateModalOpen}
         onClose={() => setIsActivateModalOpen(false)}
       />
+
+      {/* Floating Save Profile Toast Notification */}
+      <AnimatePresence>
+        {toast.show && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-slate-950/95 dark:bg-slate-900/95 backdrop-blur-xl border shadow-2xl max-w-md cursor-pointer transition-all ${
+              toast.type === 'success' ? 'border-emerald-500/40 shadow-emerald-950/20' : 'border-rose-500/40 shadow-rose-950/20'
+            }`}
+            onClick={() => setToast((prev) => ({ ...prev, show: false }))}
+          >
+            <div className={`p-2 rounded-xl shrink-0 ${toast.type === 'success' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
+              {toast.type === 'success' ? (
+                <CheckCircle2 className="w-5 h-5" />
+              ) : (
+                <AlertCircle className="w-5 h-5" />
+              )}
+            </div>
+            <div className="space-y-0.5 flex-1 min-w-0 pr-2">
+              <h5 className={`text-xs font-black ${toast.type === 'success' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                {toast.type === 'success' ? 'Profile Saved Successfully!' : 'Save Profile Failed'}
+              </h5>
+              <p className="text-[11px] font-medium text-slate-300 truncate">
+                {toast.message}
+              </p>
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setToast((prev) => ({ ...prev, show: false }));
+              }}
+              className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
