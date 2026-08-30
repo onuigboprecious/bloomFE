@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Sparkles, CheckCircle2, ShieldCheck, CreditCard, LogIn, UserPlus, Eye, LayoutDashboard } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ShieldCheck, CreditCard, LogIn, UserPlus, Eye, LayoutDashboard } from 'lucide-react';
 import Button from '../components/ui/Button';
 import MobilePhonePreview from '../components/ui/MobilePhonePreview';
 import { useApp } from '../context/AppContext';
@@ -82,8 +82,7 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
         >
           {/* Welcome Banner */}
           <div className="p-4 rounded-2xl bg-cyan-50 dark:bg-slate-800/80 border border-cyan-200 dark:border-slate-700 text-cyan-800 dark:text-cyan-300 text-xs sm:text-sm font-bold flex items-center justify-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#00BCFF] shrink-0" />
-            <span>🎉 Welcome to Bloom! You've tapped a brand new NFC Card.</span>
+            <span>Welcome to Bloom! You've tapped a brand new NFC Card.</span>
           </div>
 
           <div className="w-16 h-16 rounded-2xl bg-slate-950 text-[#00BCFF] border border-cyan-500/30 flex items-center justify-center mx-auto shadow-xl">
