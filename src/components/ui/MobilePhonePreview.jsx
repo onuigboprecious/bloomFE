@@ -7,7 +7,7 @@ export const MobilePhonePreview = ({ data, className = '' }) => {
   const targetData = data || profile;
 
   return (
-    <div className={`relative mx-auto max-w-[340px] sm:max-w-[360px] w-full ${className}`}>
+    <div className={`relative mx-auto max-w-[430px] w-full ${className}`}>
       {/* Outer Phone Shell Device Frame */}
       <div className="relative border-[10px] sm:border-[12px] border-slate-900 dark:border-slate-800 bg-slate-950 rounded-[44px] sm:rounded-[48px] shadow-2xl overflow-hidden ring-1 ring-white/10">
         
@@ -18,7 +18,7 @@ export const MobilePhonePreview = ({ data, className = '' }) => {
         </div>
 
         {/* Inner Phone Screen Content */}
-        <div className="h-[520px] sm:h-[580px] overflow-y-auto custom-scrollbar relative pt-2">
+        <div className="h-[600px] sm:h-[680px] overflow-y-auto custom-scrollbar relative pt-2">
           <ProfileView data={targetData} />
         </div>
 

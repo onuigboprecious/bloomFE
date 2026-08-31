@@ -32,32 +32,104 @@ export const AppContent = () => {
   const { currentPage, setCurrentPage, isWaitlistModalOpen, closeWaitlistModal } = useApp();
 
   useEffect(() => {
-    // Detect URL paths & search parameters for direct NFC taps, handle links (@username), claims, or invalid card alerts
-    const pathname = window.location.pathname;
-    const params = new URLSearchParams(window.location.search);
+    // Sync currentPage changes to the browser history / URL path
+    const pageToPath = {
+      home: '/',
+      login: '/login',
+      signup: '/signup',
+      dashboard: '/dashboard',
+      onboarding: '/onboarding',
+      'claim-card': '/claim',
+      'invalid-card': '/invalid-card',
+      'reset-password': '/reset-password',
+      'forgot-password': '/forgot-password',
+      cards: '/cards',
+      wristbands: '/wristbands',
+      about: '/about',
+      press: '/press',
+      support: '/support',
+      legal: '/legal',
+      privacy: '/privacy',
+      terms: '/terms',
+      security: '/security',
+      returns: '/returns'
+    };
 
-    const knownRoutes = [
-      '/', '/login', '/signup', '/dashboard', '/onboarding', '/setup-profile',
-      '/claim', '/invalid-card', '/forgot-password', '/reset-password',
-      '/cards', '/wristbands', '/about', '/press', '/support', '/legal',
-      '/privacy', '/terms', '/security', '/returns'
-    ];
-
-    if (pathname.startsWith('/card/') || pathname.startsWith('/@') || params.get('cardTap') || params.get('username')) {
-      setCurrentPage('card-tap');
-    } else if (pathname.length > 1 && !knownRoutes.includes(pathname.toLowerCase()) && !pathname.includes('.')) {
-      setCurrentPage('card-tap');
-    } else if (pathname === '/claim' || params.get('claimCard')) {
-      setCurrentPage('claim-card');
-    } else if (pathname === '/dashboard') {
-      setCurrentPage('dashboard');
-    } else if (pathname === '/onboarding' || pathname === '/setup-profile') {
-      setCurrentPage('onboarding');
-    } else if (pathname === '/invalid-card' || params.get('invalidCard')) {
-      setCurrentPage('invalid-card');
-    } else if (params.get('token')) {
-      setCurrentPage('reset-password');
+    const path = pageToPath[currentPage];
+    if (path && window.location.pathname !== path) {
+      window.history.pushState({ page: currentPage }, '', path);
     }
+  }, [currentPage]);
+
+  useEffect(() => {
+    // Detect URL paths & search parameters for direct NFC taps, handle links (@username), claims, or invalid card alerts
+    const handleInitialPath = () => {
+      const pathname = window.location.pathname;
+      const params = new URLSearchParams(window.location.search);
+
+      const knownRoutes = [
+        '/', '/login', '/signup', '/dashboard', '/onboarding', '/setup-profile',
+        '/claim', '/invalid-card', '/forgot-password', '/reset-password',
+        '/cards', '/wristbands', '/about', '/press', '/support', '/legal',
+        '/privacy', '/terms', '/security', '/returns'
+      ];
+
+      if (pathname.startsWith('/card/') || pathname.startsWith('/@') || params.get('cardTap') || params.get('username')) {
+        setCurrentPage('card-tap');
+      } else if (pathname.length > 1 && !knownRoutes.includes(pathname.toLowerCase()) && !pathname.includes('.')) {
+        setCurrentPage('card-tap');
+      } else if (pathname === '/claim' || params.get('claimCard')) {
+        setCurrentPage('claim-card');
+      } else if (pathname === '/dashboard') {
+        setCurrentPage('dashboard');
+      } else if (pathname === '/onboarding' || pathname === '/setup-profile') {
+        setCurrentPage('onboarding');
+      } else if (pathname === '/invalid-card' || params.get('invalidCard')) {
+        setCurrentPage('invalid-card');
+      } else if (params.get('token')) {
+        setCurrentPage('reset-password');
+      } else {
+        setCurrentPage('home');
+      }
+    };
+
+    handleInitialPath();
+
+    const handlePopState = (event) => {
+      const pathToPage = {
+        '/': 'home',
+        '/login': 'login',
+        '/signup': 'signup',
+        '/dashboard': 'dashboard',
+        '/onboarding': 'onboarding',
+        '/setup-profile': 'onboarding',
+        '/claim': 'claim-card',
+        '/invalid-card': 'invalid-card',
+        '/reset-password': 'reset-password',
+        '/forgot-password': 'forgot-password',
+        '/cards': 'cards',
+        '/wristbands': 'wristbands',
+        '/about': 'about',
+        '/press': 'press',
+        '/support': 'support',
+        '/legal': 'legal',
+        '/privacy': 'privacy',
+        '/terms': 'terms',
+        '/security': 'security',
+        '/returns': 'returns'
+      };
+
+      const pathname = window.location.pathname;
+      if (pathname.startsWith('/card/') || pathname.startsWith('/@')) {
+        setCurrentPage('card-tap');
+      } else {
+        const page = pathToPage[pathname.toLowerCase()] || 'home';
+        setCurrentPage(page);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [setCurrentPage]);
 
   if (currentPage === 'card-tap') {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Download, User, Mail, Phone, Globe, MapPin, Share2, MessageCircle,
-  ExternalLink, CheckCircle2, ShieldCheck, Sparkles, Building2, Briefcase, Calendar, Link as LinkIcon, Check
+  ExternalLink, CheckCircle2, ShieldCheck, Sparkles, Building2, Briefcase, Calendar, Link as LinkIcon, Check, Copy, Send
 } from 'lucide-react';
 import SocialIcon from '../ui/SocialIcon';
 import ShareBackModal from '../ui/ShareBackModal';
@@ -12,10 +12,10 @@ const THEMES = {
   'dark-luxe': {
     bg: 'bg-slate-950 text-white',
     glow: 'bg-cyan-500/10',
-    card: 'bg-slate-900/90 border-slate-800 text-white shadow-2xl',
+    card: 'bg-slate-900/90 border-slate-800/80 text-white shadow-2xl',
     primaryBtn: 'bg-[#00BCFF] text-slate-950 hover:bg-cyan-400 font-bold shadow-[0_4px_20px_rgba(0,188,255,0.3)]',
     secondaryBtn: 'bg-slate-800/80 hover:bg-slate-700/80 border-slate-700/80 text-white font-bold',
-    itemBg: 'bg-slate-800/50',
+    itemBg: 'bg-slate-800/40',
     itemBorder: 'border-slate-700/50',
     itemHover: 'hover:bg-slate-800/80',
     textPrimary: 'text-white',
@@ -25,9 +25,9 @@ const THEMES = {
     socialBg: 'bg-slate-800/60',
     socialBorder: 'border-slate-700/60',
     socialHover: 'hover:bg-slate-700 hover:border-cyan-500/50',
-    badgeBg: 'bg-slate-900/80',
-    badgeText: 'text-slate-300',
-    badgeBorder: 'border-slate-800',
+    badgeBg: 'bg-emerald-500/10',
+    badgeText: 'text-emerald-400',
+    badgeBorder: 'border-emerald-500/30',
     footerText: 'text-slate-400'
   },
   'neon-cyber': {
@@ -46,7 +46,7 @@ const THEMES = {
     socialBg: 'bg-slate-900',
     socialBorder: 'border-cyan-500/30',
     socialHover: 'hover:bg-slate-800 hover:border-cyan-400',
-    badgeBg: 'bg-slate-950',
+    badgeBg: 'bg-cyan-500/10',
     badgeText: 'text-cyan-400',
     badgeBorder: 'border-cyan-500/40',
     footerText: 'text-cyan-500/70'
@@ -146,6 +146,7 @@ export const ProfileView = ({ data }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [savedContact, setSavedContact] = useState(false);
+  const [copiedField, setCopiedField] = useState(null);
 
   const profile = data || {
     name: "no data yet",
@@ -160,12 +161,17 @@ export const ProfileView = ({ data }) => {
     location: "no data yet",
     theme: "dark-luxe",
     layout: "stack",
-    socials: {}
+    showEmail: true,
+    socials: {
+      instagram: "precious.design",
+      tiktok: "@precious_creator",
+      twitter: "preciousonuigbo",
+      website: "https://precious.design"
+    }
   };
 
   const themeKey = profile.theme || 'dark-luxe';
   const theme = THEMES[themeKey] || THEMES['dark-luxe'];
-  const layout = profile.layout || 'stack';
 
   const handleSaveContact = () => {
     saveContactToPhone(profile);
@@ -177,6 +183,13 @@ export const ProfileView = ({ data }) => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
+  };
+
+  const handleCopyField = (fieldKey, textValue) => {
+    if (!textValue) return;
+    navigator.clipboard.writeText(textValue);
+    setCopiedField(fieldKey);
+    setTimeout(() => setCopiedField(null), 2500);
   };
 
   return (
@@ -191,358 +204,187 @@ export const ProfileView = ({ data }) => {
           <span className="text-xl font-black text-[#00BCFF]">.</span>
         </div>
         <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full ${theme.badgeBg} border ${theme.badgeBorder} text-[10px] font-bold ${theme.badgeText} shadow-xs`}>
-          <ShieldCheck className="w-3.5 h-3.5 text-[#00BCFF]" />
-          <span>Verified NFC Card</span>
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <span>verified card</span>
         </div>
       </div>
 
-      {/* Main Card View Container */}
+      {/* Main Profile Card */}
       <div className="max-w-md mx-auto w-full z-10 my-auto">
         <motion.div
           initial={{ opacity: 0, y: 25, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className={`${theme.card} backdrop-blur-xl rounded-3xl p-6 sm:p-8 border relative overflow-hidden`}
+          className={`${theme.card} backdrop-blur-xl rounded-3xl p-6 sm:p-7 border relative overflow-hidden space-y-5 text-left`}
         >
-          {/* Avatar & Header Details */}
-          <div className="text-center space-y-3">
-            <div className="relative w-28 h-28 mx-auto">
+          {/* Avatar & Info Row (Side-by-side) */}
+          <div className="flex items-center gap-4 sm:gap-5">
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-cyan-400/40 shadow-lg shrink-0">
               <img
                 src={profile.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400"}
                 alt={profile.name}
-                className="w-full h-full rounded-full object-cover border-4 border-[#00BCFF]/40 shadow-xl"
+                className="w-full h-full object-cover"
               />
-              <div className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#00BCFF] text-slate-950 flex items-center justify-center shadow-md">
-                <Check className="w-5 h-5 text-slate-950 stroke-[3]" />
-              </div>
             </div>
 
-            <div>
-              <h1 className={`text-2xl font-black tracking-tight ${theme.textPrimary}`}>{profile.name}</h1>
-              <p className={`text-sm font-bold ${theme.textSecondary} mt-0.5`}>
-                {profile.title} {profile.company ? `• ${profile.company}` : ''}
-              </p>
+            <div className="flex-1 min-w-0 space-y-1">
+              <h1 className={`text-xl sm:text-2xl font-bold tracking-tight ${theme.textPrimary} truncate`}>
+                {profile.name}
+              </h1>
+              {(profile.title || profile.company) && (
+                <p className={`text-xs font-semibold ${theme.textSecondary} truncate`}>
+                  {profile.title} {profile.company ? `· ${profile.company}` : ''}
+                </p>
+              )}
               {profile.location && (
-                <p className={`text-xs ${theme.textMuted} mt-1 flex items-center justify-center gap-1`}>
-                  <MapPin className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>{profile.location}</span>
+                <p className={`text-xs ${theme.textMuted} flex items-center gap-1.5 pt-0.5`}>
+                  <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <span className="truncate">{profile.location}</span>
                 </p>
               )}
             </div>
+          </div>
 
-            {profile.bio && (
-              <p className={`text-xs ${theme.textMuted} leading-relaxed max-w-sm mx-auto px-2`}>
-                {profile.bio}
-              </p>
+          {/* Bio Text */}
+          {profile.bio && (
+            <p className={`text-xs ${theme.textMuted} leading-relaxed font-normal`}>
+              {profile.bio}
+            </p>
+          )}
+
+          {/* Primary Action Buttons */}
+          <div className="space-y-3 pt-1">
+            <button
+              onClick={handleSaveContact}
+              className={`w-full py-3 px-4 rounded-2xl ${theme.primaryBtn} flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 text-xs font-bold`}
+            >
+              {savedContact ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-950" />
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+              <span>{savedContact ? 'Contact Saved to Phone!' : 'Save contact'}</span>
+            </button>
+
+            <button
+              onClick={() => setIsShareModalOpen(true)}
+              className={`w-full py-3 px-4 rounded-2xl ${theme.secondaryBtn} border flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 text-xs font-bold`}
+            >
+              <Send className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Share your info back</span>
+            </button>
+          </div>
+
+          {/* Direct Contact Cards (Phone & Email) */}
+          <div className="space-y-3 pt-1">
+            {profile.phone && (
+              <div className={`p-3 sm:p-3.5 rounded-2xl ${theme.itemBg} border ${theme.itemBorder} flex items-center justify-between gap-3`}>
+                <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-[#00BCFF] flex items-center justify-center shrink-0">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block mb-0.5">PHONE</span>
+                  <a href={`tel:${profile.phone}`} className="text-xs font-bold text-white hover:text-cyan-400 transition-colors truncate block">
+                    {profile.phone}
+                  </a>
+                </div>
+                <button
+                  onClick={() => handleCopyField('phone', profile.phone)}
+                  className="p-2 text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0"
+                  title="Copy Phone Number"
+                >
+                  {copiedField === 'phone' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+            )}
+
+            {/* Email Card - Only shown if profile.showEmail !== false AND profile.email exists */}
+            {(profile.showEmail !== false && profile.email) && (
+              <div className={`p-3 sm:p-3.5 rounded-2xl ${theme.itemBg} border ${theme.itemBorder} flex items-center justify-between gap-3`}>
+                <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-[#00BCFF] flex items-center justify-center shrink-0">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block mb-0.5">EMAIL</span>
+                  <a href={`mailto:${profile.email}`} className="text-xs font-bold text-white hover:text-cyan-400 transition-colors truncate block">
+                    {profile.email}
+                  </a>
+                </div>
+                <button
+                  onClick={() => handleCopyField('email', profile.email)}
+                  className="p-2 text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0"
+                  title="Copy Email Address"
+                >
+                  {copiedField === 'email' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+            )}
+
+            {/* Custom Bio Linktree Buttons */}
+            {profile.customLinks && profile.customLinks.length > 0 && (
+              <div className="space-y-2 pt-1">
+                {profile.customLinks.map((linkItem, idx) => (
+                  <a
+                    key={linkItem.id || idx}
+                    href={linkItem.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`flex items-center justify-between p-3 rounded-2xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} text-xs font-bold transition-colors ${theme.textPrimary}`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <LinkIcon className="w-4 h-4 text-[#00BCFF] shrink-0" />
+                      <span className="truncate">{linkItem.label}</span>
+                    </div>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-500 shrink-0 ml-2" />
+                  </a>
+                ))}
+              </div>
             )}
           </div>
 
-          {/* LAYOUT 1: LINKTREE / BIO LINK MODE */}
-          {layout === 'linktree' && (
-            <div className="mt-6 space-y-3">
-              <button
-                onClick={handleSaveContact}
-                className={`w-full py-3.5 px-4 rounded-2xl ${theme.primaryBtn} flex items-center justify-between cursor-pointer transition-all active:scale-95 text-sm`}
-              >
-                <div className="flex items-center gap-2.5">
-                  {savedContact ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-950 shrink-0" />
-                  ) : (
-                    <Download className="w-4 h-4 shrink-0" />
-                  )}
-                  <span>{savedContact ? 'Contact Saved to Phone!' : 'Save Contact (.vcf)'}</span>
-                </div>
-                <span className="text-xs opacity-75 font-mono">Tap</span>
-              </button>
-
-              <button
-                onClick={() => setIsShareModalOpen(true)}
-                className={`w-full py-3.5 px-4 rounded-2xl ${theme.secondaryBtn} border flex items-center justify-between cursor-pointer transition-all active:scale-95 text-sm`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <MessageCircle className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span>Exchange Contact Back</span>
-                </div>
-                <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-              </button>
-
-              {profile.phone && (
-                <a
-                  href={`tel:${profile.phone}`}
-                  className={`w-full py-3.5 px-4 rounded-2xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} ${theme.textPrimary} font-bold flex items-center justify-between transition-all text-sm`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Phone className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span>Call Phone</span>
-                  </div>
-                  <span className={`text-xs ${theme.textMuted} truncate max-w-[140px]`}>{profile.phone}</span>
-                </a>
-              )}
-
-              {profile.email && (
-                <a
-                  href={`mailto:${profile.email}`}
-                  className={`w-full py-3.5 px-4 rounded-2xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} ${theme.textPrimary} font-bold flex items-center justify-between transition-all text-sm`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Mail className="w-4 h-4 text-purple-400 shrink-0" />
-                    <span>Send Email</span>
-                  </div>
-                  <span className={`text-xs ${theme.textMuted} truncate max-w-[140px]`}>{profile.email}</span>
-                </a>
-              )}
-
-              {profile.website && (
-                <a
-                  href={profile.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`w-full py-3.5 px-4 rounded-2xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} ${theme.textPrimary} font-bold flex items-center justify-between transition-all text-sm`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Globe className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Website & Portfolio</span>
-                  </div>
-                  <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-                </a>
-              )}
-
-              {/* Social Channels Link Stack */}
-              {profile.socials && Object.entries(profile.socials).map(([network, val]) => {
-                if (!val) return null;
-                const linkUrl = resolveSocialUrl(network, val);
-                return (
-                  <a
-                    key={network}
-                    href={linkUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={`w-full py-3 px-4 rounded-2xl ${theme.socialBg} ${theme.socialHover} border ${theme.socialBorder} ${theme.textPrimary} font-semibold flex items-center justify-between transition-all text-xs`}
-                  >
-                    <div className="flex items-center gap-2.5 capitalize">
-                      <SocialIcon platform={network} network={network} className="w-4 h-4" />
-                      <span>{network}</span>
-                    </div>
-                    <span className={`text-[11px] ${theme.textMuted} truncate max-w-[120px]`}>{val}</span>
-                  </a>
-                );
-              })}
+          {/* FIND ME ELSEWHERE Social Pills */}
+          {profile.socials && Object.keys(profile.socials).length > 0 && (
+            <div className="space-y-2.5 pt-2">
+              <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block">FIND ME ELSEWHERE</span>
+              <div className="flex flex-wrap items-center gap-2">
+                {Object.entries(profile.socials).map(([network, value]) => {
+                  if (!value) return null;
+                  const linkUrl = resolveSocialUrl(network, value);
+                  const netLabel = network.toLowerCase() === 'x' || network.toLowerCase() === 'twitter'
+                    ? 'X'
+                    : network.charAt(0).toUpperCase() + network.slice(1);
+                  return (
+                    <a
+                      key={network}
+                      href={linkUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700/60 hover:border-cyan-500/40 rounded-full px-3.5 py-1.5 text-xs text-white font-medium flex items-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <SocialIcon platform={network} className="w-3.5 h-3.5 shrink-0" />
+                      <span>{netLabel}</span>
+                    </a>
+                  );
+                })}
+              </div>
             </div>
-          )}
-
-          {/* LAYOUT 2: GRID / PORTFOLIO MODE */}
-          {layout === 'grid' && (
-            <div className="mt-6 space-y-4">
-              <button
-                onClick={handleSaveContact}
-                className={`w-full py-3.5 rounded-2xl ${theme.primaryBtn} flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 text-sm`}
-              >
-                {savedContact ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-950" />
-                ) : (
-                  <Download className="w-4 h-4" />
-                )}
-                <span>{savedContact ? 'Contact Saved!' : 'Save Contact to Phone'}</span>
-              </button>
-
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => setIsShareModalOpen(true)}
-                  className={`p-3.5 rounded-2xl ${theme.secondaryBtn} border flex flex-col items-center justify-center gap-1.5 cursor-pointer text-xs`}
-                >
-                  <MessageCircle className="w-5 h-5 text-cyan-400" />
-                  <span>Share Details Back</span>
-                </button>
-
-                {profile.phone && (
-                  <a
-                    href={`tel:${profile.phone}`}
-                    className={`p-3.5 rounded-2xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} ${theme.textPrimary} font-bold flex flex-col items-center justify-center gap-1.5 text-xs transition-all`}
-                  >
-                    <Phone className="w-5 h-5 text-cyan-400" />
-                    <span>Call Phone</span>
-                  </a>
-                )}
-
-                {profile.email && (
-                  <a
-                    href={`mailto:${profile.email}`}
-                    className={`p-3.5 rounded-2xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} ${theme.textPrimary} font-bold flex flex-col items-center justify-center gap-1.5 text-xs transition-all`}
-                  >
-                    <Mail className="w-5 h-5 text-purple-400" />
-                    <span>Send Email</span>
-                  </a>
-                )}
-
-                {profile.website && (
-                  <a
-                    href={profile.website}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={`p-3.5 rounded-2xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} ${theme.textPrimary} font-bold flex flex-col items-center justify-center gap-1.5 text-xs transition-all`}
-                  >
-                    <Globe className="w-5 h-5 text-emerald-400" />
-                    <span>Visit Website</span>
-                  </a>
-                )}
-              </div>
-
-              {/* Social Grid Icons */}
-              {profile.socials && Object.keys(profile.socials).length > 0 && (
-                <div className={`pt-4 border-t ${theme.itemBorder}`}>
-                  <h4 className={`text-[10px] font-bold uppercase tracking-wider ${theme.textMuted} mb-3 text-center`}>
-                    Social Media
-                  </h4>
-                  <div className="flex flex-wrap items-center justify-center gap-3">
-                    {Object.entries(profile.socials).map(([network, value]) => {
-                      if (!value) return null;
-                      const linkUrl = resolveSocialUrl(network, value);
-                      return (
-                        <a
-                          key={network}
-                          href={linkUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={`w-10 h-10 rounded-2xl ${theme.socialBg} ${theme.socialHover} border ${theme.socialBorder} flex items-center justify-center transition-all hover:scale-110`}
-                        >
-                          <SocialIcon platform={network} network={network} className="w-5 h-5" />
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* LAYOUT 3: STACK / STANDARD MODE (DEFAULT) */}
-          {layout === 'stack' && (
-            <>
-              {/* Primary Action Buttons */}
-              <div className="mt-6 space-y-3">
-                <button
-                  onClick={handleSaveContact}
-                  className={`w-full py-3.5 rounded-2xl ${theme.primaryBtn} flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 text-sm`}
-                >
-                  {savedContact ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-950" />
-                  ) : (
-                    <Download className="w-4 h-4" />
-                  )}
-                  <span>{savedContact ? 'Contact Saved to Phone!' : 'Save Contact to Phone'}</span>
-                </button>
-
-                <button
-                  onClick={() => setIsShareModalOpen(true)}
-                  className={`w-full py-3.5 rounded-2xl ${theme.secondaryBtn} border flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 text-sm`}
-                >
-                  <MessageCircle className="w-4 h-4 text-cyan-400" />
-                  <span>Share Your Info Back</span>
-                </button>
-              </div>
-
-              {/* Direct Contact Details */}
-              <div className={`mt-6 pt-6 border-t ${theme.itemBorder} space-y-2.5`}>
-                {profile.phone && (
-                  <a
-                    href={`tel:${profile.phone}`}
-                    className={`flex items-center gap-3 p-3 rounded-xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} text-xs font-semibold transition-colors ${theme.textPrimary}`}
-                  >
-                    <Phone className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span className="truncate">{profile.phone}</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-slate-500 ml-auto" />
-                  </a>
-                )}
-
-                {profile.email && (
-                  <a
-                    href={`mailto:${profile.email}`}
-                    className={`flex items-center gap-3 p-3 rounded-xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} text-xs font-semibold transition-colors ${theme.textPrimary}`}
-                  >
-                    <Mail className="w-4 h-4 text-purple-400 shrink-0" />
-                    <span className="truncate">{profile.email}</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-slate-500 ml-auto" />
-                  </a>
-                )}
-
-                {profile.website && (
-                  <a
-                    href={profile.website}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={`flex items-center gap-3 p-3 rounded-xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} text-xs font-semibold transition-colors ${theme.textPrimary}`}
-                  >
-                    <Globe className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span className="truncate">{profile.website}</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-slate-500 ml-auto" />
-                  </a>
-                )}
-
-                {/* Custom Bio Linktree Buttons */}
-                {profile.customLinks && profile.customLinks.length > 0 && (
-                  <div className="space-y-2 pt-2">
-                    {profile.customLinks.map((linkItem, idx) => (
-                      <a
-                        key={linkItem.id || idx}
-                        href={linkItem.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`flex items-center justify-between p-3 rounded-xl ${theme.itemBg} ${theme.itemHover} border ${theme.itemBorder} text-xs font-extrabold transition-colors ${theme.textPrimary}`}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <LinkIcon className="w-4 h-4 text-[#00BCFF] shrink-0" />
-                          <span className="truncate">{linkItem.label}</span>
-                        </div>
-                        <ExternalLink className="w-3.5 h-3.5 text-slate-500 shrink-0 ml-2" />
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Social Icons Grid */}
-              {profile.socials && Object.keys(profile.socials).length > 0 && (
-                <div className={`mt-6 pt-6 border-t ${theme.itemBorder}`}>
-                  <h4 className={`text-[10px] font-bold uppercase tracking-wider ${theme.textMuted} mb-3 text-center`}>
-                    Find me elsewhere
-                  </h4>
-                  <div className="flex flex-wrap items-center justify-center gap-3">
-                    {Object.entries(profile.socials).map(([network, value]) => {
-                      if (!value) return null;
-                      const linkUrl = resolveSocialUrl(network, value);
-                      return (
-                        <a
-                          key={network}
-                          href={linkUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={`w-10 h-10 rounded-2xl ${theme.socialBg} ${theme.socialHover} border ${theme.socialBorder} flex items-center justify-center transition-all hover:scale-110`}
-                        >
-                          <SocialIcon platform={network} network={network} className="w-5 h-5" />
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </>
           )}
 
           {/* Share Profile Link Footer */}
-          <div className="mt-6 text-center">
+          <div className="pt-2 text-center">
             <button
               onClick={handleCopyLink}
-              className={`inline-flex items-center gap-1.5 text-xs ${theme.textMuted} hover:${theme.textPrimary} transition-colors cursor-pointer`}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer"
             >
               {copied ? (
                 <>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-emerald-400 font-bold">Link Copied to Clipboard!</span>
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="text-emerald-400 font-bold">Link Copied!</span>
                 </>
               ) : (
                 <>
                   <Share2 className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>Share This Profile</span>
+                  <span>Share this profile</span>
                 </>
               )}
             </button>
@@ -552,7 +394,7 @@ export const ProfileView = ({ data }) => {
 
       {/* Footer Powered By */}
       <div className={`text-center pt-8 text-xs ${theme.footerText} z-10`}>
-        Powered by <span className={`font-bold ${theme.textPrimary}`}>www.enlazer.com.ng</span> • Smart NFC Technology
+        Powered by <span className={`font-bold ${theme.textPrimary}`}>enlazer.com.ng</span> — smart NFC technology
       </div>
 
       <ShareBackModal
@@ -568,4 +410,3 @@ export const ProfileView = ({ data }) => {
 };
 
 export default ProfileView;
-

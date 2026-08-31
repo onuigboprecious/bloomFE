@@ -352,6 +352,44 @@ export const AppProvider = ({ children }) => {
 
   const exportVCard = saveContactToPhone;
 
+  const exportVCards = (contactsList) => {
+    if (!contactsList || contactsList.length === 0) return;
+    
+    const rawString = contactsList.map(target => {
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const profileUrl = target.website || target.profileUrl || origin;
+      const nameParts = (target.name || '').trim().split(' ');
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+      const firstName = nameParts[0] || '';
+      
+      return [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        `N:${lastName};${firstName};;;`,
+        `FN:${target.name || ''}`,
+        `TITLE:${target.title || target.role || ''}`,
+        `ORG:${target.company || ''}`,
+        `TEL;TYPE=CELL,VOICE:${target.phone || ''}`,
+        `EMAIL;TYPE=INTERNET:${target.email || ''}`,
+        `URL:${profileUrl}`,
+        `NOTE:${target.bio || target.notes || 'Saved from Enlazer Smart NFC Card'}`,
+        'END:VCARD'
+      ].join('\r\n');
+    }).join('\r\n');
+
+    const blob = new Blob([rawString], { type: 'text/vcard;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Enlazer_Contacts_Export_${new Date().toISOString().slice(0, 10)}.vcf`);
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 500);
+  };
+
   const addLead = async (leadData) => {
     let createdLead = null;
     try {
@@ -522,6 +560,7 @@ export const AppProvider = ({ children }) => {
         deleteLead,
         exportLeadsCSV,
         exportVCard,
+        exportVCards,
         saveContactToPhone,
         generateRawVCardString
       }}

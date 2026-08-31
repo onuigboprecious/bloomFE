@@ -72,7 +72,21 @@ export const generateRawVCardString = (customContact) => {
     `TEL;TYPE=CELL,VOICE:${customContact.phone || ''}`,
     `EMAIL;TYPE=INTERNET:${customContact.email || ''}`,
     `URL:${profileUrl}`,
-    `NOTE:${customContact.bio || customContact.notes || 'Saved from Bloom Smart NFC Card'}`,
+    `NOTE:${customContact.bio || customContact.notes || 'Saved from Enlazer Smart NFC Card'}`,
     'END:VCARD'
   ].join('\r\n');
+};
+
+export const exportMultipleVCards = (contacts) => {
+  if (!contacts || contacts.length === 0) return;
+
+  const rawString = contacts.map(c => generateRawVCardString(c)).join('\r\n');
+  const blob = new Blob([rawString], { type: 'text/vcard;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', `Enlazer_Contacts_Export_${new Date().toISOString().slice(0, 10)}.vcf`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };

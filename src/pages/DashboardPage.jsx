@@ -36,7 +36,9 @@ import {
   Moon,
   AlertCircle,
   Loader2,
-  Activity
+  Activity,
+  Search,
+  Download
 } from 'lucide-react';
 import MobilePhonePreview from '../components/ui/MobilePhonePreview';
 import ActivateCardModal from '../components/onboarding/ActivateCardModal';
@@ -53,6 +55,9 @@ export const DashboardPage = () => {
     activeCardUid,
     claimAndLinkCard,
     leads,
+    deleteLead,
+    exportVCards,
+    saveContactToPhone,
     setCurrentPage,
     logoutUser,
     darkMode,
@@ -76,6 +81,7 @@ export const DashboardPage = () => {
   const [website, setWebsite] = useState(profile?.website || '');
   const [location, setLocation] = useState(profile?.location || '');
   const [customHandle, setCustomHandle] = useState(profile?.username || '');
+  const [showEmail, setShowEmail] = useState(profile?.showEmail !== false);
 
   // Dynamic Connected Social Handles State
   const [socialHandlesList, setSocialHandlesList] = useState(() => {
@@ -93,6 +99,11 @@ export const DashboardPage = () => {
   const [customLinks, setCustomLinks] = useState(() => profile?.customLinks || []);
   const [newLinkLabel, setNewLinkLabel] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
+
+  // Contacts states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedLeadIds, setSelectedLeadIds] = useState([]);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
   const [toast, setToast] = useState({ show: false, type: 'success', message: '' });
   const [isSaving, setIsSaving] = useState(false);
@@ -124,6 +135,7 @@ export const DashboardPage = () => {
         website,
         location,
         username: customHandle,
+        showEmail,
         socials: updatedSocials,
         customLinks
       });
@@ -592,6 +604,21 @@ export const DashboardPage = () => {
                       </div>
                     </div>
 
+                    {/* Email Visibility Toggle Switch */}
+                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                      <div className="space-y-0.5">
+                        <span className="text-xs font-extrabold text-slate-900 dark:text-white block">Public Email Visibility</span>
+                        <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block">Allow people who tap your card to see and email you</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowEmail((prev) => !prev)}
+                        className={`w-11 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${showEmail ? 'bg-[#00BCFF]' : 'bg-slate-300 dark:bg-slate-700'}`}
+                      >
+                        <div className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${showEmail ? 'translate-x-5' : 'translate-x-0'}`} />
+                      </button>
+                    </div>
+
                     <div>
                       <label className="text-xs font-extrabold uppercase text-slate-700 dark:text-slate-300 block mb-1">
                         Bio / Creator Pitch
@@ -778,31 +805,30 @@ export const DashboardPage = () => {
                 </div>
 
                 {/* Right Side: Mobile Phone Live Preview */}
-                <div className="lg:col-span-5 sticky top-3 h-fit">
-                  <div className="bg-slate-950 p-6 rounded-3xl border border-slate-800 shadow-2xl space-y-4 text-center">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-cyan-400 flex items-center justify-center gap-1.5">
-                      <Smartphone className="w-3.5 h-3.5" /> Live Profile Preview
-                    </span>
-                    <MobilePhonePreview
-                      data={{
-                        ...profile,
-                        avatar: avatar || profile?.avatar,
-                        name: name !== '' ? name : profile?.name,
-                        title: title !== '' ? title : profile?.title,
-                        company: company !== '' ? company : profile?.company,
-                        phone: phone !== '' ? phone : profile?.phone,
-                        bio: bio !== '' ? bio : profile?.bio,
-                        website: website !== '' ? website : profile?.website,
-                        location: location !== '' ? location : profile?.location,
-                        username: customHandle !== '' ? customHandle : profile?.username,
-                        socials: socialHandlesList.reduce((acc, curr) => {
-                          if (curr.handle) acc[curr.platform] = curr.handle;
-                          return acc;
-                        }, {}),
-                        customLinks: customLinks,
-                      }}
-                    />
-                  </div>
+                <div className="lg:col-span-5 sticky top-3 h-fit flex flex-col items-center w-full">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center justify-center gap-1.5 mb-3.5">
+                    <Smartphone className="w-3.5 h-3.5 text-[#00BCFF]" /> Live Profile Preview
+                  </span>
+                  <MobilePhonePreview
+                    data={{
+                      ...profile,
+                      avatar: avatar || profile?.avatar,
+                      name: name !== '' ? name : profile?.name,
+                      title: title !== '' ? title : profile?.title,
+                      company: company !== '' ? company : profile?.company,
+                      phone: phone !== '' ? phone : profile?.phone,
+                      bio: bio !== '' ? bio : profile?.bio,
+                      website: website !== '' ? website : profile?.website,
+                      location: location !== '' ? location : profile?.location,
+                      username: customHandle !== '' ? customHandle : profile?.username,
+                      showEmail,
+                      socials: socialHandlesList.reduce((acc, curr) => {
+                        if (curr.handle) acc[curr.platform] = curr.handle;
+                        return acc;
+                      }, {}),
+                      customLinks: customLinks,
+                    }}
+                  />
                 </div>
 
               </div>
@@ -867,71 +893,320 @@ export const DashboardPage = () => {
             )}
 
             {/* TAB 3: RECEIVED CONTACTS */}
-            {activeTab === 'leads' && (
-              <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6 animate-in fade-in duration-300">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-                  <div>
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                      <Users className="w-5 h-5 text-[#00BCFF]" />
-                      <span>Received Contacts</span>
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Contact details, roles, and notes shared back by people when they tap your Enlazer card.</p>
-                  </div>
-                  <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-[#00BCFF] font-bold text-xs">
-                    {leads.length} Received Contacts
-                  </span>
-                </div>
+            {activeTab === 'leads' && (() => {
+              const leadsArray = Array.isArray(leads) ? leads : [];
+              const filteredLeads = leadsArray.filter((item) => {
+                const term = searchTerm.toLowerCase();
+                return (
+                  (item.name || '').toLowerCase().includes(term) ||
+                  (item.email || '').toLowerCase().includes(term) ||
+                  (item.phone || '').toLowerCase().includes(term) ||
+                  (item.role || item.title || '').toLowerCase().includes(term) ||
+                  (item.company || '').toLowerCase().includes(term)
+                );
+              });
 
-                {/* Received Contacts Cards List */}
-                {leads.length === 0 ? (
-                  <div className="text-center py-12 space-y-3">
-                    <Users className="w-12 h-12 text-slate-400 mx-auto opacity-50" />
-                    <p className="text-xs text-slate-500 font-bold">No received contacts yet. Tap your card against a phone to start receiving contact details!</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {leads.map((item, idx) => (
-                      <div key={idx} className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
-                        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-2">
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-xl bg-cyan-500/10 text-[#00BCFF] font-black text-xs flex items-center justify-center">
-                              {item.name ? item.name.charAt(0).toUpperCase() : 'U'}
-                            </div>
-                            <div>
-                              <h4 className="text-sm font-black text-slate-900 dark:text-white">{item.name}</h4>
-                              {(item.role || item.title) && <p className="text-[10px] text-slate-500 font-semibold">{item.role || item.title}</p>}
-                            </div>
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-mono">{item.date || 'Today'}</span>
-                        </div>
+              const isAllSelected = filteredLeads.length > 0 && selectedLeadIds.length === filteredLeads.length;
 
-                        <div className="space-y-1.5 text-xs">
-                          {item.email && (
-                            <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                              <Mail className="w-3.5 h-3.5 text-purple-400 shrink-0" />
-                              <span className="font-mono text-cyan-600 dark:text-cyan-400 font-bold truncate">{item.email}</span>
-                            </div>
-                          )}
-                          {item.phone && (
-                            <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                              <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                              <span className="font-mono">{item.phone}</span>
-                            </div>
-                          )}
-                          {(item.notes || item.note) && (
-                            <div className="pt-1.5 border-t border-slate-200/60 dark:border-slate-800/60">
-                              <p className="text-xs italic text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
-                                "{item.notes || item.note}"
-                              </p>
-                            </div>
-                          )}
-                        </div>
+              const handleToggleSelectLead = (id) => {
+                setSelectedLeadIds((prev) =>
+                  prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+                );
+              };
+
+              const handleToggleSelectAll = () => {
+                if (isAllSelected) {
+                  setSelectedLeadIds([]);
+                } else {
+                  setSelectedLeadIds(filteredLeads.map(l => l.id || `lead-${l.name}-${l.email}`));
+                }
+              };
+
+              return (
+                <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6 animate-in fade-in duration-300">
+                  
+                  {/* Tab Title Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <div>
+                      <h3 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                        <Users className="w-5 h-5 text-[#00BCFF]" />
+                        <span>Received Contacts</span>
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Contact details, roles, and notes shared back by people when they tap your Enlazer card.</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-[#00BCFF] font-bold text-xs">
+                        {leadsArray.length} Total
+                      </span>
+                      {filteredLeads.length !== leadsArray.length && (
+                        <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold text-xs">
+                          {filteredLeads.length} Found
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Toolbar & Filter Bar */}
+                  {leadsArray.length > 0 && (
+                    <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                      {/* Search Bar */}
+                      <div className="relative w-full md:max-w-md">
+                        <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 dark:text-slate-500" />
+                        <input
+                          type="text"
+                          placeholder="Search by name, email, phone or title..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full pl-10 pr-4 py-2.5 text-xs font-bold rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-[#00BCFF] transition-all"
+                        />
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+
+                      {/* General Actions */}
+                      <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+                        <button
+                          type="button"
+                          onClick={handleToggleSelectAll}
+                          className="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-950 transition-colors cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isAllSelected}
+                            onChange={() => {}} // handled by button click
+                            className="rounded text-[#00BCFF] focus:ring-[#00BCFF] pointer-events-none"
+                          />
+                          <span>Select All</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={exportLeadsCSV}
+                          className="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-950 transition-colors cursor-pointer"
+                          title="Export All to CSV"
+                        >
+                          <Download className="w-4 h-4 text-slate-400" />
+                          <span>Export CSV</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Bulk Actions Header (visible when contacts are selected) */}
+                  {selectedLeadIds.length > 0 && (
+                    <div className="flex flex-col sm:flex-row items-center justify-between p-3.5 bg-cyan-500/5 dark:bg-[#00BCFF]/5 border border-cyan-500/20 dark:border-[#00BCFF]/20 rounded-2xl gap-3 animate-in slide-in-from-top-2 duration-200">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-md bg-[#00BCFF]/10 text-[#00BCFF] text-[10px] font-black flex items-center justify-center">
+                          {selectedLeadIds.length}
+                        </div>
+                        <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300">Contacts Selected</span>
+                      </div>
+                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const selected = leadsArray.filter(l => selectedLeadIds.includes(l.id || `lead-${l.name}-${l.email}`));
+                            exportVCards(selected);
+                            showToastNotification('success', `Exported ${selected.length} contacts as vCard!`);
+                          }}
+                          className="px-3 py-2 bg-[#00BCFF]/10 hover:bg-[#00BCFF]/20 text-[#00BCFF] rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer"
+                        >
+                          <Download className="w-3.5 h-3.5" /> Import Selected to Phone
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            selectedLeadIds.forEach(id => deleteLead(id));
+                            setSelectedLeadIds([]);
+                            showToastNotification('success', 'Selected contacts deleted.');
+                          }}
+                          className="px-3 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" /> Delete Selected
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedLeadIds([])}
+                          className="text-xs font-extrabold text-slate-400 hover:text-slate-600 dark:hover:text-white px-2 py-1.5 transition-colors cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* List of Contacts */}
+                  {leadsArray.length === 0 ? (
+                    <div className="text-center py-16 space-y-4 border border-dashed border-slate-200 dark:border-slate-800 rounded-3xl p-6 bg-slate-50/50 dark:bg-slate-950/20">
+                      <div className="w-16 h-16 rounded-full bg-cyan-500/5 text-[#00BCFF] flex items-center justify-center mx-auto border border-cyan-500/10">
+                        <Users className="w-7 h-7" />
+                      </div>
+                      <div className="space-y-1 max-w-sm mx-auto">
+                        <p className="text-sm font-black text-slate-900 dark:text-white">No contacts captured yet</p>
+                        <p className="text-xs text-slate-400 leading-relaxed">Share your Enlazer profile handle or card, and when people share their info back, they will appear here instantly!</p>
+                      </div>
+                    </div>
+                  ) : filteredLeads.length === 0 ? (
+                    <div className="text-center py-12 space-y-2">
+                      <Search className="w-8 h-8 text-slate-400 mx-auto opacity-50" />
+                      <p className="text-xs font-extrabold text-slate-500">No matching contacts found for "{searchTerm}"</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {filteredLeads.map((item, idx) => {
+                        const uniqueId = item.id || `lead-${item.name}-${item.email}`;
+                        const isSelected = selectedLeadIds.includes(uniqueId);
+                        const isConfirmingDelete = deleteConfirmId === uniqueId;
+
+                        return (
+                          <div
+                            key={uniqueId}
+                            className={`relative p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border transition-all duration-200 space-y-3.5 shadow-xs overflow-hidden ${
+                              isSelected
+                                ? 'border-[#00BCFF] bg-cyan-500/5 dark:bg-cyan-500/5'
+                                : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700/80 hover:scale-[1.01]'
+                            }`}
+                          >
+                            {/* Inline Delete Confirmation Overlay */}
+                            {isConfirmingDelete && (
+                              <div className="absolute inset-0 bg-white/95 dark:bg-slate-950/95 rounded-2xl flex flex-col items-center justify-center p-4 text-center z-25 animate-in fade-in duration-150">
+                                <p className="text-xs font-extrabold text-slate-900 dark:text-white mb-2.5">
+                                  Delete this contact permanently?
+                                </p>
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      deleteLead(item.id);
+                                      setDeleteConfirmId(null);
+                                      setSelectedLeadIds(prev => prev.filter(x => x !== uniqueId));
+                                      showToastNotification('success', 'Contact deleted successfully.');
+                                    }}
+                                    className="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-xl text-[10px] font-extrabold cursor-pointer transition-colors"
+                                  >
+                                    Yes, Delete
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setDeleteConfirmId(null)}
+                                    className="px-3 py-1.5 bg-slate-100 dark:bg-slate-850 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-white rounded-xl text-[10px] font-extrabold cursor-pointer transition-colors"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Card Header Row */}
+                            <div className="flex items-start justify-between border-b border-slate-200 dark:border-slate-800/80 pb-2.5">
+                              <div className="flex items-start gap-2.5 min-w-0">
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={() => handleToggleSelectLead(uniqueId)}
+                                  className="w-4 h-4 mt-2.5 rounded border-slate-300 dark:border-slate-800 text-[#00BCFF] focus:ring-[#00BCFF] cursor-pointer shrink-0"
+                                />
+                                <div className="w-9 h-9 rounded-2xl bg-cyan-500/10 text-[#00BCFF] font-black text-xs flex items-center justify-center shrink-0">
+                                  {item.name ? item.name.charAt(0).toUpperCase() : 'U'}
+                                </div>
+                                <div className="min-w-0">
+                                  <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">{item.name}</h4>
+                                  {(item.role || item.title || item.company) && (
+                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold truncate">
+                                      {item.role || item.title} {item.company ? `@ ${item.company}` : ''}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <span className="text-[9px] text-slate-400 font-extrabold uppercase bg-slate-200/50 dark:bg-slate-900 px-2 py-0.5 rounded-md">
+                                  {item.date || 'Today'}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => setDeleteConfirmId(uniqueId)}
+                                  className="p-1.5 text-slate-400 hover:text-red-500 dark:hover:text-rose-400 rounded-xl hover:bg-slate-200/50 dark:hover:bg-slate-900/60 transition-colors cursor-pointer"
+                                  title="Delete Contact"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Contact Card Body (Emails, Phones, Notes) */}
+                            <div className="space-y-2 text-xs">
+                              {item.email && (
+                                <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 group">
+                                  <div className="flex items-center gap-2 min-w-0">
+                                    <Mail className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                                    <span className="font-mono text-[11px] font-bold text-cyan-600 dark:text-cyan-400 truncate">{item.email}</span>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(item.email);
+                                      showToastNotification('success', 'Email copied to clipboard!');
+                                    }}
+                                    className="p-1 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+                                    title="Copy Email"
+                                  >
+                                    <Copy className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              )}
+
+                              {item.phone && (
+                                <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 group">
+                                  <div className="flex items-center gap-2 min-w-0">
+                                    <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                                    <span className="font-mono text-[11px] text-slate-700 dark:text-slate-300 truncate">{item.phone}</span>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(item.phone);
+                                      showToastNotification('success', 'Phone number copied!');
+                                    }}
+                                    className="p-1 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+                                    title="Copy Phone"
+                                  >
+                                    <Copy className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              )}
+
+                              {(item.notes || item.note) && (
+                                <div className="pt-2 border-t border-slate-200/60 dark:border-slate-850">
+                                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">Shared Note</span>
+                                  <p className="text-[11px] italic text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 leading-relaxed">
+                                    "{item.notes || item.note}"
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Card Footer Actions */}
+                            <div className="pt-2 flex items-center justify-end border-t border-slate-250/20 dark:border-slate-850/20">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  saveContactToPhone(item);
+                                  showToastNotification('success', 'Contact vCard downloaded!');
+                                }}
+                                className="w-full py-2 bg-[#00BCFF] hover:bg-cyan-500 text-slate-950 rounded-xl text-[10px] font-extrabold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs active:scale-[0.98]"
+                              >
+                                <Download className="w-3.5 h-3.5" />
+                                <span>Import to Phone / Google</span>
+                              </button>
+                            </div>
+
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* TAB 4: TAP ANALYTICS & INSIGHTS GRAPH STUDIO */}
             {activeTab === 'analytics' && (
