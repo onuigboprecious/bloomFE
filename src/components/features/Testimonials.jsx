@@ -94,9 +94,9 @@ export const Testimonials = () => {
   }, [isHovered]);
 
   return (
-    <section id="testimonials" className="py-20 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 transition-colors overflow-hidden select-none">
+    <section id="testimonials" className="py-20 bg-white dark:bg-slate-950 transition-colors overflow-hidden select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        
+
         {/* Section Header */}
         <div className="text-center space-y-3 max-w-4xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
@@ -111,9 +111,7 @@ export const Testimonials = () => {
               Loved by founders & leaders using Enlazer Cards & Wristbands
             </h2>
           </div>
-          <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">
-            Swipe or let it auto-play to discover how professionals elevate their networking with our NFC ecosystem.
-          </p>
+
         </div>
 
         {/* Auto Buttonless Swipeable Slider Container */}
@@ -137,7 +135,7 @@ export const Testimonials = () => {
               >
                 {/* Top Visual Banner: Testifier Avatar Image Prominently Displayed */}
                 <div className={`h-48 w-full relative ${card.bannerBg} flex items-center justify-center p-4 overflow-hidden border-b border-slate-800/80`}>
-                  
+
                   {/* Subtle Background Radial Glow */}
                   <div className="absolute inset-0 bg-cyan-500/10 blur-xl pointer-events-none" />
 

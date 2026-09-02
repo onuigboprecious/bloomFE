@@ -11,7 +11,7 @@ export const FaqSection = () => {
   };
 
   return (
-    <section id="faq" className="py-20 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 transition-colors">
+    <section id="faq" className="py-20 bg-white dark:bg-slate-950 transition-colors">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
