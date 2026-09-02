@@ -98,13 +98,19 @@ export const Testimonials = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         
         {/* Section Header */}
-        <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#00BCFF]">
-            Verified Enlazer NFC Experience
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Loved by founders & leaders using Enlazer Cards & Wristbands
-          </h2>
+        <div className="text-center space-y-3 max-w-4xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-800 shrink-0">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#00BCFF]" />
+              <span>Verified Enlazer NFC Experience</span>
+            </div>
+            <span className="hidden sm:inline-block text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
+              |
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Loved by founders & leaders using Enlazer Cards & Wristbands
+            </h2>
+          </div>
           <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">
             Swipe or let it auto-play to discover how professionals elevate their networking with our NFC ecosystem.
           </p>
