@@ -65,7 +65,7 @@ export const SignUpPage = () => {
           initial={{ opacity: 0, y: 25, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-100/90 dark:border-slate-800 relative transition-colors"
+          className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-lg dark:shadow-none border border-slate-100/90 dark:border-slate-800 relative transition-colors"
         >
           {signupSuccess ? (
             <motion.div
@@ -95,7 +95,7 @@ export const SignUpPage = () => {
               <button
                 type="button"
                 onClick={loginWithGoogleRedirect}
-                className="w-full flex items-center justify-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-750 font-bold py-3 px-4 rounded-xl text-sm transition-all duration-200 shadow-sm cursor-pointer group"
+                className="w-full flex items-center justify-center gap-3 bg-white dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/70 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold py-3 px-4 rounded-xl text-sm transition-all duration-200 shadow-none cursor-pointer group"
               >
                 <svg className="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
