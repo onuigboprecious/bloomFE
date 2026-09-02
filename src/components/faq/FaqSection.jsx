@@ -21,6 +21,9 @@ export const FaqSection = () => {
               <HelpCircle className="w-3.5 h-3.5 text-[#00BCFF]" />
               <span>Got Questions?</span>
             </div>
+            <span className="hidden sm:inline-block text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
+              |
+            </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Frequently Asked Questions
             </h2>
