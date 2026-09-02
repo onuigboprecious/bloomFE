@@ -22,7 +22,8 @@ import {
   Newspaper,
   ShieldCheck,
   BookOpen,
-  Palette
+  Palette,
+  ShoppingBag
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -69,9 +70,21 @@ export const Navbar = () => {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-8 lg:gap-10 text-[13px] font-semibold text-slate-500 dark:text-slate-400">
-            <button onClick={() => setCurrentPage('dashboard')} className="hover:text-[#00BCFF] dark:hover:text-[#00BCFF] transition-colors cursor-pointer flex items-center gap-1.5 font-bold text-slate-900 dark:text-white">
-              <LayoutDashboard className="w-3.5 h-3.5 text-[#00BCFF]" />
-              <span>Dashboard</span>
+            <button
+              onClick={() => {
+                if (currentPage !== 'home') {
+                  setCurrentPage('home');
+                } else {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className={`transition-colors cursor-pointer py-1 font-bold ${
+                currentPage === 'home'
+                  ? 'text-[#00BCFF] dark:text-[#00BCFF]'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <span>Our Story</span>
             </button>
 
             {/* Products Dropdown */}
@@ -353,40 +366,16 @@ export const Navbar = () => {
                       </span>
                     </div>
 
-                    {/* Dashboard */}
+                    {/* My Cart */}
                     <button
                       onClick={() => {
-                        setCurrentPage('dashboard');
+                        setIsOrderModalOpen(true);
                         setProfileDropdownOpen(false);
                       }}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
                     >
-                      <LayoutDashboard className="w-4 h-4 text-[#00BCFF]" />
-                      <span>Dashboard</span>
-                    </button>
-
-                    {/* Card Builder */}
-                    <button
-                      onClick={() => {
-                        setCurrentPage('customizer');
-                        setProfileDropdownOpen(false);
-                      }}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
-                    >
-                      <Sliders className="w-4 h-4 text-[#00BCFF]" />
-                      <span>Card Builder</span>
-                    </button>
-
-                    {/* Settings */}
-                    <button
-                      onClick={() => {
-                        setCurrentPage('dashboard');
-                        setProfileDropdownOpen(false);
-                      }}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
-                    >
-                      <Settings className="w-4 h-4 text-[#00BCFF]" />
-                      <span>Settings</span>
+                      <ShoppingBag className="w-4 h-4 text-[#00BCFF]" />
+                      <span>Cart</span>
                     </button>
 
                     {/* Logout */}
@@ -572,32 +561,19 @@ export const Navbar = () => {
 
             {isAuthenticated && (
               <div className="py-2 border-b border-slate-100 dark:border-slate-800/80 space-y-1">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">Account & Studio</span>
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">Orders & Cart</span>
                 <button
                   onClick={() => {
-                    setCurrentPage('dashboard');
+                    setIsOrderModalOpen(true);
                     setMobileMenuOpen(false);
                   }}
                   className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
-                    <LayoutDashboard className="w-4 h-4 text-[#00BCFF]" />
-                    <span>Dashboard</span>
+                    <ShoppingBag className="w-4 h-4 text-[#00BCFF]" />
+                    <span>Cart</span>
                   </div>
-                  <span className="text-[11px] text-[#00BCFF]">Open →</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setCurrentPage('customizer');
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex items-center justify-between w-full text-left py-2 px-2.5 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
-                >
-                  <div className="flex items-center gap-2">
-                    <Palette className="w-4 h-4 text-[#00BCFF]" />
-                    <span>Card Builder</span>
-                  </div>
-                  <span className="text-[11px] text-[#00BCFF]">Design →</span>
+                  <span className="text-[11px] text-[#00BCFF]">View Cart →</span>
                 </button>
               </div>
             )}

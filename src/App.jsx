@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
+import { isAppDomain, isMarketingDomain, getMarketingDomainUrl, getAppDomainUrl } from './config/domainConfig';
+
 import Navbar from './components/layout/Navbar';
 import HeroSection from './components/hero/HeroSection';
 import NfcProcessSteps from './components/features/NfcProcessSteps';
@@ -8,10 +11,10 @@ import FaqSection from './components/faq/FaqSection';
 import Footer from './components/layout/Footer';
 import OrderModal from './components/order-modal/OrderModal';
 import WaitlistModal from './components/ui/WaitlistModal';
+
 import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
 import DashboardPage from './pages/DashboardPage';
-import OnboardingSetupPage from './pages/OnboardingSetupPage';
 import NfcCardsPage from './components/products/NfcCardsPage';
 import NfcWristbandsPage from './components/products/NfcWristbandsPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -28,189 +31,9 @@ import ClaimCardPage from './pages/ClaimCardPage';
 import InvalidCardPage from './pages/InvalidCardPage';
 import CardTapHandler from './pages/CardTapHandler';
 
-export const AppContent = () => {
-  const { currentPage, setCurrentPage, isWaitlistModalOpen, closeWaitlistModal } = useApp();
-
-  useEffect(() => {
-    // Sync currentPage changes to the browser history / URL path
-    const pageToPath = {
-      home: '/',
-      login: '/login',
-      signup: '/signup',
-      dashboard: '/dashboard',
-      onboarding: '/onboarding',
-      'claim-card': '/claim',
-      'invalid-card': '/invalid-card',
-      'reset-password': '/reset-password',
-      'forgot-password': '/forgot-password',
-      cards: '/cards',
-      wristbands: '/wristbands',
-      about: '/about',
-      press: '/press',
-      support: '/support',
-      legal: '/legal',
-      privacy: '/privacy',
-      terms: '/terms',
-      security: '/security',
-      returns: '/returns'
-    };
-
-    const path = pageToPath[currentPage];
-    if (path && window.location.pathname !== path) {
-      window.history.pushState({ page: currentPage }, '', path);
-    }
-  }, [currentPage]);
-
-  useEffect(() => {
-    // Detect URL paths & search parameters for direct NFC taps, handle links (@username), claims, or invalid card alerts
-    const handleInitialPath = () => {
-      const pathname = window.location.pathname;
-      const params = new URLSearchParams(window.location.search);
-
-      const knownRoutes = [
-        '/', '/login', '/signup', '/dashboard', '/onboarding', '/setup-profile',
-        '/claim', '/invalid-card', '/forgot-password', '/reset-password',
-        '/cards', '/wristbands', '/about', '/press', '/support', '/legal',
-        '/privacy', '/terms', '/security', '/returns'
-      ];
-
-      if (pathname.startsWith('/card/') || pathname.startsWith('/@') || params.get('cardTap') || params.get('username')) {
-        setCurrentPage('card-tap');
-      } else if (pathname.length > 1 && !knownRoutes.includes(pathname.toLowerCase()) && !pathname.includes('.')) {
-        setCurrentPage('card-tap');
-      } else if (pathname === '/claim' || params.get('claimCard')) {
-        setCurrentPage('claim-card');
-      } else if (pathname === '/dashboard') {
-        setCurrentPage('dashboard');
-      } else if (pathname === '/onboarding' || pathname === '/setup-profile') {
-        setCurrentPage('onboarding');
-      } else if (pathname === '/invalid-card' || params.get('invalidCard')) {
-        setCurrentPage('invalid-card');
-      } else if (params.get('token')) {
-        setCurrentPage('reset-password');
-      } else {
-        setCurrentPage('home');
-      }
-    };
-
-    handleInitialPath();
-
-    const handlePopState = (event) => {
-      const pathToPage = {
-        '/': 'home',
-        '/login': 'login',
-        '/signup': 'signup',
-        '/dashboard': 'dashboard',
-        '/onboarding': 'onboarding',
-        '/setup-profile': 'onboarding',
-        '/claim': 'claim-card',
-        '/invalid-card': 'invalid-card',
-        '/reset-password': 'reset-password',
-        '/forgot-password': 'forgot-password',
-        '/cards': 'cards',
-        '/wristbands': 'wristbands',
-        '/about': 'about',
-        '/press': 'press',
-        '/support': 'support',
-        '/legal': 'legal',
-        '/privacy': 'privacy',
-        '/terms': 'terms',
-        '/security': 'security',
-        '/returns': 'returns'
-      };
-
-      const pathname = window.location.pathname;
-      if (pathname.startsWith('/card/') || pathname.startsWith('/@')) {
-        setCurrentPage('card-tap');
-      } else {
-        const page = pathToPage[pathname.toLowerCase()] || 'home';
-        setCurrentPage(page);
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [setCurrentPage]);
-
-  if (currentPage === 'card-tap') {
-    return <CardTapHandler />;
-  }
-
-  if (currentPage === 'claim-card') {
-    return <ClaimCardPage />;
-  }
-
-  if (currentPage === 'onboarding') {
-    return <OnboardingSetupPage />;
-  }
-
-  if (currentPage === 'invalid-card') {
-    return <InvalidCardPage />;
-  }
-
-  if (currentPage === 'login') {
-    return <LoginPage />;
-  }
-
-  if (currentPage === 'signup') {
-    return <SignUpPage />;
-  }
-
-  if (currentPage === 'forgot-password') {
-    return <ForgotPasswordPage />;
-  }
-
-  if (currentPage === 'reset-password') {
-    return <ResetPasswordPage />;
-  }
-
-  if (currentPage === 'dashboard') {
-    return <DashboardPage />;
-  }
-
-  // if (currentPage === 'customizer') {
-  //   return <CardBuilderPage />;
-  // }
-
-  if (currentPage === 'cards') {
-    return <NfcCardsPage />;
-  }
-
-  if (currentPage === 'wristbands') {
-    return <NfcWristbandsPage />;
-  }
-
-  if (currentPage === 'about') {
-    return <AboutUsPage />;
-  }
-
-  if (currentPage === 'press') {
-    return <PressMediaPage />;
-  }
-
-  if (currentPage === 'support') {
-    return <ContactSupportPage />;
-  }
-
-  if (currentPage === 'legal') {
-    return <LegalPage />;
-  }
-
-  if (currentPage === 'privacy') {
-    return <PrivacyPolicyPage />;
-  }
-
-  if (currentPage === 'terms') {
-    return <TermsOfServicePage />;
-  }
-
-  if (currentPage === 'security') {
-    return <SecurityPage />;
-  }
-
-  if (currentPage === 'returns') {
-    return <ReturnsGuaranteePage />;
-  }
+// Home Page Layout Component (enlazer.com.ng)
+export const HomePage = () => {
+  const { isWaitlistModalOpen, closeWaitlistModal } = useApp();
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors overflow-x-hidden">
@@ -228,10 +51,170 @@ export const AppContent = () => {
   );
 };
 
+// Route & App Context Synchronization Bridge (Multi-domain Aware)
+const RouteSyncBridge = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { currentPage, setCurrentPage } = useApp();
+  const isFirstRender = React.useRef(true);
+  const prevPageRef = React.useRef(currentPage);
+
+  // Page name to URL path map
+  const pageToPath = {
+    home: '/',
+    login: '/login',
+    signup: '/signup',
+    dashboard: '/dashboard',
+    profile: '/profile',
+    'card-tap': '/profile',
+    onboarding: '/dashboard',
+    'claim-card': '/claim',
+    'invalid-card': '/invalid-card',
+    'reset-password': '/reset-password',
+    'forgot-password': '/forgot-password',
+    cards: '/cards',
+    wristbands: '/wristbands',
+    about: '/about',
+    press: '/press',
+    support: '/support',
+    legal: '/legal',
+    privacy: '/privacy',
+    terms: '/terms',
+    security: '/security',
+    returns: '/returns'
+  };
+
+  const pathToPage = {
+    '/': 'home',
+    '/login': 'login',
+    '/signup': 'signup',
+    '/dashboard': 'dashboard',
+    '/profile': 'card-tap',
+    '/onboarding': 'dashboard',
+    '/claim': 'claim-card',
+    '/invalid-card': 'invalid-card',
+    '/reset-password': 'reset-password',
+    '/forgot-password': 'forgot-password',
+    '/cards': 'cards',
+    '/wristbands': 'wristbands',
+    '/about': 'about',
+    '/press': 'press',
+    '/support': 'support',
+    '/legal': 'legal',
+    '/privacy': 'privacy',
+    '/terms': 'terms',
+    '/security': 'security',
+    '/returns': 'returns'
+  };
+
+  // 1. Sync URL -> App Context state on route change / initial load
+  useEffect(() => {
+    const pathname = location.pathname;
+    if (pathname.startsWith('/card/') || pathname.startsWith('/@')) {
+      setCurrentPage('card-tap');
+    } else {
+      const page = pathToPage[pathname.toLowerCase()];
+      if (page && page !== currentPage) {
+        setCurrentPage(page);
+      }
+    }
+  }, [location.pathname, setCurrentPage, currentPage]);
+
+  // 2. Sync App Context state -> URL (and cross-domain navigation if required in production)
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      prevPageRef.current = currentPage;
+      return;
+    }
+
+    if (prevPageRef.current !== currentPage) {
+      prevPageRef.current = currentPage;
+      const targetPath = pageToPath[currentPage] || '/';
+      const isDev = typeof window !== 'undefined' && (
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname.endsWith('.local')
+      );
+
+      // Perform cross-domain redirects in production environments
+      if (!isDev) {
+        const appPages = ['dashboard', 'profile', 'card-tap', 'login', 'signup', 'claim-card'];
+        const isTargetAppPage = appPages.includes(currentPage);
+        const currentlyOnAppDomain = isAppDomain();
+
+        if (isTargetAppPage && !currentlyOnAppDomain) {
+          window.location.href = getAppDomainUrl(targetPath);
+          return;
+        }
+
+        if (!isTargetAppPage && currentlyOnAppDomain) {
+          window.location.href = getMarketingDomainUrl(targetPath);
+          return;
+        }
+      }
+
+      if (targetPath && location.pathname !== targetPath) {
+        navigate(targetPath);
+      }
+    }
+  }, [currentPage, location.pathname, navigate]);
+
+  return null;
+};
+
+export const AppRoutes = () => {
+  const isApp = isAppDomain();
+
+  return (
+    <>
+      <RouteSyncBridge />
+      <Routes>
+        {/* 1. Home / Root Route */}
+        {/* On enlazer.app domain root (/), redirect to /dashboard. On enlazer.com.ng, render HomePage */}
+        <Route path="/" element={isApp ? <Navigate to="/dashboard" replace /> : <HomePage />} />
+
+        {/* 2. Dashboard Route (enlazer.app/dashboard) */}
+        <Route path="/dashboard" element={<DashboardPage />} />
+
+        {/* 3. Profile & NFC Card Tap Views (enlazer.app/profile, enlazer.app/@username, enlazer.app/card/:cardUid) */}
+        <Route path="/profile" element={<CardTapHandler />} />
+        <Route path="/@:username" element={<CardTapHandler />} />
+        <Route path="/card/:cardUid" element={<CardTapHandler />} />
+
+        {/* Auth Pages */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/claim" element={<ClaimCardPage />} />
+        <Route path="/invalid-card" element={<InvalidCardPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+        {/* Marketing Pages (enlazer.com.ng) */}
+        <Route path="/cards" element={<NfcCardsPage />} />
+        <Route path="/wristbands" element={<NfcWristbandsPage />} />
+        <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/press" element={<PressMediaPage />} />
+        <Route path="/support" element={<ContactSupportPage />} />
+        <Route path="/legal" element={<LegalPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms" element={<TermsOfServicePage />} />
+        <Route path="/security" element={<SecurityPage />} />
+        <Route path="/returns" element={<ReturnsGuaranteePage />} />
+
+        {/* Fallback route */}
+        <Route path="*" element={isApp ? <CardTapHandler /> : <HomePage />} />
+      </Routes>
+    </>
+  );
+};
+
 export default function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <BrowserRouter>
+      <AppProvider>
+        <AppRoutes />
+      </AppProvider>
+    </BrowserRouter>
   );
 }

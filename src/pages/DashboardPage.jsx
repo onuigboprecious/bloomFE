@@ -34,8 +34,11 @@ import {
   Settings,
   Sun,
   Moon,
-  AlertCircle,
   Loader2,
+  Music,
+  Image as ImageIcon,
+  ShoppingBag,
+  AlertCircle,
   Activity,
   Search,
   Download
@@ -43,8 +46,17 @@ import {
 import MobilePhonePreview from '../components/ui/MobilePhonePreview';
 import ActivateCardModal from '../components/onboarding/ActivateCardModal';
 import SocialIcon from '../components/ui/SocialIcon';
+import { THEMES, TEMPLATES } from '../components/profile/ProfileView';
 import { useApp } from '../context/AppContext';
 import { mockAnalyticsHourly } from '../data/mockData';
+import TemplateSelector from '../components/dashboard/TemplateSelector';
+import CreatorFields from '../components/dashboard/CreatorFields';
+import ArtGalleryFields from '../components/dashboard/ArtGalleryFields';
+import BusinessVendorFields from '../components/dashboard/BusinessVendorFields';
+import PersonalInfoForm from '../components/dashboard/PersonalInfoForm';
+import SocialHandlesManager from '../components/dashboard/SocialHandlesManager';
+import CustomLinksManager from '../components/dashboard/CustomLinksManager';
+import SettingsStudio from '../components/dashboard/SettingsStudio';
 
 export const DashboardPage = () => {
   const {
@@ -82,6 +94,54 @@ export const DashboardPage = () => {
   const [location, setLocation] = useState(profile?.location || '');
   const [customHandle, setCustomHandle] = useState(profile?.username || '');
   const [showEmail, setShowEmail] = useState(profile?.showEmail !== false);
+  const [selectedTheme, setSelectedTheme] = useState(profile?.theme || 'dark-luxe');
+  const [selectedTemplate, setSelectedTemplate] = useState(profile?.template || profile?.layout || 'classic-stack');
+
+  // Dynamic Template Fields State
+  const [featuredTrack, setFeaturedTrack] = useState(() => profile?.featuredTrack || {
+    title: 'Aura of Midnight (Single)',
+    artist: profile?.name || 'Enlazer Sounds',
+    cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=400',
+    streamUrl: 'https://open.spotify.com'
+  });
+
+  const [artworks, setArtworks] = useState(() => profile?.artworks || [
+    {
+      id: 'art-1',
+      title: 'Lagos Horizon at Dusk',
+      medium: 'Oil & Acrylic on Canvas',
+      size: '36 x 48 inches',
+      price: '₦450,000 ($350)',
+      image: '',
+      available: true
+    },
+    {
+      id: 'art-2',
+      title: 'Golden African Essence No. 4',
+      medium: 'Mixed Media & 24K Gold Leaf',
+      size: '30 x 40 inches',
+      price: '₦620,000 ($480)',
+      image: '',
+      available: true
+    }
+  ]);
+
+  const [products, setProducts] = useState(() => profile?.products || [
+    {
+      id: 'prod-1',
+      name: 'Stealth Black Smart NFC Card',
+      price: '₦25,000',
+      desc: 'Stainless steel matte finish with instant contact tap.',
+      image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'prod-2',
+      name: 'IP68 Waterproof NFC Wristband',
+      price: '₦15,000',
+      desc: 'Eco-silicone wearable for events & VIP check-in.',
+      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400'
+    }
+  ]);
 
   // Dynamic Connected Social Handles State
   const [socialHandlesList, setSocialHandlesList] = useState(() => {
@@ -136,8 +196,13 @@ export const DashboardPage = () => {
         location,
         username: customHandle,
         showEmail,
+        theme: selectedTheme,
+        template: selectedTemplate,
         socials: updatedSocials,
-        customLinks
+        customLinks,
+        featuredTrack,
+        artworks,
+        products
       });
 
       if (res && res.success === false) {
@@ -165,6 +230,8 @@ export const DashboardPage = () => {
       if (profile.location) setLocation(profile.location);
       if (profile.username) setCustomHandle(profile.username);
       if (profile.customLinks) setCustomLinks(profile.customLinks);
+      if (profile.theme) setSelectedTheme(profile.theme);
+      if (profile.template || profile.layout) setSelectedTemplate(profile.template || profile.layout);
 
       if (profile.socials && Object.keys(profile.socials).length > 0) {
         setSocialHandlesList(
@@ -316,7 +383,7 @@ export const DashboardPage = () => {
                       <div className="space-y-1 min-w-0">
                         <h3 className="font-extrabold text-sm text-white truncate">{profile.name}</h3>
                         <div className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-lg">
-                          <span className="text-[10px] font-mono text-[#00BCFF] font-bold truncate">www.enlazer.com.ng/@{customHandle}</span>
+                          <span className="text-[10px] font-mono text-[#00BCFF] font-bold truncate">enlazer.app/@{customHandle}</span>
                           <button
                             onClick={handleCopyProfileLink}
                             className="p-0.5 hover:bg-cyan-500/20 rounded text-[#00BCFF] transition-colors cursor-pointer shrink-0"
@@ -505,295 +572,89 @@ export const DashboardPage = () => {
                     </div>
                   </div>
 
-                  {/* 2. Profile Details Form */}
-                  <div className="space-y-4 pt-2">
-                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-2">
-                      <User className="w-4 h-4 text-[#00BCFF]" />
-                      <span>Personal & Contact Information</span>
-                    </h4>
+                  {/* 1. Profile Layout Template Selector Card */}
+                  <TemplateSelector
+                    selectedTemplate={selectedTemplate}
+                    setSelectedTemplate={setSelectedTemplate}
+                  />
 
-                    {/* Profile Picture Upload Section */}
-                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
-                      <label className="text-xs font-black uppercase text-slate-700 dark:text-slate-300 block">
-                        Profile Picture / Avatar
-                      </label>
-                      <div className="flex items-center gap-4">
-                        <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#00BCFF] shrink-0 group">
-                          <img
-                            src={avatar || profile?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400"}
-                            alt="Avatar preview"
-                            className="w-full h-full object-cover"
-                          />
-                          <label className="absolute inset-0 bg-slate-950/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                            <Camera className="w-5 h-5 text-white" />
-                            <input type="file" accept="image/*" onChange={handleAvatarFileChange} className="hidden" />
-                          </label>
-                        </div>
-                        <div className="flex-1 space-y-2">
-                          <label className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-extrabold text-xs cursor-pointer transition-all active:scale-95 shadow-xs">
-                            <Camera className="w-4 h-4" />
-                            <span>Upload New Photo</span>
-                            <input type="file" accept="image/*" onChange={handleAvatarFileChange} className="hidden" />
-                          </label>
-                          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Supports JPG, PNG, GIF or WebP. Updates live instantly!</p>
-                        </div>
-                      </div>
-                    </div>
+                  {/* 2. Dynamic Specialized Template Content Fields */}
+                  {(selectedTemplate === 'creator-artist' || selectedTemplate === 'modern-card') && (
+                    <CreatorFields
+                      featuredTrack={featuredTrack}
+                      setFeaturedTrack={setFeaturedTrack}
+                    />
+                  )}
 
-                    <div>
-                      <label className="text-xs font-extrabold uppercase text-slate-700 dark:text-slate-300 block mb-1">
-                        Full Name
-                      </label>
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:border-[#00BCFF]"
-                      />
-                    </div>
+                  {(selectedTemplate === 'art-gallery' || selectedTemplate === 'minimalist-glass') && (
+                    <ArtGalleryFields
+                      artworks={artworks}
+                      setArtworks={setArtworks}
+                    />
+                  )}
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-xs font-extrabold uppercase text-slate-700 dark:text-slate-300 block mb-1">
-                          Job Title / Craft
-                        </label>
-                        <input
-                          type="text"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:border-[#00BCFF]"
-                        />
-                      </div>
+                  {(selectedTemplate === 'business-vendor' || selectedTemplate === 'bento-grid') && (
+                    <BusinessVendorFields
+                      products={products}
+                      setProducts={setProducts}
+                    />
+                  )}
 
-                      <div>
-                        <label className="text-xs font-extrabold uppercase text-slate-700 dark:text-slate-300 block mb-1">
-                          Brand / Company
-                        </label>
-                        <input
-                          type="text"
-                          value={company}
-                          onChange={(e) => setCompany(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:border-[#00BCFF]"
-                        />
-                      </div>
-                    </div>
+                  {/* 3. Personal & Contact Information */}
+                  <PersonalInfoForm
+                    avatar={avatar}
+                    profile={profile}
+                    handleAvatarFileChange={handleAvatarFileChange}
+                    name={name}
+                    setName={setName}
+                    title={title}
+                    setTitle={setTitle}
+                    company={company}
+                    setCompany={setCompany}
+                    phone={phone}
+                    setPhone={setPhone}
+                    location={location}
+                    setLocation={setLocation}
+                    showEmail={showEmail}
+                    setShowEmail={setShowEmail}
+                    bio={bio}
+                    setBio={setBio}
+                  />
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-xs font-extrabold uppercase text-slate-700 dark:text-slate-300 block mb-1">
-                          Phone Number
-                        </label>
-                        <input
-                          type="tel"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:border-[#00BCFF]"
-                        />
-                      </div>
+                  {/* 4. Connected Social Handles */}
+                  <SocialHandlesManager
+                    socialHandlesList={socialHandlesList}
+                    setSocialHandlesList={setSocialHandlesList}
+                    newSocialPlatform={newSocialPlatform}
+                    setNewSocialPlatform={setNewSocialPlatform}
+                    newSocialValue={newSocialValue}
+                    setNewSocialValue={setNewSocialValue}
+                    handleAddSocialHandle={handleAddSocialHandle}
+                    handleRemoveSocialHandle={handleRemoveSocialHandle}
+                  />
 
-                      <div>
-                        <label className="text-xs font-extrabold uppercase text-slate-700 dark:text-slate-300 block mb-1">
-                          Location
-                        </label>
-                        <input
-                          type="text"
-                          value={location}
-                          onChange={(e) => setLocation(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:border-[#00BCFF]"
-                        />
-                      </div>
-                    </div>
+                  {/* 5. Custom Bio Link Buttons */}
+                  <CustomLinksManager
+                    customLinks={customLinks}
+                    newLinkLabel={newLinkLabel}
+                    setNewLinkLabel={setNewLinkLabel}
+                    newLinkUrl={newLinkUrl}
+                    setNewLinkUrl={setNewLinkUrl}
+                    handleAddCustomLink={handleAddCustomLink}
+                    handleRemoveCustomLink={handleRemoveCustomLink}
+                  />
 
-                    {/* Email Visibility Toggle Switch */}
-                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                      <div className="space-y-0.5">
-                        <span className="text-xs font-extrabold text-slate-900 dark:text-white block">Public Email Visibility</span>
-                        <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block">Allow people who tap your card to see and email you</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setShowEmail((prev) => !prev)}
-                        className={`w-11 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${showEmail ? 'bg-[#00BCFF]' : 'bg-slate-300 dark:bg-slate-700'}`}
-                      >
-                        <div className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${showEmail ? 'translate-x-5' : 'translate-x-0'}`} />
-                      </button>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-extrabold uppercase text-slate-700 dark:text-slate-300 block mb-1">
-                        Bio / Creator Pitch
-                      </label>
-                      <textarea
-                        rows={3}
-                        value={bio}
-                        onChange={(e) => setBio(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl p-3 text-xs font-medium focus:outline-none focus:border-[#00BCFF]"
-                      />
-                    </div>
-
-                    {/* Dynamic Social Accounts Manager */}
-                    <div className="pt-2 space-y-4">
-                      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
-                        <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
-                          <Share2 className="w-4 h-4 text-[#00BCFF]" />
-                          <span>Connected Social Handles & Channels</span>
-                        </h4>
-                        <span className="text-[10px] font-mono text-slate-400">{socialHandlesList.length} Connected</span>
-                      </div>
-
-                      {/* Active Social Handles List */}
-                      {socialHandlesList.length === 0 ? (
-                        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-dashed border-slate-200 dark:border-slate-800 text-center space-y-1">
-                          <Share2 className="w-5 h-5 text-slate-400 mx-auto opacity-50" />
-                          <p className="text-xs font-bold text-slate-500">No social channels connected yet.</p>
-                          <p className="text-[10px] text-slate-400">Select a platform below to connect your Instagram, LinkedIn, WhatsApp, TikTok, GitHub, or portfolio!</p>
-                        </div>
-                      ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          {socialHandlesList.map((item) => (
-                            <div key={item.id} className="flex items-center gap-2 p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                              <div className="p-2 rounded-xl bg-slate-200/60 dark:bg-slate-800/80 shrink-0">
-                                <SocialIcon platform={item.platform} className="w-4 h-4 text-[#00BCFF]" />
-                              </div>
-                              <div className="flex-1 min-w-0 space-y-0.5">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase block truncate">{item.platform}</span>
-                                <input
-                                  type="text"
-                                  value={item.handle}
-                                  onChange={(e) => handleUpdateSocialHandle(item.id, e.target.value)}
-                                  className="w-full bg-transparent text-xs font-bold text-slate-900 dark:text-white focus:outline-none truncate"
-                                  placeholder={`Enter ${item.platform} handle`}
-                                />
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveSocialHandle(item.id)}
-                                className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-colors cursor-pointer shrink-0"
-                                title="Remove handle"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Add New Social Handle Form */}
-                      <form onSubmit={handleAddSocialHandle} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-3">
-                        <span className="text-[11px] font-extrabold uppercase text-slate-700 dark:text-slate-300 block">Add New Social Channel / Handle</span>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                          <select
-                            value={newSocialPlatform}
-                            onChange={(e) => setNewSocialPlatform(e.target.value)}
-                            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs font-bold focus:outline-none focus:border-[#00BCFF] capitalize"
-                          >
-                            <option value="instagram">Instagram</option>
-                            <option value="linkedin">LinkedIn</option>
-                            <option value="twitter">X / Twitter</option>
-                            <option value="whatsapp">WhatsApp</option>
-                            <option value="tiktok">TikTok</option>
-                            <option value="youtube">YouTube</option>
-                            <option value="github">GitHub</option>
-                            <option value="threads">Threads</option>
-                            <option value="telegram">Telegram</option>
-                            <option value="spotify">Spotify</option>
-                            <option value="calendly">Calendly</option>
-                            <option value="website">Website / Portfolio</option>
-                          </select>
-                          <input
-                            type="text"
-                            placeholder="Handle or URL (e.g. username)"
-                            value={newSocialValue}
-                            onChange={(e) => setNewSocialValue(e.target.value)}
-                            className="sm:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs font-bold focus:outline-none focus:border-[#00BCFF]"
-                          />
-                        </div>
-                        <button
-                          type="submit"
-                          className="w-full py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 text-white font-bold text-xs hover:bg-slate-800 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                        >
-                          <Plus className="w-4 h-4 text-cyan-400" />
-                          <span>Add Social Handle</span>
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-
-                  {/* 3. Custom Linktree Buttons Builder */}
-                  <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
-                      <Link className="w-4 h-4 text-[#00BCFF]" />
-                      <span>Custom Bio Linktree Buttons</span>
-                    </h4>
-
-                    {/* Existing Links List */}
-                    {customLinks.length === 0 ? (
-                      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-dashed border-slate-200 dark:border-slate-800 text-center space-y-1">
-                        <Link className="w-5 h-5 text-slate-400 mx-auto opacity-50" />
-                        <p className="text-xs font-bold text-slate-500">No custom bio button links created yet.</p>
-                        <p className="text-[10px] text-slate-400">Use the form below to add your portfolio, booking calendar, or custom website links!</p>
-                      </div>
-                    ) : (
-                      <div className="space-y-2.5">
-                        {customLinks.map((linkItem) => (
-                          <div key={linkItem.id} className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                            <div className="space-y-0.5 truncate pr-2">
-                              <span className="text-xs font-extrabold text-slate-900 dark:text-white block truncate">{linkItem.label}</span>
-                              <span className="text-[10px] font-mono text-cyan-500 truncate block">{linkItem.url}</span>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveCustomLink(linkItem.id)}
-                              className="p-2 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Add New Link Form */}
-                    <form onSubmit={handleAddCustomLink} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-3">
-                      <span className="text-[11px] font-extrabold uppercase text-slate-700 dark:text-slate-300 block">Add New Bio Button Link</span>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <input
-                          type="text"
-                          placeholder="Button Label (e.g. Portfolio)"
-                          value={newLinkLabel}
-                          onChange={(e) => setNewLinkLabel(e.target.value)}
-                          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs font-bold focus:outline-none focus:border-[#00BCFF]"
-                        />
-                        <input
-                          type="url"
-                          placeholder="URL (https://...)"
-                          value={newLinkUrl}
-                          onChange={(e) => setNewLinkUrl(e.target.value)}
-                          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs font-bold focus:outline-none focus:border-[#00BCFF]"
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="w-full py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 text-white font-bold text-xs hover:bg-slate-800 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                      >
-                        <Plus className="w-4 h-4 text-cyan-400" />
-                        <span>Add Bio Link Button</span>
-                      </button>
-                    </form>
-
-                  </div>
-
-                  {/* Save Profile Updates Action Button (Bottom of Card) */}
+                  {/* Save Profile Updates Action Button */}
                   <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end">
                     <button
                       onClick={handleSaveProfile}
                       type="button"
                       disabled={isSaving}
-                      className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00BCFF] hover:bg-cyan-400 disabled:opacity-50 text-slate-950 font-black text-xs transition-all shadow-lg shadow-cyan-500/20 cursor-pointer active:scale-95 text-center flex items-center justify-center gap-2"
+                      className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00BCFF] hover:bg-cyan-400 disabled:opacity-50 text-[#0F172A] font-black text-xs transition-all shadow-lg shadow-cyan-500/20 cursor-pointer active:scale-95 text-center flex items-center justify-center gap-2"
                     >
                       {isSaving ? (
                         <>
-                          <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                          <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
                           <span>Saving Updates...</span>
                         </>
                       ) : (
@@ -822,11 +683,16 @@ export const DashboardPage = () => {
                       location: location !== '' ? location : profile?.location,
                       username: customHandle !== '' ? customHandle : profile?.username,
                       showEmail,
+                      theme: selectedTheme,
+                      template: selectedTemplate,
                       socials: socialHandlesList.reduce((acc, curr) => {
                         if (curr.handle) acc[curr.platform] = curr.handle;
                         return acc;
                       }, {}),
                       customLinks: customLinks,
+                      featuredTrack: featuredTrack,
+                      artworks: artworks,
+                      products: products,
                     }}
                   />
                 </div>
@@ -1478,115 +1344,14 @@ export const DashboardPage = () => {
 
             {/* TAB 5: SETTINGS STUDIO */}
             {activeTab === 'settings' && (
-              <div className="space-y-6 animate-in fade-in duration-300">
-                <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6 shadow-sm">
-                  <div className="border-b border-slate-200 dark:border-slate-800/80 pb-4">
-                    <h3 className="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                      <Settings className="w-5 h-5 text-[#00BCFF]" />
-                      <span>Account & Studio Settings</span>
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Manage your account security, handle username, and profile preferences.</p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Public Username Handle Settings */}
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Enlazer Digital Handle</label>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700">www.enlazer.com.ng/@</span>
-                        <input
-                          type="text"
-                          value={customHandle}
-                          onChange={(e) => setCustomHandle(e.target.value.toLowerCase().trim())}
-                          className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-xs font-bold focus:outline-none focus:border-[#00BCFF]"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Email Account */}
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Account Email</label>
-                      <input
-                        type="email"
-                        value={profile.email || ''}
-                        readOnly
-                        className="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 rounded-xl px-3.5 py-2.5 text-xs font-bold"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Appearance & Theme Preference */}
-                  <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
-                          {darkMode ? <Moon className="w-4 h-4 text-[#00BCFF]" /> : <Sun className="w-4 h-4 text-amber-400" />}
-                          <span>Appearance & Theme Preference</span>
-                        </h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Choose your preferred visual theme for the Enlazer Dashboard & Studio.</p>
-                      </div>
-                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                        {darkMode ? 'Dark Mode Active' : 'Light Mode Active'}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                      {/* Dark Mode Card Option */}
-                      <button
-                        type="button"
-                        onClick={() => { if (!darkMode) toggleDarkMode(); }}
-                        className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between ${
-                          darkMode
-                            ? 'bg-slate-900 border-[#00BCFF] ring-2 ring-[#00BCFF]/20 text-white'
-                            : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-400'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="p-2.5 rounded-xl bg-slate-800 text-amber-400 border border-slate-700">
-                            <Moon className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <span className="text-xs font-extrabold block">Dark Theme</span>
-                            <span className="text-[10px] opacity-75">Sleek obsidian dark UI with vibrant neon accents.</span>
-                          </div>
-                        </div>
-                        {darkMode && <CheckCircle2 className="w-4 h-4 text-[#00BCFF] shrink-0" />}
-                      </button>
-
-                      {/* Light Mode Card Option */}
-                      <button
-                        type="button"
-                        onClick={() => { if (darkMode) toggleDarkMode(); }}
-                        className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between ${
-                          !darkMode
-                            ? 'bg-white border-[#00BCFF] ring-2 ring-[#00BCFF]/20 text-slate-900 shadow-sm'
-                            : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-400'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="p-2.5 rounded-xl bg-amber-100 text-amber-600 border border-amber-200">
-                            <Sun className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <span className="text-xs font-extrabold block">Light Theme</span>
-                            <span className="text-[10px] opacity-75">Clean high-contrast light mode layout.</span>
-                          </div>
-                        </div>
-                        {!darkMode && <CheckCircle2 className="w-4 h-4 text-[#00BCFF] shrink-0" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end">
-                    <button
-                      onClick={handleSaveProfile}
-                      className="px-6 py-3 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-extrabold text-xs transition-all shadow-md cursor-pointer"
-                    >
-                      Save Settings Changes
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <SettingsStudio
+                customHandle={customHandle}
+                setCustomHandle={setCustomHandle}
+                profile={profile}
+                darkMode={darkMode}
+                toggleDarkMode={toggleDarkMode}
+                handleSaveProfile={handleSaveProfile}
+              />
             )}
 
           </div>

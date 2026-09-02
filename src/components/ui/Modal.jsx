@@ -36,15 +36,15 @@ export const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-md' 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className={`relative w-full ${maxWidth} bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white overflow-hidden z-10`}
+            className={`relative w-full ${maxWidth} bg-slate-950 rounded-3xl shadow-2xl border border-slate-800 text-white overflow-hidden z-10`}
           >
             {/* Header */}
             {title && (
-              <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>
+              <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/50">
+                <h3 className="text-lg font-bold text-white">{title}</h3>
                 <button
                   onClick={onClose}
-                  className="p-1.5 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors"
+                  className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -54,14 +54,14 @@ export const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-md' 
             {!title && (
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 z-20 p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                className="absolute top-4 right-4 z-20 p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             )}
 
             {/* Body */}
-            <div className="p-6">{children}</div>
+            <div>{children}</div>
           </motion.div>
         </div>
       )}

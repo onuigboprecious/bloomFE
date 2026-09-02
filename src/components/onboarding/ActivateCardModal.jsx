@@ -97,9 +97,9 @@ export const ActivateCardModal = ({ isOpen, onClose }) => {
 
             {/* Header Text */}
             <div className="space-y-1.5">
-              <h3 className="text-xl font-black text-white tracking-tight">Activate Your Enlazer Card</h3>
+              <h3 className="text-xl font-black text-white tracking-tight">Activate Your Enlazer Tag</h3>
               <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
-                Tap your physical NFC card against your phone or enter the activation code on the back.
+                Tap your physical NFC tag against your phone or enter the activation code on the back.
               </p>
             </div>
 
@@ -120,7 +120,7 @@ export const ActivateCardModal = ({ isOpen, onClose }) => {
                 ) : (
                   <>
                     <Rss className="w-4 h-4" />
-                    <span>Simulate NFC Card Tap</span>
+                    <span>Simulate NFC Tag Tap</span>
                   </>
                 )}
               </button>

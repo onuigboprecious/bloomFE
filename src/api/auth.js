@@ -43,3 +43,16 @@ export async function resetPasswordApi({ token, newPassword }) {
     body: JSON.stringify({ token, newPassword }),
   });
 }
+
+export async function googleAuthApi({ token, idToken, credential }) {
+  return apiClient('/api/auth/google', {
+    method: 'POST',
+    body: JSON.stringify({ token: token || idToken || credential }),
+  });
+}
+
+export function getGoogleOAuthLoginUrl() {
+  const baseUrl = import.meta.env.VITE_API_URL || 'https://bloombe.onrender.com';
+  return `${baseUrl}/api/auth/google/login`;
+}
+

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Lock, Eye, EyeOff, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Lock, Eye, EyeOff, CheckCircle2, ShieldCheck, KeyRound } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useApp } from '../context/AppContext';
 import { resetPasswordApi } from '../api/auth';

@@ -15,6 +15,8 @@ import {
   joinWaitlistApi,
   updateProfileApi,
   checkHandleApi,
+  googleAuthApi,
+  getGoogleOAuthLoginUrl,
 } from '../api';
 import ShareBackModal from '../components/ui/ShareBackModal';
 
@@ -73,8 +75,15 @@ export const AppProvider = ({ children }) => {
   });
   const [claimToast, setClaimToast] = useState({ show: false, message: '', uid: '' });
 
-  // Check active session on initial render
+  // Check active session on initial render (including URL query param for OAuth redirect tokens)
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenFromUrl = urlParams.get('token');
+    if (tokenFromUrl) {
+      localStorage.setItem('bloom_auth_token', tokenFromUrl);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     getMeApi()
       .then((userData) => {
         setIsAuthenticated(true);
@@ -84,6 +93,7 @@ export const AppProvider = ({ children }) => {
             ...prev,
             name: userData.name,
             email: userData.email || prev.email,
+            avatar: userData.avatar_url || userData.user?.avatar_url || prev.avatar,
           }));
         }
         getProfileMeApi()
@@ -157,6 +167,40 @@ export const AppProvider = ({ children }) => {
       })
       .catch(() => {});
     return userData;
+  };
+
+  const loginWithGoogle = async (googlePayload) => {
+    const userData = await googleAuthApi(googlePayload);
+    if (userData?.token) {
+      localStorage.setItem('bloom_auth_token', userData.token);
+    }
+    setIsAuthenticated(true);
+    setUser(userData?.user || userData);
+    if (userData?.name || userData?.user?.name) {
+      setProfile((prev) => ({
+        ...prev,
+        name: userData.name || userData.user.name,
+        email: userData.email || userData.user?.email || prev.email,
+        avatar: userData.avatar_url || userData.user?.avatar_url || prev.avatar,
+      }));
+    }
+    getProfileMeApi()
+      .then((profData) => {
+        if (profData) {
+          setProfile((prev) => ({
+            ...prev,
+            ...profData,
+            socials: profData.socials || prev.socials || {},
+          }));
+        }
+      })
+      .catch(() => {});
+    return userData;
+  };
+
+  const loginWithGoogleRedirect = () => {
+    const targetUrl = getGoogleOAuthLoginUrl();
+    window.location.href = targetUrl;
   };
 
   const signupUser = async ({ email, password, name }) => {
@@ -522,6 +566,8 @@ export const AppProvider = ({ children }) => {
         user,
         authLoading,
         loginUser,
+        loginWithGoogle,
+        loginWithGoogleRedirect,
         signupUser,
         logoutUser,
         darkMode,

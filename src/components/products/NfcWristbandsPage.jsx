@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Watch, Droplet, Zap, ShieldCheck, Sparkles, CheckCircle2, ArrowRight, Rss, Activity, Award, UserCheck, Flame } from 'lucide-react';
+import { Watch, Droplet, Zap, ShieldCheck, Sparkles, CheckCircle2, ArrowRight, ArrowLeft, Rss, Activity, Award, UserCheck, Flame } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import Navbar from '../layout/Navbar';
 import Footer from '../layout/Footer';

@@ -151,11 +151,11 @@ export const Globe = () => {
 
     // Animation Loop
     let animationFrameId;
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      const elapsedTime = (performance.now() - startTime) / 1000;
 
       // Auto rotation
       group.rotation.y += 0.0016;

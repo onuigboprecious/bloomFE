@@ -1,5 +1,5 @@
 import africanFounderImg from '../assets/images/african_founder.png';
-import nfcMatteBlackImg from '../assets/images/nfc_matte_black_card.png';
+import nfcMatteBlackImg from '../assets/images/nfc_wristband_showcase.png';
 import africanWomanImg from '../assets/images/african_woman_executive.png';
 
 export const mockProfileData = {
