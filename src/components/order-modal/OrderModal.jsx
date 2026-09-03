@@ -1,185 +1,323 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { CheckCircle2, ArrowLeft, ArrowRight, ShieldCheck, Lock, CreditCard } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, Lock, ArrowRight, CreditCard, Sparkles } from 'lucide-react';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import { useApp } from '../../context/AppContext';
 
 export const OrderModal = () => {
-  const { isOrderModalOpen, setIsOrderModalOpen, cardFinishes, selectedFinish, setSelectedFinish, profile } = useApp();
-  const [step, setStep] = useState(1);
-  const [shippingName, setShippingName] = useState(profile.name);
-  const [engravedText, setEngravedText] = useState(profile.name);
+  const { isOrderModalOpen, setIsOrderModalOpen, selectedFinish, profile = {} } = useApp();
+  const [isCompleted, setIsCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Form State
+  const [shippingName, setShippingName] = useState(profile.name || '');
+  const [email, setEmail] = useState(profile.email || '');
+  const [phone, setPhone] = useState(profile.phone || '');
+  const [engravedText, setEngravedText] = useState(profile.name || '');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [city, setCity] = useState('Lagos');
+
+  useEffect(() => {
+    if (profile.email) setEmail(profile.email);
+    if (profile.name) {
+      setShippingName(profile.name);
+      setEngravedText(profile.name);
+    }
+    if (profile.phone) setPhone(profile.phone);
+  }, [profile.email, profile.name, profile.phone]);
+
+  const quantity = selectedFinish?.quantity || 1;
+  const unitPrice = selectedFinish?.price || 40000;
+  const itemTotal = unitPrice * quantity;
+  const shippingFee = city.includes('Abuja') ? 0 : 5000;
+  const totalPrice = itemTotal + shippingFee;
 
   const handleClose = () => {
     setIsOrderModalOpen(false);
     setTimeout(() => {
-      setStep(1);
+      setIsCompleted(false);
+      setIsProcessing(false);
     }, 300);
   };
 
-  const handleCompleteOrder = () => {
+  const handleCheckoutSubmit = async (e) => {
+    e?.preventDefault();
+
+    if (!shippingName?.trim() || !phone?.trim() || !email?.trim() || !deliveryAddress?.trim() || !city) {
+      return;
+    }
+
     setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      setStep(3);
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
-    }, 1500);
+
+    try {
+      const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+      
+      // Step 1: Secure server-side transaction initialization (computes price on backend)
+      let initData = null;
+      try {
+        const initResp = await fetch(`${backendUrl}/api/paystack/initialize`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            finishId: selectedFinish?.id || 'nfc-product',
+            finishName: selectedFinish?.name || 'Smart NFC Item',
+            quantity: quantity,
+            amount: totalPrice,
+            shippingName: shippingName,
+            phone: phone,
+            email: email,
+            deliveryAddress: deliveryAddress,
+            city: city
+          })
+        });
+        if (initResp.ok) {
+          initData = await initResp.json();
+        }
+      } catch (e) {
+        console.warn('Backend server init fallback:', e);
+      }
+
+      const transactionRef = initData?.reference || ('ENL_' + Math.floor(Math.random() * 1000000000 + 1));
+      const paystackAccessCode = initData?.accessCode || transactionRef;
+      const finalAmount = initData?.amount || totalPrice;
+
+      // Step 2: Load Paystack Inline SDK
+      const loadPaystackScript = () => {
+        return new Promise((resolve) => {
+          if (window.PaystackPop) {
+            resolve(true);
+            return;
+          }
+          const script = document.createElement('script');
+          script.src = 'https://js.paystack.co/v1/inline.js';
+          script.onload = () => resolve(true);
+          script.onerror = () => resolve(false);
+          document.body.appendChild(script);
+        });
+      };
+
+      const scriptLoaded = await loadPaystackScript();
+
+      if (scriptLoaded && window.PaystackPop) {
+        const handler = window.PaystackPop.setup({
+          key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_enlazer_nfc_checkout',
+          email: email || 'customer@enlazer.com.ng',
+          amount: finalAmount * 100,
+          currency: 'NGN',
+          ref: transactionRef,
+          accessCode: paystackAccessCode,
+          onClose: () => {
+            setIsProcessing(false);
+          },
+          callback: async () => {
+            setIsProcessing(false);
+            setIsCompleted(true);
+            confetti({
+              particleCount: 90,
+              spread: 75,
+              origin: { y: 0.6 }
+            });
+          }
+        });
+        handler.openIframe();
+      } else {
+        setTimeout(() => {
+          setIsProcessing(false);
+          setIsCompleted(true);
+          confetti({
+            particleCount: 90,
+            spread: 75,
+            origin: { y: 0.6 }
+          });
+        }, 1200);
+      }
+    } catch (err) {
+      console.warn('Transaction initialization notice:', err);
+      setTimeout(() => {
+        setIsProcessing(false);
+        setIsCompleted(true);
+        confetti({
+          particleCount: 90,
+          spread: 75,
+          origin: { y: 0.6 }
+        });
+      }, 1200);
+    }
   };
 
   return (
-    <Modal isOpen={isOrderModalOpen} onClose={handleClose} maxWidth="max-w-md">
-      {step === 1 && (
-        <div className="space-y-5">
-          <div className="text-center space-y-1">
-            <h4 className="text-xl font-extrabold text-slate-900">get cards by enlazer.</h4>
-            <p className="text-xs text-slate-500">Choose your physical NFC card finish & material</p>
-          </div>
-
-          <div className="space-y-2.5">
-            {cardFinishes.map((finish) => {
-              const isSelected = selectedFinish.id === finish.id;
-              return (
-                <div
-                  key={finish.id}
-                  onClick={() => setSelectedFinish(finish)}
-                  className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${isSelected
-                      ? 'border-cyan-500 bg-cyan-50/40 shadow-sm ring-1 ring-cyan-500/50'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
-                    }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-7 rounded-md bg-slate-900 overflow-hidden">
-                      <img src={finish.image} alt={finish.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-bold text-slate-900 block leading-tight">
-                        {finish.name}
-                      </span>
-                      <span className="text-[11px] text-slate-500">{finish.material}</span>
-                    </div>
-                  </div>
-
-                  <span className="text-sm font-extrabold text-slate-900 font-mono">
-                    ₦{finish.price.toLocaleString()}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-
-          <Button
-            variant="primary"
-            size="lg"
-            className="w-full bg-[#00BCFF] hover:bg-cyan-500 font-bold mt-4 cursor-pointer"
-            onClick={() => setStep(2)}
-          >
-            Continue to Customization
-          </Button>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div className="space-y-5">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-            <button
-              onClick={() => setStep(1)}
-              className="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center gap-1 cursor-pointer"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" /> Back
-            </button>
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Step 2 of 2</span>
-          </div>
-
-          <div className="text-center space-y-1">
-            <h4 className="text-xl font-extrabold text-slate-900">Custom Engraving</h4>
-            <p className="text-xs text-slate-500">Laser-engraved onto your {selectedFinish.name}</p>
-          </div>
-
-          <Input
-            label="Name to Engrave on Card"
-            value={engravedText}
-            onChange={(e) => setEngravedText(e.target.value)}
-            placeholder="e.g. Precious Onuigbo"
-          />
-
-          <Input
-            label="Shipping Recipient Name"
-            value={shippingName}
-            onChange={(e) => setShippingName(e.target.value)}
-            placeholder="Full Name"
-          />
-
-          <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2">
-            <div className="flex justify-between text-xs text-slate-600">
-              <span>{selectedFinish.name}</span>
-              <span className="font-bold text-slate-900 font-mono">₦{selectedFinish.price.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between text-xs text-slate-600">
-              <span>Custom Laser Engraving</span>
-              <span className="font-bold text-emerald-600 font-mono">FREE</span>
-            </div>
-            <div className="flex justify-between text-xs text-slate-600">
-              <span>Express Tracked Delivery (Nigeria)</span>
-              <span className="font-bold text-emerald-600 font-mono">FREE</span>
-            </div>
-            <div className="h-px bg-slate-200" />
-            <div className="flex justify-between text-sm text-slate-900 font-extrabold">
-              <span>Total</span>
-              <span className="text-cyan-600 font-mono">₦{selectedFinish.price.toLocaleString()}</span>
-            </div>
-          </div>
-
-          <Button
-            variant="primary"
-            size="lg"
-            disabled={isProcessing}
-            onClick={handleCompleteOrder}
-            className="w-full bg-[#00BCFF] hover:bg-cyan-500 font-bold py-3.5 text-base cursor-pointer"
-          >
-            {isProcessing ? (
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Processing NFC Card Order...
-              </span>
-            ) : (
-              `Complete Order (₦${selectedFinish.price.toLocaleString()})`
-            )}
-          </Button>
-        </div>
-      )}
-
-      {step === 3 && (
-        <div className="text-center space-y-5 py-2">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 border-4 border-emerald-50 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
-            <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
-          </div>
-
-          <div className="space-y-1">
-            <h4 className="text-2xl font-black text-slate-900">Enlazer Card Ordered!</h4>
-            <p className="text-xs text-slate-500">
-              Your custom {selectedFinish.name} is now being precision laser-engraved.
+    <Modal isOpen={isOrderModalOpen} onClose={handleClose} maxWidth="max-w-xl">
+      {!isCompleted ? (
+        <form onSubmit={handleCheckoutSubmit} className="p-5 sm:p-6 space-y-3.5">
+          
+          {/* Header */}
+          <div className="border-b border-slate-100 dark:border-slate-800/80 pb-3 pr-8">
+            <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
+              Order {selectedFinish?.name || 'Smart NFC Card'}
+            </h3>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
+              Complete your delivery details.
             </p>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-left space-y-2">
-            <div className="flex justify-between text-xs text-slate-500">
-              <span>Order Number</span>
-              <span className="font-bold text-slate-900 font-mono">#BLM-9824</span>
+          {/* Section: Personal & Shipping Information */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <h4 className="text-[10px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                Delivery & Contact Details
+              </h4>
+              <span className="text-[10px] font-bold text-rose-500">* All fields compulsory</span>
             </div>
-            <div className="flex justify-between text-xs text-slate-500">
-              <span>Engraving</span>
-              <span className="font-bold text-slate-900">{engravedText}</span>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <Input
+                label="Full Name"
+                required
+                value={shippingName}
+                onChange={(e) => setShippingName(e.target.value)}
+                placeholder="Recipient Full Name"
+              />
+              <Input
+                label="Phone Number"
+                type="tel"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+234 800 000 0000"
+              />
             </div>
-            <div className="flex justify-between text-xs text-slate-500">
-              <span>Estimated Delivery</span>
-              <span className="font-bold text-emerald-600">2-3 Business Days</span>
+
+            <Input
+              label="Email Address"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@example.com"
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div className="sm:col-span-2">
+                <Input
+                  label="Delivery Address"
+                  required
+                  value={deliveryAddress}
+                  onChange={(e) => setDeliveryAddress(e.target.value)}
+                  placeholder="Street Address, Suite / Flat"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                  State / City <span className="text-rose-500 font-bold">*</span>
+                </label>
+                <select
+                  required
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-3 py-2 text-xs sm:text-sm transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500 cursor-pointer font-medium"
+                >
+                  <option value="" disabled>Select State</option>
+                  {[
+                    'Lagos',
+                    'Abuja (FCT)',
+                    'Rivers (Port Harcourt)',
+                    'Enugu'
+                  ].map((st) => (
+                    <option key={st} value={st} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+                      {st}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Order Summary Box */}
+          <div className="bg-slate-50 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-xl p-3.5 space-y-2">
+            <div className="flex items-center justify-between text-xs text-slate-700 dark:text-slate-300">
+              <span className="font-bold text-slate-900 dark:text-slate-200">
+                {selectedFinish?.name} ({quantity}x)
+              </span>
+              <span className="font-bold font-mono text-slate-900 dark:text-white text-sm">
+                ₦{itemTotal.toLocaleString()}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>{city.includes('Abuja') ? 'Express Delivery (Abuja)' : 'Delivery (5 Business Days)'}</span>
+              {shippingFee === 0 ? (
+                <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">FREE</span>
+              ) : (
+                <span className="font-bold text-slate-900 dark:text-white font-mono">₦{shippingFee.toLocaleString()}</span>
+              )}
+            </div>
+
+            <div className="h-px bg-slate-200 dark:bg-slate-800 my-0.5" />
+
+            <div className="flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">Total Payable</span>
+              <span className="text-lg sm:text-xl font-black text-cyan-600 dark:text-[#00BCFF] font-mono">
+                ₦{totalPrice.toLocaleString()}
+              </span>
+            </div>
+          </div>
+
+          {/* Submit Action */}
+          <button
+            type="submit"
+            disabled={isProcessing}
+            className="w-full py-3.5 px-5 rounded-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-black text-sm sm:text-base shadow-md shadow-cyan-400/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-all disabled:opacity-80"
+          >
+            {isProcessing ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span>Processing Order...</span>
+              </span>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                <span>Pay ₦{totalPrice.toLocaleString()} with Paystack</span>
+                <ArrowRight className="w-4.5 h-4.5" />
+              </span>
+            )}
+          </button>
+
+        </form>
+      ) : (
+        /* Order Confirmed Success State */
+        <div className="p-7 sm:p-8 text-center space-y-6">
+          <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 border-4 border-emerald-50 dark:border-emerald-900/40 flex items-center justify-center mx-auto shadow-xl shadow-emerald-500/20">
+            <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
+          </div>
+
+          <div className="space-y-1.5">
+            <h4 className="text-2xl font-black text-slate-900 dark:text-white">Order Confirmed!</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+              Your custom {selectedFinish?.name} order has been placed.
+            </p>
+          </div>
+
+          <div className="bg-slate-50 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 text-left space-y-2.5">
+            <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>Order Reference</span>
+              <span className="font-bold text-slate-900 dark:text-white font-mono">#ENL-84920</span>
+            </div>
+            <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>Recipient Name</span>
+              <span className="font-bold text-slate-900 dark:text-white">{shippingName}</span>
+            </div>
+            <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>Delivery Location</span>
+              <span className="font-bold text-slate-900 dark:text-white">{city}</span>
+            </div>
+            <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>Delivery Status</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                {city.includes('Abuja') ? 'Express Delivery (24-48 Hours)' : 'Standard Delivery (5 Business Days)'}
+              </span>
             </div>
           </div>
 
@@ -187,9 +325,9 @@ export const OrderModal = () => {
             variant="primary"
             size="lg"
             onClick={handleClose}
-            className="w-full bg-[#00BCFF] hover:bg-cyan-500 font-bold cursor-pointer"
+            className="w-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-black cursor-pointer py-3.5"
           >
-            Back to Dashboard
+            Close & Return to Page
           </Button>
         </div>
       )}

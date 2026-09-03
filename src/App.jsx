@@ -5,8 +5,7 @@ import { isAppDomain, isMarketingDomain, getMarketingDomainUrl, getAppDomainUrl 
 
 import Navbar from './components/layout/Navbar';
 import HeroSection from './components/hero/HeroSection';
-import NfcProcessSteps from './components/features/NfcProcessSteps';
-import Testimonials from './components/features/Testimonials';
+import Testimonials from './components/hero/Testimonials';
 import FaqSection from './components/faq/FaqSection';
 import Footer from './components/layout/Footer';
 import OrderModal from './components/order-modal/OrderModal';
@@ -40,7 +39,6 @@ export const HomePage = () => {
       <Navbar />
       <main>
         <HeroSection />
-        <NfcProcessSteps />
         <Testimonials />
         <FaqSection />
       </main>

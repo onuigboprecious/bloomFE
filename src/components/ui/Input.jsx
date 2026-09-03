@@ -9,6 +9,7 @@ export const Input = ({
   prefix,
   suffix,
   className = '',
+  required = false,
   error
 }) => {
   return (
@@ -16,6 +17,7 @@ export const Input = ({
       {label && (
         <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
           {label}
+          {required && <span className="text-rose-500 ml-0.5 font-bold">*</span>}
         </label>
       )}
       <div className="relative flex items-center">
@@ -29,7 +31,8 @@ export const Input = ({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={`w-full bg-slate-50/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500 placeholder:text-slate-400/50 dark:placeholder:text-slate-500/50 placeholder:font-normal placeholder:italic ${
+          required={required}
+          className={`w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500 placeholder:text-slate-500 dark:placeholder:text-slate-400 placeholder:font-normal ${
             prefix ? 'pl-9' : ''
           } ${suffix ? 'pr-9' : ''}`}
         />

@@ -115,17 +115,56 @@ export const mockCardFinishes = [
     popular: false
   },
   {
-    id: "finish-5",
-    name: "Enlazer Active NFC Wristband",
+    id: "wristband-1",
+    name: "Midnight Obsidian Black",
     category: "wristband",
     material: "IP68 Waterproof Eco-Silicone",
-    tagline: "Hands-free smart wearable for active networking",
+    tagline: "Sleek, stealthy & indestructible",
+    price: 28000,
+    color: "bg-slate-950 text-white",
+    cardGradient: "bg-slate-950",
+    chipColor: "border-cyan-400/60 text-cyan-300",
+    image: nfcMatteBlackImg,
+    popular: true
+  },
+  {
+    id: "wristband-2",
+    name: "Cyber Cyan Blue",
+    category: "wristband",
+    material: "IP68 Waterproof Eco-Silicone",
+    tagline: "Vibrant high-visibility tech finish",
     price: 28000,
     color: "bg-cyan-700 text-white",
     cardGradient: "bg-cyan-950",
     chipColor: "border-cyan-400/60 text-cyan-300",
-    image: "https://images.unsplash.com/photo-1510017803434-a899398421b3?auto=format&fit=crop&q=80&w=400",
-    popular: true
+    image: nfcMatteBlackImg,
+    popular: false
+  },
+  {
+    id: "wristband-3",
+    name: "Sahara Sunset Orange",
+    category: "wristband",
+    material: "IP68 Waterproof Eco-Silicone",
+    tagline: "Bold, energetic statement style",
+    price: 28000,
+    color: "bg-amber-600 text-white",
+    cardGradient: "bg-amber-950",
+    chipColor: "border-amber-400/60 text-amber-300",
+    image: nfcMatteBlackImg,
+    popular: false
+  },
+  {
+    id: "wristband-4",
+    name: "Neon Emerald Green",
+    category: "wristband",
+    material: "IP68 Waterproof Eco-Silicone",
+    tagline: "Fresh, premium matte finish",
+    price: 28000,
+    color: "bg-emerald-600 text-white",
+    cardGradient: "bg-emerald-950",
+    chipColor: "border-emerald-400/60 text-emerald-300",
+    image: nfcMatteBlackImg,
+    popular: false
   }
 ];
 
