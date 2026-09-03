@@ -41,8 +41,8 @@ export const ContactSupportPage = () => {
               </div>
               <h4 className="font-bold text-slate-900 dark:text-white text-base">Email Support</h4>
               <p className="text-xs text-slate-500">Fast response within 2-4 hours.</p>
-              <a href="mailto:support@bloomlabs.africa" className="text-xs font-bold text-[#00BCFF] hover:underline block">
-                support@bloomlabs.africa
+              <a href="mailto:support@enlazer.com.ng" className="text-xs font-bold text-[#00BCFF] hover:underline block">
+                support@enlazer.com.ng
               </a>
             </div>
 
