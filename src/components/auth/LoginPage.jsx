@@ -5,7 +5,7 @@ import Button from '../ui/Button';
 import { useApp } from '../../context/AppContext';
 
 export const LoginPage = () => {
-  const { setCurrentPage, loginUser, loginWithGoogleRedirect } = useApp();
+  const { setCurrentPage, loginUser, loginWithGoogleRedirect, selectedFinish, setIsOrderModalOpen } = useApp();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -24,8 +24,11 @@ export const LoginPage = () => {
         const pendingCardUid = localStorage.getItem('pending_claim_cardUid');
         if (pendingCardUid) {
           setCurrentPage('claim-card');
+        } else if (selectedFinish) {
+          setIsOrderModalOpen(true);
+          setCurrentPage('home');
         } else {
-          setCurrentPage('dashboard');
+          setCurrentPage('home');
         }
       }, 1000);
     } catch (err) {

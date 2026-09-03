@@ -137,7 +137,7 @@ const RouteSyncBridge = () => {
 
       // Perform cross-domain redirects in production environments
       if (!isDev) {
-        const appPages = ['dashboard', 'profile', 'card-tap', 'login', 'signup', 'claim-card'];
+        const appPages = ['dashboard', 'profile', 'card-tap', 'claim-card'];
         const isTargetAppPage = appPages.includes(currentPage);
         const currentlyOnAppDomain = isAppDomain();
 
