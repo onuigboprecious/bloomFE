@@ -70,13 +70,6 @@ export const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {new Date().getFullYear()} Enlazer; A commercial product of Infarbloom. All rights reserved.</p>
-          <div className="flex items-center gap-2">
-            <Mail className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Support:</span>
-            <a href="mailto:support@enlazer.com.ng" className="text-cyan-400 font-bold hover:underline">
-              support@enlazer.com.ng
-            </a>
-          </div>
         </div>
       </div>
     </footer>
