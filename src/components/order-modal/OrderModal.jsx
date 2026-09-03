@@ -51,17 +51,15 @@ export const OrderModal = () => {
 
     setIsProcessing(true);
 
-    try {
-      const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-      
-      // Step 1: Secure server-side transaction initialization (computes price on backend)
-      let initData = null;
+    const transactionRef = 'ENL_' + Math.floor(Math.random() * 1000000000 + 1);
+
+    // Non-blocking async backend notification
+    const notifyBackend = async () => {
       try {
-        const initResp = await fetch(`${backendUrl}/api/paystack/initialize`, {
+        const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+        await fetch(`${backendUrl}/api/orders`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             finishId: selectedFinish?.id || 'nfc-product',
             finishName: selectedFinish?.name || 'Smart NFC Item',
@@ -71,81 +69,59 @@ export const OrderModal = () => {
             phone: phone,
             email: email,
             deliveryAddress: deliveryAddress,
-            city: city
+            city: city,
+            paymentRef: transactionRef
           })
         });
-        if (initResp.ok) {
-          initData = await initResp.json();
-        }
-      } catch (e) {
-        console.warn('Backend server init fallback:', e);
+      } catch (err) {
+        console.warn('Backend order recording notice:', err);
       }
+    };
 
-      const transactionRef = initData?.reference || ('ENL_' + Math.floor(Math.random() * 1000000000 + 1));
-      const paystackAccessCode = initData?.accessCode || transactionRef;
-      const finalAmount = initData?.amount || totalPrice;
+    // Load Paystack Inline SDK
+    const loadPaystackScript = () => {
+      return new Promise((resolve) => {
+        if (window.PaystackPop) {
+          resolve(true);
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://js.paystack.co/v1/inline.js';
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+      });
+    };
 
-      // Step 2: Load Paystack Inline SDK
-      const loadPaystackScript = () => {
-        return new Promise((resolve) => {
-          if (window.PaystackPop) {
-            resolve(true);
-            return;
-          }
-          const script = document.createElement('script');
-          script.src = 'https://js.paystack.co/v1/inline.js';
-          script.onload = () => resolve(true);
-          script.onerror = () => resolve(false);
-          document.body.appendChild(script);
-        });
-      };
+    const scriptLoaded = await loadPaystackScript();
 
-      const scriptLoaded = await loadPaystackScript();
+    if (scriptLoaded && window.PaystackPop) {
+      try {
+        const paystackPublicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_35696820fac838fa5b578d369a132e86126248bb';
 
-      if (scriptLoaded && window.PaystackPop) {
         const handler = window.PaystackPop.setup({
-          key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_enlazer_nfc_checkout',
-          email: email || 'customer@enlazer.com.ng',
-          amount: finalAmount * 100,
+          key: paystackPublicKey,
+          email: email,
+          amount: totalPrice * 100, // Amount in kobo
           currency: 'NGN',
           ref: transactionRef,
-          accessCode: paystackAccessCode,
           onClose: () => {
             setIsProcessing(false);
           },
-          callback: async () => {
+          callback: (response) => {
             setIsProcessing(false);
             setIsCompleted(true);
-            confetti({
-              particleCount: 90,
-              spread: 75,
-              origin: { y: 0.6 }
-            });
+            notifyBackend();
           }
         });
         handler.openIframe();
-      } else {
-        setTimeout(() => {
-          setIsProcessing(false);
-          setIsCompleted(true);
-          confetti({
-            particleCount: 90,
-            spread: 75,
-            origin: { y: 0.6 }
-          });
-        }, 1200);
-      }
-    } catch (err) {
-      console.warn('Transaction initialization notice:', err);
-      setTimeout(() => {
+      } catch (err) {
+        console.error('Paystack iframe open error:', err);
         setIsProcessing(false);
-        setIsCompleted(true);
-        confetti({
-          particleCount: 90,
-          spread: 75,
-          origin: { y: 0.6 }
-        });
-      }, 1200);
+      }
+    } else {
+      console.warn('Paystack SDK script failed to load.');
+      setIsProcessing(false);
     }
   };
 
@@ -296,7 +272,7 @@ export const OrderModal = () => {
           <div className="space-y-1.5">
             <h4 className="text-2xl font-black text-slate-900 dark:text-white">Order Confirmed!</h4>
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
-              Your custom {selectedFinish?.name} order has been placed.
+              Your custom {selectedFinish?.name} order has been placed. Please check your email address (<strong className="text-slate-900 dark:text-white">{email}</strong>) for your official receipt and order summary.
             </p>
           </div>
 
@@ -308,6 +284,10 @@ export const OrderModal = () => {
             <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
               <span>Recipient Name</span>
               <span className="font-bold text-slate-900 dark:text-white">{shippingName}</span>
+            </div>
+            <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>Email Receipt</span>
+              <span className="font-bold text-[#00BCFF]">{email}</span>
             </div>
             <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
               <span>Delivery Location</span>
