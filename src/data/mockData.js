@@ -3,27 +3,27 @@ import nfcMatteBlackImg from '../assets/images/nfc_wristband_showcase.png';
 import africanWomanImg from '../assets/images/african_woman_executive.png';
 
 export const mockProfileData = {
-  name: "Precious Onuigbo",
-  username: "precious",
+  name: "Alex Morgan",
+  username: "alexmorgan",
   title: "Product Designer & Creator",
   company: "Enlazer Labs",
   bio: "Designing digital experiences & building next-gen physical NFC networking tools across Africa. Tap to connect or book a call!",
   avatar: africanFounderImg,
-  email: "precious@enlazerlabs.africa",
+  email: "alex.morgan@enlazer.com.ng",
   phone: "+234 803 123 4567",
-  website: "https://precious.design",
+  website: "https://alexmorgan.design",
   location: "Lagos & Abuja, Nigeria",
   theme: "dark-luxe", // 'dark-luxe' | 'neon-cyber' | 'sunset-amber' | 'emerald-green'
   layout: "stack", // 'stack' | 'grid' | 'linktree'
   socials: {
-    instagram: "precious.design",
-    tiktok: "@precious_creator",
-    twitter: "preciousonuigbo",
+    instagram: "alexmorgan.design",
+    tiktok: "@alexmorgan_creator",
+    twitter: "alexmorgandesign",
     whatsapp: "+2348031234567",
-    calendly: "https://calendly.com/precious-onuigbo/30min",
-    portfolio: "https://precious.design",
-    linkedin: "preciousonuigbo",
-    youtube: "@precious_builds"
+    calendly: "https://calendly.com/alex-morgan/30min",
+    portfolio: "https://alexmorgan.design",
+    linkedin: "alexmorgandesign",
+    youtube: "@alexmorgan_builds"
   },
   stats: {
     totalTaps: 1422,
@@ -226,8 +226,8 @@ export const mockRecentLeads = [
 export const mockTeamCards = [
   {
     id: "team-1",
-    name: "Precious Onuigbo",
-    email: "precious@enlazerlabs.africa",
+    name: "Alex Morgan",
+    email: "alex.morgan@enlazer.com.ng",
     title: "Founder & CPO",
     department: "Executive",
     cardUid: "ENL-9921-NFC",

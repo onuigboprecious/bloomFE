@@ -106,8 +106,8 @@ export const ProfileView = ({ data }) => {
   const [selectedArtwork, setSelectedArtwork] = useState(null);
 
   const profile = data || {
-    name: "Precious Onuigbo",
-    username: "precious",
+    name: "John Doe",
+    username: "johndoe",
     title: "Product Lead & Executive",
     company: "Enlazer Global",
     bio: "Building next-generation digital networking tools & smart NFC business cards.",
@@ -120,9 +120,9 @@ export const ProfileView = ({ data }) => {
     template: "corporate-pro",
     showEmail: true,
     socials: {
-      linkedin: "preciousonuigbo",
-      twitter: "preciousonuigbo",
-      instagram: "precious.design",
+      linkedin: "johndoe",
+      twitter: "johndoe",
+      instagram: "johndoe.design",
       website: "https://enlazer.com.ng"
     }
   };
