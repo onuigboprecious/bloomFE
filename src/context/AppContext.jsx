@@ -50,7 +50,7 @@ export const AppProvider = ({ children }) => {
   const [profile, setProfile] = useState(() => {
     const saved = localStorage.getItem('bloom_profile');
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try { return JSON.parse(saved); } catch (e) { }
     }
     return mockProfileData;
   });
@@ -63,7 +63,7 @@ export const AppProvider = ({ children }) => {
   const [leads, setLeads] = useState(() => {
     const saved = localStorage.getItem('bloom_leads');
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try { return JSON.parse(saved); } catch (e) { }
     }
     return mockRecentLeads;
   });
@@ -106,7 +106,7 @@ export const AppProvider = ({ children }) => {
               }));
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       })
       .catch(() => {
         setIsAuthenticated(false);
@@ -125,7 +125,7 @@ export const AppProvider = ({ children }) => {
             setLeads(data);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
       getProfileMeApi()
         .then((profData) => {
           if (profData) {
@@ -136,7 +136,7 @@ export const AppProvider = ({ children }) => {
             }));
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }, [isAuthenticated]);
 
@@ -161,10 +161,10 @@ export const AppProvider = ({ children }) => {
     }
     setIsAuthenticated(true);
     setUser(userData?.user || userData);
-    
+
     const userEmail = userData?.email || userData?.user?.email || email;
     const userName = userData?.name || userData?.user?.name || email.split('@')[0];
-    
+
     setProfile((prev) => ({
       ...prev,
       name: userName,
@@ -181,7 +181,7 @@ export const AppProvider = ({ children }) => {
           }));
         }
       })
-      .catch(() => {});
+      .catch(() => { });
     return userData;
   };
 
@@ -262,7 +262,7 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('bloom_is_card_linked', 'true');
     localStorage.setItem('bloom_linked_card_uid', cardId);
 
-    claimCardApi(cardId).catch(() => {});
+    claimCardApi(cardId).catch(() => { });
 
     setProfile((prev) => ({
       ...prev,
@@ -287,7 +287,7 @@ export const AppProvider = ({ children }) => {
   const triggerNfcTap = () => {
     setIsTapSimulating(true);
     const cardId = activeCardUid || 'BLM-9921-NFC';
-    recordTapApi(cardId, 'NFC Tap').catch(() => {});
+    recordTapApi(cardId, 'NFC Tap').catch(() => { });
 
     setTimeout(() => {
       setIsTapSimulating(false);
@@ -311,7 +311,7 @@ export const AppProvider = ({ children }) => {
       };
       try {
         localStorage.setItem('bloom_profile', JSON.stringify(updatedObj));
-      } catch (e) {}
+      } catch (e) { }
       return updatedObj;
     });
 
@@ -330,7 +330,7 @@ export const AppProvider = ({ children }) => {
   const updateProfileField = (field, value) => {
     setProfile((prev) => {
       const updated = { ...prev, [field]: value };
-      updateProfileApi(updated).catch(() => {});
+      updateProfileApi(updated).catch(() => { });
       return updated;
     });
   };
@@ -344,7 +344,7 @@ export const AppProvider = ({ children }) => {
           [network]: value
         }
       };
-      updateProfileApi(updated).catch(() => {});
+      updateProfileApi(updated).catch(() => { });
       return updated;
     });
   };
@@ -412,14 +412,14 @@ export const AppProvider = ({ children }) => {
 
   const exportVCards = (contactsList) => {
     if (!contactsList || contactsList.length === 0) return;
-    
+
     const rawString = contactsList.map(target => {
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
       const profileUrl = target.website || target.profileUrl || origin;
       const nameParts = (target.name || '').trim().split(' ');
       const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
       const firstName = nameParts[0] || '';
-      
+
       return [
         'BEGIN:VCARD',
         'VERSION:3.0',
@@ -503,7 +503,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const deleteLead = (leadId) => {
-    deleteLeadApi(leadId).catch(() => {});
+    deleteLeadApi(leadId).catch(() => { });
     setLeads((prev) => {
       const updated = prev.filter((item) => item.id !== leadId);
       localStorage.setItem('bloom_leads', JSON.stringify(updated));
@@ -547,7 +547,7 @@ export const AppProvider = ({ children }) => {
   const closeWaitlistModal = () => setIsWaitlistModalOpen(false);
 
   const joinWaitlist = (data) => {
-    joinWaitlistApi(data).catch(() => {});
+    joinWaitlistApi(data).catch(() => { });
     const existing = JSON.parse(localStorage.getItem('bloom_waitlist') || '[]');
     const newEntry = {
       id: 'waitlist-' + Date.now(),

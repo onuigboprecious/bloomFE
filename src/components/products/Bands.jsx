@@ -86,8 +86,8 @@ export const Bands = () => {
                         key={finish.id}
                         onClick={() => setActiveBand(finish)}
                         className={`p-2.5 sm:p-3 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between shadow-xs ${isSelected
-                            ? 'border-[#00BCFF] bg-cyan-50/50 dark:bg-cyan-950/40 shadow-sm ring-1 ring-[#00BCFF]'
-                            : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700'
+                          ? 'border-[#00BCFF] bg-cyan-50/50 dark:bg-cyan-950/40 shadow-sm ring-1 ring-[#00BCFF]'
+                          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700'
                           }`}
                       >
                         <div className="space-y-0.5 truncate pr-1">
@@ -108,7 +108,7 @@ export const Bands = () => {
           {/* Right Column: Product Description & Sales Card */}
           <div className="lg:col-span-6 flex flex-col justify-center">
             <div className="p-4 sm:p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
-              
+
               {/* ============================================================ */}
               {/* MOBILE-FIRST CONDENSED VIEW (Visible on mobile: block sm:hidden) */}
               {/* ============================================================ */}

@@ -137,7 +137,7 @@ export const Cards = () => {
           {/* Right Column: Product Details Card */}
           <div className="lg:col-span-6 flex flex-col justify-center">
             <div className="p-4 sm:p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
-              
+
               {/* ============================================================ */}
               {/* MOBILE-FIRST CONDENSED VIEW (Visible on mobile: block sm:hidden) */}
               {/* ============================================================ */}

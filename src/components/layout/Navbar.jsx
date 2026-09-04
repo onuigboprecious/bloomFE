@@ -78,11 +78,10 @@ export const Navbar = () => {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
               }}
-              className={`transition-colors cursor-pointer py-1 font-bold ${
-                currentPage === 'home'
+              className={`transition-colors cursor-pointer py-1 font-bold ${currentPage === 'home'
                   ? 'text-[#00BCFF] dark:text-[#00BCFF]'
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
+                }`}
             >
               <span>Our Story</span>
             </button>

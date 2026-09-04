@@ -129,7 +129,7 @@ export const OrderModal = () => {
     <Modal isOpen={isOrderModalOpen} onClose={handleClose} maxWidth="max-w-xl">
       {!isCompleted ? (
         <form onSubmit={handleCheckoutSubmit} className="p-5 sm:p-6 space-y-3.5">
-          
+
           {/* Header */}
           <div className="border-b border-slate-100 dark:border-slate-800/80 pb-3 pr-8">
             <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
