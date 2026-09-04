@@ -45,12 +45,6 @@ export const OrderModal = () => {
   const handleCheckoutSubmit = async (e) => {
     e?.preventDefault();
 
-    if (!isAuthenticated) {
-      setIsOrderModalOpen(false);
-      setCurrentPage('login');
-      return;
-    }
-
     if (!shippingName?.trim() || !phone?.trim() || !email?.trim() || !deliveryAddress?.trim() || !city) {
       return;
     }
@@ -133,49 +127,7 @@ export const OrderModal = () => {
 
   return (
     <Modal isOpen={isOrderModalOpen} onClose={handleClose} maxWidth="max-w-xl">
-      {!isAuthenticated ? (
-        /* Sign In Required State */
-        <div className="p-7 sm:p-8 text-center space-y-6">
-          <div className="w-16 h-16 rounded-full bg-cyan-50 dark:bg-cyan-950/70 text-[#00BCFF] border-4 border-cyan-100 dark:border-cyan-900/40 flex items-center justify-center mx-auto shadow-xl shadow-cyan-500/10">
-            <Lock className="w-8 h-8 stroke-[2.5]" />
-          </div>
-
-          <div className="space-y-2">
-            <h4 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-              Sign In to Complete Order
-            </h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
-              Please log in or create an account to complete your purchase for <strong className="text-slate-900 dark:text-white">{selectedFinish?.name || 'Smart NFC Product'}</strong>.
-            </p>
-          </div>
-
-          <div className="space-y-3 pt-2">
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={() => {
-                setIsOrderModalOpen(false);
-                setCurrentPage('login');
-              }}
-              className="w-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-black cursor-pointer py-3.5 flex items-center justify-center gap-2"
-            >
-              <span>Log In to Account</span>
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setIsOrderModalOpen(false);
-                setCurrentPage('signup');
-              }}
-              className="w-full text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer py-2"
-            >
-              Don't have an account? <span className="text-[#00BCFF] underline">Create Account</span>
-            </button>
-          </div>
-        </div>
-      ) : !isCompleted ? (
+      {!isCompleted ? (
         <form onSubmit={handleCheckoutSubmit} className="p-5 sm:p-6 space-y-3.5">
           
           {/* Header */}
@@ -184,7 +136,7 @@ export const OrderModal = () => {
               Order {selectedFinish?.name || 'Smart NFC Card'}
             </h3>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
-              Complete your delivery details.
+              Complete your delivery details. Guest checkout available.
             </p>
           </div>
 
@@ -348,6 +300,29 @@ export const OrderModal = () => {
               </span>
             </div>
           </div>
+
+          {/* Optional Post-Purchase Account Creation Callout */}
+          {!isAuthenticated && (
+            <div className="p-4 rounded-2xl bg-cyan-50/70 dark:bg-cyan-950/40 border border-cyan-200/80 dark:border-cyan-800/40 text-left space-y-2">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-slate-900 dark:text-white">
+                <Sparkles className="w-4 h-4 text-[#00BCFF] shrink-0" />
+                <span>Save info for live card tracking & profile management?</span>
+              </div>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">
+                Create a password to access your Enlazer profile dashboard anytime.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  handleClose();
+                  setCurrentPage('signup');
+                }}
+                className="w-full mt-1.5 py-2.5 px-4 bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center block shadow-sm"
+              >
+                Create Account with {email}
+              </button>
+            </div>
+          )}
 
           <Button
             variant="primary"
