@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Globe from './Globe';
 import { Sparkles, Zap, ShieldCheck, TrendingUp } from 'lucide-react';
+import sampleImg from '../../assets/images/sample.png';
 
 export const HeroSection = () => {
   return (
@@ -47,7 +48,7 @@ export const HeroSection = () => {
         </div>
 
         {/* Desktop Floating Cards (visible on screens >= lg) */}
-        
+
         {/* Desktop Card 1: Top Left - Slanted -5 deg */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -155,6 +156,17 @@ export const HeroSection = () => {
           <p className="text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed pt-1 px-2">
             Share your contact details, social profiles, and business portfolio in under half a second with modern NFC smart cards & wristbands.
           </p>
+
+          {/* Sample Product Showcase Image */}
+          <div className="pt-4 sm:pt-6 max-w-4xl mx-auto px-2">
+            <div className="relative bg-transparent transition-all flex items-center justify-center">
+              <img
+                src={sampleImg}
+                alt="Enlazer NFC Smart Cards & Wristbands Product Showcase"
+                className="w-full h-auto object-contain max-h-[380px] sm:max-h-[480px] md:max-h-[580px] mx-auto drop-shadow-2xl"
+              />
+            </div>
+          </div>
         </motion.div>
 
         {/* Mobile & Tablet Staggered Bottom Cards (visible on screens < lg) */}
