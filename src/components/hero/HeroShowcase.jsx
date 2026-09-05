@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap } from 'lucide-react';
 import phoneHandImg from '../../assets/images/phone-hand-new.jpg';
 
 export const HeroShowcase = () => {
@@ -14,8 +13,7 @@ export const HeroShowcase = () => {
         {/* Section Header */}
         <div className="text-center space-y-4 max-w-5xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
-              <Zap className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center justify-center px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
               <span>Seamless NFC Experience</span>
             </div>
             <span className="hidden sm:inline-block text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
