@@ -17,7 +17,7 @@ export const FaqSection = () => {
         {/* Header */}
         <div className="text-center space-y-3 mb-14">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-800 shrink-0">
+            <div className="inline-flex items-center gap-2 text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
               <HelpCircle className="w-3.5 h-3.5 text-[#00BCFF]" />
               <span>Got Questions?</span>
             </div>
