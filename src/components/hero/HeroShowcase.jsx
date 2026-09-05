@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import phoneHandImg from '../../assets/images/phone-hand-new.jpg';
+import phoneHandImg from '../../assets/images/phone-hand-new.png';
 
 export const HeroShowcase = () => {
   return (
@@ -9,7 +9,7 @@ export const HeroShowcase = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 sm:space-y-16">
-        
+
         {/* Section Header */}
         <div className="text-center space-y-4 max-w-5xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
@@ -35,12 +35,12 @@ export const HeroShowcase = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="w-full max-w-[420px] sm:max-w-[480px] relative flex justify-center items-center"
+            className="w-full max-w-4xl sm:max-w-5xl lg:max-w-6xl relative flex justify-center items-center px-2"
           >
             <img
               src={phoneHandImg}
               alt="Enlazer Contact Details Phone Showcase"
-              className="w-full h-auto object-contain max-h-[600px] rounded-[36px] border-4 border-slate-800 shadow-2xl shadow-cyan-500/20"
+              className="w-full h-auto object-contain max-h-[750px] md:max-h-[850px]"
             />
           </motion.div>
         </div>
