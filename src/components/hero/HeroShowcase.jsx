@@ -1,12 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, ShoppingBag } from 'lucide-react';
-import { useApp } from '../../context/AppContext';
 import phoneHandImg from '../../assets/images/phone-hand-new.png';
 
 export const HeroShowcase = () => {
-  const { setCurrentPage } = useApp();
-
   return (
     <section id="how-it-works" className="pt-16 sm:pt-24 pb-0 bg-[#070F1E] text-white relative overflow-hidden transition-colors">
       {/* Background Ambient Radial Glow */}
@@ -15,7 +11,7 @@ export const HeroShowcase = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center">
 
         {/* Section Header */}
-        <div className="text-center space-y-5 max-w-5xl mx-auto mb-10 sm:mb-14">
+        <div className="text-center space-y-4 max-w-5xl mx-auto mb-10 sm:mb-14">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <span className="text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
               Seamless NFC Experience
@@ -30,18 +26,6 @@ export const HeroShowcase = () => {
           <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
             Experience how easy it is to share your contact details and build valuable professional connections in under half a second.
           </p>
-
-          {/* CTA Button linked to products */}
-          <div className="pt-2 flex justify-center items-center">
-            <button
-              onClick={() => setCurrentPage('cards')}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-cyan-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer group"
-            >
-              <ShoppingBag className="w-4 h-4 text-slate-950" />
-              <span>Explore Products & Order Now</span>
-              <ArrowRight className="w-4 h-4 text-slate-950 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
         </div>
 
         {/* Center Phone Hand Image Only - Flush with Bottom */}
