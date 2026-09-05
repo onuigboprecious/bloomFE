@@ -52,12 +52,12 @@ export const HeroSection = () => {
           </div>
 
           {/* Sample Product Showcase Image */}
-          <div className="pt-4 sm:pt-6 max-w-4xl mx-auto px-2">
+          <div className="pt-4 sm:pt-6 max-w-4xl mx-auto px-0 sm:px-2">
             <div className="relative bg-transparent transition-all flex items-center justify-center">
               <img
                 src={sampleImg}
                 alt="Enlazer NFC Smart Cards & Wristbands Product Showcase"
-                className="w-full h-auto object-contain max-h-[380px] sm:max-h-[480px] md:max-h-[580px] mx-auto drop-shadow-2xl"
+                className="w-full h-auto object-contain max-h-[460px] sm:max-h-[540px] md:max-h-[620px] scale-105 sm:scale-100 mx-auto drop-shadow-2xl"
               />
             </div>
           </div>

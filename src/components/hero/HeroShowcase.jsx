@@ -29,18 +29,18 @@ export const HeroShowcase = () => {
         </div>
 
         {/* Center Phone Hand Image Only - Flush with Bottom */}
-        <div className="w-full flex justify-center items-end z-20">
+        <div className="w-full flex justify-center items-end z-20 overflow-visible">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="w-full max-w-4xl sm:max-w-5xl lg:max-w-6xl relative flex justify-center items-end px-2"
+            className="w-full max-w-4xl sm:max-w-5xl lg:max-w-6xl relative flex justify-center items-end px-0 sm:px-2"
           >
             <img
               src={phoneHandImg}
               alt="Enlazer Contact Details Phone Showcase"
-              className="w-full h-auto object-contain max-h-[1250px] md:max-h-[1250px] block align-bottom"
+              className="w-full h-auto object-contain max-h-[550px] sm:max-h-[750px] md:max-h-[1050px] lg:max-h-[1250px] scale-110 sm:scale-100 block align-bottom origin-bottom"
             />
           </motion.div>
         </div>
