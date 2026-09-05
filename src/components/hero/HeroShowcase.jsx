@@ -40,7 +40,7 @@ export const HeroShowcase = () => {
             <img
               src={phoneHandImg}
               alt="Enlazer Contact Details Phone Showcase"
-              className="w-full h-auto object-contain max-h-[750px] md:max-h-[850px] block align-bottom"
+              className="w-full h-auto object-contain max-h-[900px] md:max-h-[1000px] block align-bottom"
             />
           </motion.div>
         </div>
