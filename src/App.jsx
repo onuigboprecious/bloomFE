@@ -5,6 +5,7 @@ import { isAppDomain, isMarketingDomain, getMarketingDomainUrl, getAppDomainUrl 
 
 import Navbar from './components/layout/Navbar';
 import HeroSection from './components/hero/HeroSection';
+import ConnectionBanner from './components/hero/ConnectionBanner';
 import HeroShowcase from './components/hero/HeroShowcase';
 import Testimonials from './components/hero/Testimonials';
 import FaqSection from './components/faq/FaqSection';
@@ -40,6 +41,7 @@ export const HomePage = () => {
       <Navbar />
       <main>
         <HeroSection />
+        <ConnectionBanner />
         <HeroShowcase />
         <Testimonials />
         <FaqSection />

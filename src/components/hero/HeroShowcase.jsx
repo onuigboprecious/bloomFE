@@ -1,51 +1,55 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import phoneHandImg from '../../assets/images/phone-hand-new.png';
+import mobilePhoneHandImg from '../../assets/images/mobile-phone-hand-new.png';
 
 export const HeroShowcase = () => {
   return (
-    <section id="how-it-works" className="pt-16 sm:pt-24 pb-0 bg-[#070F1E] text-white relative overflow-hidden transition-colors">
+    <section id="how-it-works" className="pt-16 sm:pt-24 pb-0 bg-slate-50 dark:bg-[#070F1E] text-slate-900 dark:text-white relative overflow-hidden transition-colors">
       {/* Background Ambient Radial Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-blue-500/5 dark:bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
+      {/* Header Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center">
-
         {/* Section Header */}
         <div className="text-center space-y-4 max-w-5xl mx-auto mb-10 sm:mb-14">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-            <span className="text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
+            <span className="text-[#0066FF] dark:text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
               Seamless NFC Experience
             </span>
-            <span className="hidden sm:inline-block text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
+            <span className="hidden sm:inline-block text-[#0066FF] dark:text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
               |
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               Tap to Share. Collect Leads. Sync Instantly.
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
             Experience how easy it is to share your contact details and build valuable professional connections in under half a second.
           </p>
         </div>
-
-        {/* Center Phone Hand Image Only - Flush with Bottom */}
-        <div className="w-full flex justify-center items-end z-20 overflow-visible">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="w-full max-w-4xl sm:max-w-5xl lg:max-w-6xl relative flex justify-center items-end px-0 sm:px-2"
-          >
-            <img
-              src={phoneHandImg}
-              alt="Enlazer Contact Details Phone Showcase"
-              className="w-full h-auto object-contain max-h-[550px] sm:max-h-[750px] md:max-h-[1050px] lg:max-h-[1250px] scale-110 sm:scale-100 block align-bottom origin-bottom"
-            />
-          </motion.div>
-        </div>
-
       </div>
+
+      {/* Center Phone Hand Image - Full-Width Edge to Edge */}
+      <div className="w-full flex justify-center items-end z-20 overflow-visible px-0">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="w-full relative flex justify-center items-end px-0"
+        >
+          <picture className="w-full flex justify-center items-end">
+            <source media="(min-width: 640px)" srcSet={phoneHandImg} />
+            <img
+              src={mobilePhoneHandImg}
+              alt="Enlazer Contact Details Phone Showcase"
+              className="w-full min-w-full h-auto object-cover sm:object-contain block align-bottom origin-bottom"
+            />
+          </picture>
+        </motion.div>
+      </div>
+
     </section>
   );
 };
