@@ -29,7 +29,7 @@ export const FaqSection = () => {
             </h2>
           </div>
           <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">
-            Everything you need to know about Enlazer NFC Digital Business Cards.
+            Everything you need to know about building your free profile, publishing live, and free NFC card delivery.
           </p>
         </div>
 

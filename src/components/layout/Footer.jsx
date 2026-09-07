@@ -19,11 +19,11 @@ export const Footer = () => {
               <span className="text-2xl font-black text-[#00BCFF]">.</span>
             </button>
             <p className="text-slate-400 text-sm max-w-sm leading-relaxed">
-              Enlazer Card is the next-generation NFC digital business card platform. Tap to share contacts, social links, portfolios, and capture leads effortlessly.
+              Enlazer is the hosted digital profile platform for individual professionals in Nigeria. Build your page free, preview live drafts, and get a free custom NFC card shipped when you publish.
             </p>
             <div className="flex items-center gap-4 text-slate-400 text-xs pt-2">
-              <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5 text-cyan-400" />High-Speed Chip</span>
-              <span className="flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> 100% Universal Compatibility</span>
+              <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5 text-cyan-400" />Free Hosted Profile</span>
+              <span className="flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Free NFC Card Delivery</span>
             </div>
           </div>
 

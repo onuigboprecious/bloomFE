@@ -19,6 +19,12 @@ export const MobilePhonePreview = ({ data, className = '' }) => {
 
         {/* Inner Phone Screen Content */}
         <div className="h-[600px] sm:h-[680px] overflow-y-auto custom-scrollbar relative pt-2">
+          {targetData.is_published === false && (
+            <div className="sticky top-0 z-20 bg-slate-900/90 backdrop-blur-md text-[#00BCFF] border-b border-cyan-500/30 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-center flex items-center justify-center gap-1.5 shadow-md">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span>Private Draft Preview</span>
+            </div>
+          )}
           <ProfileView data={targetData} />
         </div>
 

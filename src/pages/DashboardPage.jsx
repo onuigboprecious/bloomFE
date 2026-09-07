@@ -41,10 +41,12 @@ import {
   AlertCircle,
   Activity,
   Search,
-  Download
+  Download,
+  Rocket
 } from 'lucide-react';
 import MobilePhonePreview from '../components/ui/MobilePhonePreview';
 import ActivateCardModal from '../components/onboarding/ActivateCardModal';
+import PublishModal from '../components/order-modal/PublishModal';
 import SocialIcon from '../components/ui/SocialIcon';
 import { THEMES, TEMPLATES } from '../components/profile/ProfileView';
 import { useApp } from '../context/AppContext';
@@ -73,8 +75,12 @@ export const DashboardPage = () => {
     setCurrentPage,
     logoutUser,
     darkMode,
-    toggleDarkMode
+    toggleDarkMode,
+    isPublished,
+    isPublishModalOpen,
+    setIsPublishModalOpen
   } = useApp();
+
 
   const [activeTab, setActiveTab] = useState('creators'); // 'creators' | 'cards' | 'leads' | 'analytics'
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -552,6 +558,54 @@ export const DashboardPage = () => {
 
           {/* Right Main Content Panel */}
           <div className="flex-1 w-full space-y-6">
+
+            {/* DRAFT VS PUBLISHED STATUS BANNER */}
+            <div className={`p-4 sm:p-5 rounded-3xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm ${
+              isPublished
+                ? 'bg-emerald-500/10 border-emerald-500/30 text-slate-900 dark:text-white'
+                : 'bg-slate-900 text-white border-cyan-500/40 shadow-xl'
+            }`}>
+              <div className="flex items-start gap-3 min-w-0">
+                <div className={`p-2.5 rounded-2xl shrink-0 ${isPublished ? 'bg-emerald-500/20 text-emerald-400' : 'bg-cyan-500/20 text-[#00BCFF]'}`}>
+                  {isPublished ? <CheckCircle2 className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
+                </div>
+                <div className="space-y-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black uppercase tracking-wider text-[#00BCFF]">
+                      {isPublished ? 'Live & Public' : 'Private Draft Mode'}
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300">
+                      enlazer.app/@{customHandle || 'username'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-300 dark:text-slate-400 leading-relaxed">
+                    {isPublished
+                      ? 'Your profile is live! Any edits you make here update instantly without re-paying.'
+                      : 'Your page draft is private to you. Publish when you are ready to go live + get your free NFC card shipped.'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="shrink-0 w-full sm:w-auto flex items-center gap-2">
+                {!isPublished ? (
+                  <button
+                    onClick={() => setIsPublishModalOpen(true)}
+                    className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95"
+                  >
+                    <Rocket className="w-4 h-4 text-slate-950" />
+                    <span>Publish Page (₦35,000)</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleCopyProfileLink}
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                  >
+                    {copiedLink ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    <span>{copiedLink ? 'Link Copied!' : 'Copy Live Link'}</span>
+                  </button>
+                )}
+              </div>
+            </div>
 
             {/* TAB CONTENTS */}
 
@@ -1364,6 +1418,12 @@ export const DashboardPage = () => {
       <ActivateCardModal
         isOpen={isActivateModalOpen}
         onClose={() => setIsActivateModalOpen(false)}
+      />
+
+      {/* Publish Profile & Free Card Claim Modal */}
+      <PublishModal
+        isOpen={isPublishModalOpen}
+        onClose={() => setIsPublishModalOpen(false)}
       />
 
       {/* Floating Save Profile Toast Notification */}

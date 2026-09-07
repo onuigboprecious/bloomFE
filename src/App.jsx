@@ -8,9 +8,12 @@ import HeroSection from './components/hero/HeroSection';
 import ConnectionBanner from './components/hero/ConnectionBanner';
 import HeroShowcase from './components/hero/HeroShowcase';
 import Testimonials from './components/hero/Testimonials';
+import PricingSection from './components/hero/PricingSection';
 import FaqSection from './components/faq/FaqSection';
 import Footer from './components/layout/Footer';
 import OrderModal from './components/order-modal/OrderModal';
+import PublishModal from './components/order-modal/PublishModal';
+import StickyCtaBar from './components/layout/StickyCtaBar';
 import WaitlistModal from './components/ui/WaitlistModal';
 
 import LoginPage from './components/auth/LoginPage';
@@ -34,24 +37,28 @@ import CardTapHandler from './pages/CardTapHandler';
 
 // Home Page Layout Component (enlazer.com.ng)
 export const HomePage = () => {
-  const { isWaitlistModalOpen, closeWaitlistModal } = useApp();
+  const { isWaitlistModalOpen, closeWaitlistModal, isPublishModalOpen, setIsPublishModalOpen } = useApp();
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors overflow-x-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors overflow-x-hidden relative pb-16">
       <Navbar />
       <main>
         <HeroSection />
         <ConnectionBanner />
         <HeroShowcase />
         <Testimonials />
+        <PricingSection />
         <FaqSection />
       </main>
       <Footer />
       <OrderModal />
+      <PublishModal isOpen={isPublishModalOpen} onClose={() => setIsPublishModalOpen(false)} />
+      <StickyCtaBar />
       <WaitlistModal isOpen={isWaitlistModalOpen} onClose={closeWaitlistModal} />
     </div>
   );
 };
+
 
 // Route & App Context Synchronization Bridge (Multi-domain Aware)
 const RouteSyncBridge = () => {

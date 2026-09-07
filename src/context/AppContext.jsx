@@ -54,6 +54,14 @@ export const AppProvider = ({ children }) => {
     }
     return mockProfileData;
   });
+
+  const [isPublished, setIsPublished] = useState(() => {
+    const savedPublished = localStorage.getItem('enlazer_is_published');
+    if (savedPublished !== null) return savedPublished === 'true';
+    return profile?.is_published || false;
+  });
+
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isProUser, setIsProUser] = useState(true);
   const [selectedFinish, setSelectedFinish] = useState(mockCardFinishes[0]);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
@@ -74,6 +82,39 @@ export const AppProvider = ({ children }) => {
     return localStorage.getItem('bloom_linked_card_uid') || "BLM-9921-NFC";
   });
   const [claimToast, setClaimToast] = useState({ show: false, message: '', uid: '' });
+
+  const publishProfile = async (shippingDetails = {}, chosenFinish = selectedFinish, paymentRef = '') => {
+    setIsPublished(true);
+    localStorage.setItem('enlazer_is_published', 'true');
+
+    const updated = {
+      ...profile,
+      is_published: true,
+      cardShippingStatus: 'processing',
+      chosenFinish: chosenFinish?.name || 'Stealth Matte Black',
+      shippingDetails,
+      paymentRef
+    };
+
+    setProfile(updated);
+    try {
+      localStorage.setItem('bloom_profile', JSON.stringify(updated));
+    } catch (e) { }
+
+    updateProfileApi(updated).catch(() => { });
+
+    setClaimToast({
+      show: true,
+      uid: profile.username || 'user',
+      message: `🎉 Profile Published & Live! Your free ${chosenFinish?.name || 'NFC Card'} is processing for delivery.`
+    });
+    setTimeout(() => {
+      setClaimToast((prev) => ({ ...prev, show: false }));
+    }, 6000);
+
+    return updated;
+  };
+
 
   // Check active session on initial render (including URL query param for OAuth redirect tokens)
   useEffect(() => {
@@ -589,6 +630,11 @@ export const AppProvider = ({ children }) => {
         toggleDarkMode,
         profile,
         setProfile,
+        isPublished,
+        setIsPublished,
+        isPublishModalOpen,
+        setIsPublishModalOpen,
+        publishProfile,
         isProUser,
         setIsProUser,
         checkUsernameAvailability,

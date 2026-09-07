@@ -328,7 +328,7 @@ export const Navbar = () => {
 
           {/* Right Action Buttons & Profile Dropdown */}
           <div className="hidden md:flex items-center gap-3">
-            {isAuthenticated ? (
+            {isAuthenticated && (
               /* AUTHENTICATED: Profile Avatar & Dropdown Menu */
               <div className="relative">
                 <button
@@ -365,16 +365,16 @@ export const Navbar = () => {
                       </span>
                     </div>
 
-                    {/* My Cart */}
+                    {/* Go to Builder */}
                     <button
                       onClick={() => {
-                        setIsOrderModalOpen(true);
+                        setCurrentPage('dashboard');
                         setProfileDropdownOpen(false);
                       }}
                       className="w-full flex items-center gap-2.5 px-2.5 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
                     >
-                      <ShoppingBag className="w-4 h-4 text-[#00BCFF]" />
-                      <span>Cart</span>
+                      <LayoutDashboard className="w-4 h-4 text-[#00BCFF]" />
+                      <span>Profile Builder</span>
                     </button>
 
                     {/* Logout */}
@@ -395,14 +395,6 @@ export const Navbar = () => {
                   </div>
                 )}
               </div>
-            ) : (
-              /* NOT AUTHENTICATED: Log In Button */
-              <button
-                onClick={() => setCurrentPage('login')}
-                className="px-5 py-2 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-800 dark:hover:border-slate-400 text-slate-900 dark:text-white font-bold text-xs transition-all active:scale-95 cursor-pointer bg-transparent"
-              >
-                Log In
-              </button>
             )}
 
             {/* Dark / Light Mode Toggle */}
@@ -415,6 +407,7 @@ export const Navbar = () => {
             </button>
 
           </div>
+
 
           {/* Mobile Right Bar: Dark Mode Toggle & Hamburger Button */}
           <div className="md:hidden flex items-center gap-2">
@@ -577,8 +570,8 @@ export const Navbar = () => {
               </div>
             )}
 
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
-              {isAuthenticated ? (
+            {isAuthenticated && (
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
                 <button
                   onClick={() => {
                     logoutUser();
@@ -590,28 +583,8 @@ export const Navbar = () => {
                   <LogOut className="w-4 h-4" />
                   <span>Log Out</span>
                 </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setCurrentPage('login');
-                  }}
-                  className="w-full py-2.5 rounded-full border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs text-center cursor-pointer"
-                >
-                  Log In
-                </button>
-              )}
-
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setCurrentPage('customizer');
-                }}
-                className="w-full py-2.5 rounded-full bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-extrabold text-xs text-center shadow-md cursor-pointer transition-all active:scale-95"
-              >
-                Get Enlazer Card
-              </button>
-            </div>
+              </div>
+            )}
           </div>
         )}
 

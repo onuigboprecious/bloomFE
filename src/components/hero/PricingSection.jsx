@@ -1,0 +1,175 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Check, ArrowRight, ShieldCheck, Globe } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
+import { mockPricingTiers } from '../../data/mockData';
+
+export const PricingSection = () => {
+  const { setCurrentPage, isAuthenticated } = useApp();
+
+  const handleStartBuilding = () => {
+    if (isAuthenticated) {
+      setCurrentPage('dashboard');
+    } else {
+      setCurrentPage('signup');
+    }
+  };
+
+  return (
+    <section id="pricing" className="py-20 bg-slate-50 dark:bg-[#070F1E] text-slate-900 dark:text-white transition-colors relative overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Section Header */}
+        <div className="text-center space-y-4 max-w-3xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-300 text-xs font-extrabold tracking-wider uppercase">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#00BCFF]" />
+            <span>Simple, Transparent Pricing</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Build it free. Pay only when you're ready to go live.
+          </h2>
+
+          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
+            No credit card needed to design your profile. Every publish plan includes a free custom NFC card or wristband delivered anywhere in Nigeria.
+          </p>
+        </div>
+
+        {/* 2 Main Pricing Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+
+          {/* TIER 1: FREE TO BUILD */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-7 sm:p-8 flex flex-col justify-between shadow-sm relative">
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
+                  Step 1: Draft & Design
+                </span>
+                <h3 className="text-2xl font-black text-slate-900 dark:text-white">
+                  Free to Build
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Build, customize & preview your page in real-time.
+                </p>
+              </div>
+
+              <div className="flex items-baseline gap-1">
+                <span className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white font-mono">
+                  ₦0
+                </span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                  / forever free draft
+                </span>
+              </div>
+
+              <div className="h-px bg-slate-100 dark:bg-slate-800" />
+
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                {mockPricingTiers.freeFeatures.map((feat, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
+                    <div className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0 mt-0.5">
+                      <Check className="w-3.5 h-3.5" />
+                    </div>
+                    <span>{feat}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="pt-8">
+              <button
+                onClick={handleStartBuilding}
+                className="w-full py-3.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-white text-slate-900 dark:text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer bg-transparent"
+              >
+                Build Your Free Page
+              </button>
+            </div>
+          </div>
+
+          {/* TIER 2: PUBLISH & LAUNCH (FEATURED) */}
+          <div className="bg-slate-900 text-white border-2 border-[#00BCFF] rounded-3xl p-7 sm:p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 bg-[#00BCFF] text-slate-950 text-[10px] font-black uppercase tracking-wider px-4 py-1 rounded-bl-xl">
+              Includes Free NFC Card
+            </div>
+
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <span className="text-xs font-black uppercase tracking-wider text-cyan-400 block">
+                  Step 2: Go Live & Connect
+                </span>
+                <h3 className="text-2xl font-black text-white">
+                  Publish & Get Your Free Card
+                </h3>
+                <p className="text-xs text-slate-300">
+                  Makes your profile live + ships your free NFC card.
+                </p>
+              </div>
+
+              <div className="flex items-baseline gap-1">
+                <span className="text-4xl sm:text-5xl font-black text-white font-mono">
+                  ₦35,000
+                </span>
+                <span className="text-xs text-slate-400 font-medium">
+                  / one-time payment
+                </span>
+              </div>
+
+              <div className="h-px bg-slate-800" />
+
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-200">
+                {mockPricingTiers.publishFeatures.map((feat, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
+                    <div className="w-5 h-5 rounded-full bg-[#00BCFF]/20 text-[#00BCFF] flex items-center justify-center shrink-0 mt-0.5">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                    <span className={idx === 2 ? "font-bold text-[#00BCFF]" : ""}>{feat}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="pt-8">
+              <button
+                onClick={handleStartBuilding}
+                className="w-full py-3.5 rounded-full bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/25 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>Start Free, Pay at Publish</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Custom Domain Upgrade Callout Box */}
+        <div className="mt-12 max-w-4xl mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5">
+            <div className="p-3 rounded-xl bg-cyan-500/10 text-[#00BCFF] shrink-0">
+              <Globe className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="text-sm font-black text-slate-900 dark:text-white">
+                Optional Upgrade: Custom Domain Tier
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Connect your custom domain (e.g., <strong className="text-slate-800 dark:text-slate-200">yourname.ng</strong> or <strong className="text-slate-800 dark:text-slate-200">yourbrand.com</strong>) for ₦15,000/yr on top of the base publish plan.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={handleStartBuilding}
+            className="shrink-0 px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-[#00BCFF] text-xs font-extrabold text-slate-900 dark:text-white transition-all cursor-pointer"
+          >
+            Learn More
+          </button>
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+export default PricingSection;
