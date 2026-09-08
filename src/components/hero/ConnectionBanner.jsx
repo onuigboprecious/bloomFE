@@ -23,10 +23,10 @@ export const ConnectionBanner = () => {
         {/* Header Block */}
         <div className="text-center space-y-4 max-w-4xl mx-auto mb-10 sm:mb-14">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-            <span className="text-[#0066FF] dark:text-[#00BCFF] text-xs sm:text-sm font-extrabold tracking-wider uppercase shrink-0">
+            <span className="text-[#00BCFF] text-xs sm:text-sm font-extrabold tracking-wider uppercase shrink-0">
               HOSTED DIGITAL PROFILE
             </span>
-            <span className="hidden sm:inline-block text-[#0066FF] dark:text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
+            <span className="hidden sm:inline-block text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
               |
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">

@@ -50,7 +50,6 @@ export const PersonalInfoForm = ({
               <span>Upload New Photo</span>
               <input type="file" accept="image/*" onChange={handleAvatarFileChange} className="hidden" />
             </label>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Supports JPG, PNG, GIF or WebP. Updates live instantly!</p>
           </div>
         </div>
       </div>

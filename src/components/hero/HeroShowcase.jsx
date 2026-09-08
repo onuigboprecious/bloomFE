@@ -1,21 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { UserPlus, Palette, CreditCard, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { useApp } from '../../context/AppContext';
+import { UserPlus, Palette, CreditCard, CheckCircle2 } from 'lucide-react';
 import phoneHandImg from '../../assets/images/phone-hand-new.png';
 import mobilePhoneHandImg from '../../assets/images/mobile-phone-hand-new.png';
 
 export const HeroShowcase = () => {
-  const { setCurrentPage, isAuthenticated } = useApp();
-
-  const handleStartBuilding = () => {
-    if (isAuthenticated) {
-      setCurrentPage('dashboard');
-    } else {
-      setCurrentPage('signup');
-    }
-  };
-
   const steps = [
     {
       num: "01",
@@ -44,10 +33,10 @@ export const HeroShowcase = () => {
         {/* Section Header */}
         <div className="text-center space-y-3 max-w-4xl mx-auto mb-12 sm:mb-16">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-            <span className="text-[#0066FF] dark:text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
+            <span className="text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
               HOW IT WORKS
             </span>
-            <span className="hidden sm:inline-block text-[#0066FF] dark:text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
+            <span className="hidden sm:inline-block text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
               |
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
@@ -98,16 +87,6 @@ export const HeroShowcase = () => {
           })}
         </div>
 
-        {/* CTA Step Action */}
-        <div className="text-center pb-8">
-          <button
-            onClick={handleStartBuilding}
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider hover:scale-105 active:scale-95 transition-all cursor-pointer group"
-          >
-            <span>Start Step 1: Build your free page</span>
-            <ArrowRight className="w-4 h-4 text-slate-950 group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
       </div>
 
       {/* Phone Hand Image Footer */}

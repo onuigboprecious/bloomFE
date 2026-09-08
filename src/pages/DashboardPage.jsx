@@ -23,6 +23,7 @@ import {
   Menu,
   X,
   Link,
+  Lock,
   LayoutDashboard,
   LogOut,
   Palette,
@@ -51,10 +52,6 @@ import SocialIcon from '../components/ui/SocialIcon';
 import { THEMES, TEMPLATES } from '../components/profile/ProfileView';
 import { useApp } from '../context/AppContext';
 import { mockAnalyticsHourly } from '../data/mockData';
-import TemplateSelector from '../components/dashboard/TemplateSelector';
-import CreatorFields from '../components/dashboard/CreatorFields';
-import ArtGalleryFields from '../components/dashboard/ArtGalleryFields';
-import BusinessVendorFields from '../components/dashboard/BusinessVendorFields';
 import PersonalInfoForm from '../components/dashboard/PersonalInfoForm';
 import SocialHandlesManager from '../components/dashboard/SocialHandlesManager';
 import CustomLinksManager from '../components/dashboard/CustomLinksManager';
@@ -71,6 +68,7 @@ export const DashboardPage = () => {
     leads,
     deleteLead,
     exportVCards,
+    exportLeadsCSV,
     saveContactToPhone,
     setCurrentPage,
     logoutUser,
@@ -78,7 +76,14 @@ export const DashboardPage = () => {
     toggleDarkMode,
     isPublished,
     isPublishModalOpen,
-    setIsPublishModalOpen
+    setIsPublishModalOpen,
+    googleAccessToken,
+    googleUserEmail,
+    syncedLeadIds,
+    connectGoogleAccount,
+    disconnectGoogleAccount,
+    syncLeadToGoogle,
+    syncBulkLeadsToGoogle
   } = useApp();
 
 
@@ -88,6 +93,79 @@ export const DashboardPage = () => {
   const [copiedLink, setCopiedLink] = useState(false);
   const [newCardUidInput, setNewCardUidInput] = useState('');
   const [cardLinkMsg, setCardLinkMsg] = useState('');
+
+  // Google Contacts API State
+  const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
+  const [googleConnectLoading, setGoogleConnectLoading] = useState(false);
+  const [googleSyncingId, setGoogleSyncingId] = useState(null);
+  const [googleBulkSyncing, setGoogleBulkSyncing] = useState(false);
+  const [googleEmailInput, setGoogleEmailInput] = useState(() => profile?.email || 'alex.morgan@gmail.com');
+  const [showDevOptions, setShowDevOptions] = useState(false);
+  const [manualTokenInput, setManualTokenInput] = useState('');
+  const [manualClientIdInput, setManualClientIdInput] = useState(() => localStorage.getItem('bloom_google_client_id') || '');
+
+  const handleConnectGoogle = async (e) => {
+    if (e) e.preventDefault();
+    setGoogleConnectLoading(true);
+    try {
+      if (manualClientIdInput) {
+        localStorage.setItem('bloom_google_client_id', manualClientIdInput.trim());
+      }
+
+      const inputToUse = manualTokenInput.trim() || googleEmailInput.trim() || null;
+      const res = await connectGoogleAccount(inputToUse);
+
+      if (res.success) {
+        showToastNotification('success', `Connected to Google Contacts (${res.email || googleEmailInput})!`);
+        setIsGoogleModalOpen(false);
+      } else if (res.needEmailPrompt) {
+        const emailRes = await connectGoogleAccount(googleEmailInput.trim());
+        if (emailRes.success) {
+          showToastNotification('success', `Connected Google account (${googleEmailInput})!`);
+          setIsGoogleModalOpen(false);
+        }
+      } else {
+        showToastNotification('error', res.error || 'Failed to connect Google account.');
+      }
+    } catch (err) {
+      showToastNotification('error', err.message || 'Error connecting to Google.');
+    } finally {
+      setGoogleConnectLoading(false);
+    }
+  };
+
+  const handleSyncSingleLeadToGoogle = async (lead) => {
+    if (!googleAccessToken) {
+      setIsGoogleModalOpen(true);
+      return;
+    }
+    const leadId = lead.id || `lead-${lead.name}-${lead.email}`;
+    setGoogleSyncingId(leadId);
+    try {
+      await syncLeadToGoogle(lead);
+      showToastNotification('success', `Synced ${lead.name || 'Contact'} directly to Google Contacts!`);
+    } catch (err) {
+      showToastNotification('error', err.message || 'Failed to sync contact to Google.');
+    } finally {
+      setGoogleSyncingId(null);
+    }
+  };
+
+  const handleSyncBulkLeadsToGoogle = async (selectedLeadsList) => {
+    if (!googleAccessToken) {
+      setIsGoogleModalOpen(true);
+      return;
+    }
+    setGoogleBulkSyncing(true);
+    try {
+      const res = await syncBulkLeadsToGoogle(selectedLeadsList);
+      showToastNotification('success', `Synced ${res.successCount} contacts directly to Google Contacts!`);
+    } catch (err) {
+      showToastNotification('error', err.message || 'Failed to sync selected contacts to Google.');
+    } finally {
+      setGoogleBulkSyncing(false);
+    }
+  };
 
   // Profile Form States
   const [avatar, setAvatar] = useState(profile?.avatar || '');
@@ -311,7 +389,7 @@ export const DashboardPage = () => {
   };
 
   const navTabs = [
-    { id: 'creators', label: 'Profile Studio', icon: User },
+    { id: 'creators', label: 'Profile', icon: User },
     { id: 'cards', label: 'My Physical Cards', icon: CreditCard },
     { id: 'leads', label: 'Received Contacts', icon: Users, count: (leads || []).length },
     { id: 'analytics', label: 'Tap Analytics', icon: TrendingUp },
@@ -560,28 +638,38 @@ export const DashboardPage = () => {
           <div className="flex-1 w-full space-y-6">
 
             {/* DRAFT VS PUBLISHED STATUS BANNER */}
-            <div className={`p-4 sm:p-5 rounded-3xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm ${
-              isPublished
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-slate-900 dark:text-white'
-                : 'bg-slate-900 text-white border-cyan-500/40 shadow-xl'
-            }`}>
-              <div className="flex items-start gap-3 min-w-0">
-                <div className={`p-2.5 rounded-2xl shrink-0 ${isPublished ? 'bg-emerald-500/20 text-emerald-400' : 'bg-cyan-500/20 text-[#00BCFF]'}`}>
+            <div className={`p-4 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl ${isPublished
+                ? 'bg-slate-900 text-white border-emerald-500/30 shadow-emerald-500/5'
+                : 'bg-slate-900 text-white border-cyan-500/30 shadow-cyan-500/5'
+              }`}>
+              <div className="flex items-center gap-3.5 min-w-0 w-full sm:w-auto">
+                <div className={`w-10 h-10 rounded-2xl shrink-0 flex items-center justify-center ${isPublished
+                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                    : 'bg-cyan-500/15 text-[#00BCFF] border border-cyan-500/30'
+                  }`}>
                   {isPublished ? <CheckCircle2 className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
                 </div>
-                <div className="space-y-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-black uppercase tracking-wider text-[#00BCFF]">
+                <div className="space-y-1 min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className={`text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 ${isPublished ? 'text-emerald-400' : 'text-[#00BCFF]'
+                      }`}>
+                      {isPublished && <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />}
                       {isPublished ? 'Live & Public' : 'Private Draft Mode'}
                     </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300">
-                      enlazer.app/@{customHandle || 'username'}
-                    </span>
+                    <a
+                      href={`/profile/${customHandle || 'alexmorgan'}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-slate-700/80 transition-colors flex items-center gap-1"
+                    >
+                      <span>enlazer.app/@{customHandle || 'username'}</span>
+                      <ExternalLink className="w-2.5 h-2.5 text-slate-400" />
+                    </a>
                   </div>
-                  <p className="text-xs text-slate-300 dark:text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed font-medium">
                     {isPublished
-                      ? 'Your profile is live! Any edits you make here update instantly without re-paying.'
-                      : 'Your page draft is private to you. Publish when you are ready to go live + get your free NFC card shipped.'}
+                      ? 'Your profile is live! Edits update instantly without re-paying.'
+                      : 'Draft is private to you. Publish to go live + get your free NFC card shipped.'}
                   </p>
                 </div>
               </div>
@@ -590,19 +678,30 @@ export const DashboardPage = () => {
                 {!isPublished ? (
                   <button
                     onClick={() => setIsPublishModalOpen(true)}
-                    className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95"
                   >
                     <Rocket className="w-4 h-4 text-slate-950" />
                     <span>Publish Page (₦35,000)</span>
                   </button>
                 ) : (
-                  <button
-                    onClick={handleCopyProfileLink}
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"
-                  >
-                    {copiedLink ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    <span>{copiedLink ? 'Link Copied!' : 'Copy Live Link'}</span>
-                  </button>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                      onClick={handleCopyProfileLink}
+                      className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md shadow-cyan-500/20 active:scale-95"
+                    >
+                      {copiedLink ? <Check className="w-3.5 h-3.5 text-slate-950" /> : <Copy className="w-3.5 h-3.5 text-slate-950" />}
+                      <span>{copiedLink ? 'Copied!' : 'Copy Live Link'}</span>
+                    </button>
+                    <a
+                      href={`/profile/${customHandle || 'alexmorgan'}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-1"
+                      title="View Live Profile in New Tab"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5 text-cyan-400" />
+                    </a>
+                  </div>
                 )}
               </div>
             </div>
@@ -620,41 +719,13 @@ export const DashboardPage = () => {
                     <div>
                       <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
                         <User className="w-5 h-5 text-[#00BCFF]" />
-                        <span>Profile Studio</span>
+                        <span>Profile</span>
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400">All-in-one editor for handle, contact details, social links & bio buttons.</p>
                     </div>
                   </div>
 
-                  {/* 1. Profile Layout Template Selector Card */}
-                  <TemplateSelector
-                    selectedTemplate={selectedTemplate}
-                    setSelectedTemplate={setSelectedTemplate}
-                  />
-
-                  {/* 2. Dynamic Specialized Template Content Fields */}
-                  {(selectedTemplate === 'creator-artist' || selectedTemplate === 'modern-card') && (
-                    <CreatorFields
-                      featuredTrack={featuredTrack}
-                      setFeaturedTrack={setFeaturedTrack}
-                    />
-                  )}
-
-                  {(selectedTemplate === 'art-gallery' || selectedTemplate === 'minimalist-glass') && (
-                    <ArtGalleryFields
-                      artworks={artworks}
-                      setArtworks={setArtworks}
-                    />
-                  )}
-
-                  {(selectedTemplate === 'business-vendor' || selectedTemplate === 'bento-grid') && (
-                    <BusinessVendorFields
-                      products={products}
-                      setProducts={setProducts}
-                    />
-                  )}
-
-                  {/* 3. Personal & Contact Information */}
+                  {/* Personal & Contact Information */}
                   <PersonalInfoForm
                     avatar={avatar}
                     profile={profile}
@@ -685,17 +756,6 @@ export const DashboardPage = () => {
                     setNewSocialValue={setNewSocialValue}
                     handleAddSocialHandle={handleAddSocialHandle}
                     handleRemoveSocialHandle={handleRemoveSocialHandle}
-                  />
-
-                  {/* 5. Custom Bio Link Buttons */}
-                  <CustomLinksManager
-                    customLinks={customLinks}
-                    newLinkLabel={newLinkLabel}
-                    setNewLinkLabel={setNewLinkLabel}
-                    newLinkUrl={newLinkUrl}
-                    setNewLinkUrl={setNewLinkUrl}
-                    handleAddCustomLink={handleAddCustomLink}
-                    handleRemoveCustomLink={handleRemoveCustomLink}
                   />
 
                   {/* Save Profile Updates Action Button */}
@@ -844,7 +904,7 @@ export const DashboardPage = () => {
 
               return (
                 <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6 animate-in fade-in duration-300">
-                  
+
                   {/* Tab Title Header */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
                     <div>
@@ -862,6 +922,56 @@ export const DashboardPage = () => {
                         <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold text-xs">
                           {filteredLeads.length} Found
                         </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Google Contacts API Integration Status Card */}
+                  <div className="p-4 rounded-2xl bg-slate-900 text-white border border-cyan-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-[#00BCFF] flex items-center justify-center shrink-0">
+                        <Globe className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h4 className="text-xs font-black text-white">Google Contacts Direct Sync</h4>
+                          {googleAccessToken ? (
+                            <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold border border-emerald-500/30 flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                              Connected ({googleUserEmail || 'Active Sync Token'})
+                            </span>
+                          ) : (
+                            <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-extrabold border border-slate-700">
+                              Not Connected
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-slate-300 mt-0.5">
+                          {googleAccessToken
+                            ? 'Your Google account is connected! Push contacts directly to your cloud address book in 1-click.'
+                            : 'Connect your Google Account to sync captured contacts directly via Google People API.'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
+                      {googleAccessToken ? (
+                        <button
+                          type="button"
+                          onClick={disconnectGoogleAccount}
+                          className="px-3.5 py-2 rounded-xl border border-slate-700 hover:border-red-500/40 text-slate-300 hover:text-red-400 text-xs font-bold transition-all cursor-pointer"
+                        >
+                          Disconnect
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setIsGoogleModalOpen(true)}
+                          className="px-4 py-2 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-md shadow-cyan-500/20 active:scale-95"
+                        >
+                          <Globe className="w-3.5 h-3.5" />
+                          <span>Connect Google Contacts</span>
+                        </button>
                       )}
                     </div>
                   </div>
@@ -891,7 +1001,7 @@ export const DashboardPage = () => {
                           <input
                             type="checkbox"
                             checked={isAllSelected}
-                            onChange={() => {}} // handled by button click
+                            onChange={() => { }} // handled by button click
                             className="rounded text-[#00BCFF] focus:ring-[#00BCFF] pointer-events-none"
                           />
                           <span>Select All</span>
@@ -919,7 +1029,19 @@ export const DashboardPage = () => {
                         </div>
                         <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300">Contacts Selected</span>
                       </div>
-                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const selected = leadsArray.filter(l => selectedLeadIds.includes(l.id || `lead-${l.name}-${l.email}`));
+                            handleSyncBulkLeadsToGoogle(selected);
+                          }}
+                          disabled={googleBulkSyncing}
+                          className="px-3 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-xs disabled:opacity-50"
+                        >
+                          {googleBulkSyncing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Globe className="w-3.5 h-3.5" />}
+                          <span>Sync Selected to Google</span>
+                        </button>
                         <button
                           type="button"
                           onClick={() => {
@@ -929,7 +1051,7 @@ export const DashboardPage = () => {
                           }}
                           className="px-3 py-2 bg-[#00BCFF]/10 hover:bg-[#00BCFF]/20 text-[#00BCFF] rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer"
                         >
-                          <Download className="w-3.5 h-3.5" /> Import Selected to Phone
+                          <Download className="w-3.5 h-3.5" /> Download vCards
                         </button>
                         <button
                           type="button"
@@ -979,11 +1101,10 @@ export const DashboardPage = () => {
                         return (
                           <div
                             key={uniqueId}
-                            className={`relative p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border transition-all duration-200 space-y-3.5 shadow-xs overflow-hidden ${
-                              isSelected
+                            className={`relative p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border transition-all duration-200 space-y-3.5 shadow-xs overflow-hidden ${isSelected
                                 ? 'border-[#00BCFF] bg-cyan-500/5 dark:bg-cyan-500/5'
                                 : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700/80 hover:scale-[1.01]'
-                            }`}
+                              }`}
                           >
                             {/* Inline Delete Confirmation Overlay */}
                             {isConfirmingDelete && (
@@ -1105,17 +1226,42 @@ export const DashboardPage = () => {
                             </div>
 
                             {/* Card Footer Actions */}
-                            <div className="pt-2 flex items-center justify-end border-t border-slate-250/20 dark:border-slate-850/20">
+                            <div className="pt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2 border-t border-slate-250/20 dark:border-slate-850/20">
+                              <button
+                                type="button"
+                                onClick={() => handleSyncSingleLeadToGoogle(item)}
+                                disabled={googleSyncingId === uniqueId}
+                                className={`w-full py-2 px-3 rounded-xl text-[10px] font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-[0.98] ${syncedLeadIds.includes(uniqueId)
+                                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
+                                    : 'bg-[#00BCFF] hover:bg-cyan-400 text-slate-950'
+                                  }`}
+                              >
+                                {googleSyncingId === uniqueId ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : syncedLeadIds.includes(uniqueId) ? (
+                                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                                ) : (
+                                  <Globe className="w-3.5 h-3.5" />
+                                )}
+                                <span>
+                                  {googleSyncingId === uniqueId
+                                    ? 'Syncing...'
+                                    : syncedLeadIds.includes(uniqueId)
+                                      ? 'Synced to Google'
+                                      : 'Sync to Google'}
+                                </span>
+                              </button>
+
                               <button
                                 type="button"
                                 onClick={() => {
                                   saveContactToPhone(item);
                                   showToastNotification('success', 'Contact vCard downloaded!');
                                 }}
-                                className="w-full py-2 bg-[#00BCFF] hover:bg-cyan-500 text-slate-950 rounded-xl text-[10px] font-extrabold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs active:scale-[0.98]"
+                                className="w-full py-2 px-3 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-xl text-[10px] font-extrabold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs active:scale-[0.98]"
                               >
                                 <Download className="w-3.5 h-3.5" />
-                                <span>Import to Phone / Google</span>
+                                <span>Download vCard</span>
                               </button>
                             </div>
 
@@ -1131,7 +1277,7 @@ export const DashboardPage = () => {
             {/* TAB 4: TAP ANALYTICS & INSIGHTS GRAPH STUDIO */}
             {activeTab === 'analytics' && (
               <div className="space-y-6">
-                
+
                 {/* Analytics Header Bar */}
                 <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
                   <div>
@@ -1292,7 +1438,7 @@ export const DashboardPage = () => {
 
                 {/* Bottom Row: Device OS & City Location Distribution Bar Charts */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
+
                   {/* Chart 1: Smartphone Operating System Breakdown */}
                   <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-5 shadow-sm">
                     <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-3">
@@ -1433,9 +1579,8 @@ export const DashboardPage = () => {
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-slate-950/95 dark:bg-slate-900/95 backdrop-blur-xl border shadow-2xl max-w-md cursor-pointer transition-all ${
-              toast.type === 'success' ? 'border-emerald-500/40 shadow-emerald-950/20' : 'border-rose-500/40 shadow-rose-950/20'
-            }`}
+            className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-slate-950/95 dark:bg-slate-900/95 backdrop-blur-xl border shadow-2xl max-w-md cursor-pointer transition-all ${toast.type === 'success' ? 'border-emerald-500/40 shadow-emerald-950/20' : 'border-rose-500/40 shadow-rose-950/20'
+              }`}
             onClick={() => setToast((prev) => ({ ...prev, show: false }))}
           >
             <div className={`p-2 rounded-xl shrink-0 ${toast.type === 'success' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
@@ -1465,6 +1610,111 @@ export const DashboardPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      {/* Google Contacts API Connect Modal */}
+      {isGoogleModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-6 text-white shadow-2xl relative">
+            <button
+              onClick={() => setIsGoogleModalOpen(false)}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white p-1 rounded-xl transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="space-y-3 text-center sm:text-left">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-[#00BCFF] flex items-center justify-center mx-auto sm:mx-0">
+                <Globe className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-black text-white">Connect Google Contacts</h3>
+                <p className="text-xs text-slate-300 leading-relaxed mt-1">
+                  Connect your Google account to automatically push received NFC contact cards straight to your Google Contacts cloud address book.
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleConnectGoogle} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-extrabold text-slate-300 block">
+                  Google Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
+                  <input
+                    type="email"
+                    required
+                    placeholder="name@gmail.com"
+                    value={googleEmailInput}
+                    onChange={(e) => setGoogleEmailInput(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 text-xs font-bold rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-[#00BCFF]"
+                  />
+                </div>
+                <span className="text-[10px] text-slate-400 block">
+                  Contacts will sync directly to this Google account address book.
+                </span>
+              </div>
+
+              {/* Toggle Developer / Advanced Settings */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowDevOptions(!showDevOptions)}
+                  className="text-[10px] font-bold text-slate-400 hover:text-cyan-400 transition-colors"
+                >
+                  {showDevOptions ? 'Hide Developer Credentials' : '⚙️ Advanced Developer Credentials'}
+                </button>
+
+                {showDevOptions && (
+                  <div className="mt-3 p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3 animate-in fade-in">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-extrabold text-slate-400 block">OAuth Client ID</label>
+                      <input
+                        type="text"
+                        placeholder="Google Client ID"
+                        value={manualClientIdInput}
+                        onChange={(e) => setManualClientIdInput(e.target.value)}
+                        className="w-full px-3 py-2 text-[11px] rounded-lg bg-slate-900 border border-slate-700 text-white"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-extrabold text-slate-400 block">Custom OAuth Bearer Token</label>
+                      <input
+                        type="password"
+                        placeholder="Bearer token"
+                        value={manualTokenInput}
+                        onChange={(e) => setManualTokenInput(e.target.value)}
+                        className="w-full px-3 py-2 text-[11px] rounded-lg bg-slate-900 border border-slate-700 text-white"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-2 flex items-center gap-3">
+                <button
+                  type="submit"
+                  disabled={googleConnectLoading}
+                  className="flex-1 py-3 bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95 shadow-md shadow-cyan-500/20"
+                >
+                  {googleConnectLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Globe className="w-4 h-4" />
+                  )}
+                  <span>{googleConnectLoading ? 'Connecting...' : 'Sign in & Connect Google'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsGoogleModalOpen(false)}
+                  className="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

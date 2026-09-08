@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Check, ArrowRight, ShieldCheck, Globe } from 'lucide-react';
+import { Check, ArrowRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { mockPricingTiers } from '../../data/mockData';
 
@@ -23,17 +23,19 @@ export const PricingSection = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center space-y-4 max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-300 text-xs font-extrabold tracking-wider uppercase">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#00BCFF]" />
-            <span>Simple, Transparent Pricing</span>
+        <div className="text-center space-y-3 max-w-4xl mx-auto mb-12 sm:mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+            <span className="text-[#00BCFF] text-xs sm:text-sm font-extrabold tracking-wider uppercase shrink-0">
+              SIMPLE, TRANSPARENT PRICING
+            </span>
+            <span className="hidden sm:inline-block text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
+              |
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              Build it free. Pay only when you're ready to go live.
+            </h2>
           </div>
-
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Build it free. Pay only when you're ready to go live.
-          </h2>
-
-          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
             No credit card needed to design your profile. Every publish plan includes a free custom NFC card or wristband delivered anywhere in Nigeria.
           </p>
         </div>
@@ -142,29 +144,6 @@ export const PricingSection = () => {
             </div>
           </div>
 
-        </div>
-
-        {/* Custom Domain Upgrade Callout Box */}
-        <div className="mt-12 max-w-4xl mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-start gap-3.5">
-            <div className="p-3 rounded-xl bg-cyan-500/10 text-[#00BCFF] shrink-0">
-              <Globe className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-sm font-black text-slate-900 dark:text-white">
-                Optional Upgrade: Custom Domain Tier
-              </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Connect your custom domain (e.g., <strong className="text-slate-800 dark:text-slate-200">yourname.ng</strong> or <strong className="text-slate-800 dark:text-slate-200">yourbrand.com</strong>) for ₦15,000/yr on top of the base publish plan.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={handleStartBuilding}
-            className="shrink-0 px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-[#00BCFF] text-xs font-extrabold text-slate-900 dark:text-white transition-all cursor-pointer"
-          >
-            Learn More
-          </button>
         </div>
 
       </div>
