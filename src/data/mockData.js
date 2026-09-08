@@ -59,7 +59,7 @@ export const mockPricingTiers = {
   customDomainPrice: 15000,
   freeFeatures: [
     "100% Free to build & customize your profile",
-    "Pick your @username handle (enlazer.app/@yourname)",
+    "Pick your @username handle (enlazer.cloud/@yourname)",
     "Unlimited social, WhatsApp, email & portfolio links",
     "Instant live private preview draft as you edit",
     "Select from curated themes & card layouts"
@@ -180,7 +180,7 @@ export const mockNfcFaqs = [
   {
     id: "faq-4",
     question: "Can I update my links, bio, or handle after publishing?",
-    answer: "Yes! Your physical NFC card points dynamically to your live hosted profile URL (`enlazer.app/@yourname`). Any edits you make in your dashboard — changing phone numbers, adding new social channels, updating your portfolio — reflect live instantly without needing a new card or any extra payment."
+    answer: "Yes! Your physical NFC card points dynamically to your live hosted profile URL (`enlazer.cloud/@yourname`). Any edits you make in your dashboard — changing phone numbers, adding new social channels, updating your portfolio — reflect live instantly without needing a new card or any extra payment."
   },
   {
     id: "faq-5",

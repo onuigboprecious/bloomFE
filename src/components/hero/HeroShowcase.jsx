@@ -10,7 +10,7 @@ export const HeroShowcase = () => {
       num: "01",
       icon: UserPlus,
       title: "Sign up free",
-      desc: "Reserve your custom @handle (enlazer.app/@yourname) and set up your account. No credit card or payment info needed."
+      desc: "Reserve your custom @handle (enlazer.cloud/@yourname) and set up your account. No credit card or payment info needed."
     },
     {
       num: "02",

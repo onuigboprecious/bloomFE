@@ -43,11 +43,25 @@ import {
   Activity,
   Search,
   Download,
-  Rocket
+  Rocket,
+  QrCode,
+  Sparkles,
+  ChevronDown,
+  Bell,
+  MessageSquare,
+  FileText,
+  CheckSquare,
+  Folder,
+  HelpCircle,
+  Clock,
+  Hourglass,
+  MessageCircle,
+  Paperclip
 } from 'lucide-react';
 import MobilePhonePreview from '../components/ui/MobilePhonePreview';
 import ActivateCardModal from '../components/onboarding/ActivateCardModal';
 import PublishModal from '../components/order-modal/PublishModal';
+import QuickShareModal from '../components/ui/QuickShareModal';
 import SocialIcon from '../components/ui/SocialIcon';
 import { THEMES, TEMPLATES } from '../components/profile/ProfileView';
 import { useApp } from '../context/AppContext';
@@ -56,6 +70,8 @@ import PersonalInfoForm from '../components/dashboard/PersonalInfoForm';
 import SocialHandlesManager from '../components/dashboard/SocialHandlesManager';
 import CustomLinksManager from '../components/dashboard/CustomLinksManager';
 import SettingsStudio from '../components/dashboard/SettingsStudio';
+import ScheduleWidget from '../components/dashboard/ScheduleWidget';
+import NotesChecklistWidget from '../components/dashboard/NotesChecklistWidget';
 
 export const DashboardPage = () => {
   const {
@@ -90,6 +106,7 @@ export const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState('creators'); // 'creators' | 'cards' | 'leads' | 'analytics'
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
+  const [isQuickShareModalOpen, setIsQuickShareModalOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [newCardUidInput, setNewCardUidInput] = useState('');
   const [cardLinkMsg, setCardLinkMsg] = useState('');
@@ -389,11 +406,11 @@ export const DashboardPage = () => {
   };
 
   const navTabs = [
-    { id: 'creators', label: 'Profile', icon: User },
-    { id: 'cards', label: 'My Physical Cards', icon: CreditCard },
+    { id: 'creators', label: 'Profile Studio', icon: User },
+    { id: 'cards', label: 'Hardware & NFC', icon: CreditCard },
     { id: 'leads', label: 'Received Contacts', icon: Users, count: (leads || []).length },
-    { id: 'analytics', label: 'Tap Analytics', icon: TrendingUp },
-    { id: 'settings', label: 'Settings', icon: Settings }
+    { id: 'analytics', label: 'Tap Analytics', icon: BarChart3 },
+    { id: 'settings', label: 'Account Settings', icon: Settings }
   ];
 
   if (!profile) {
@@ -467,7 +484,7 @@ export const DashboardPage = () => {
                       <div className="space-y-1 min-w-0">
                         <h3 className="font-extrabold text-sm text-white truncate">{profile.name}</h3>
                         <div className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-lg">
-                          <span className="text-[10px] font-mono text-[#00BCFF] font-bold truncate">enlazer.app/@{customHandle}</span>
+                          <span className="text-[10px] font-mono text-[#00BCFF] font-bold truncate">enlazer.cloud/@{customHandle}</span>
                           <button
                             onClick={handleCopyProfileLink}
                             className="p-0.5 hover:bg-cyan-500/20 rounded text-[#00BCFF] transition-colors cursor-pointer shrink-0"
@@ -638,14 +655,14 @@ export const DashboardPage = () => {
           <div className="flex-1 w-full space-y-6">
 
             {/* DRAFT VS PUBLISHED STATUS BANNER */}
-            <div className={`p-4 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl ${isPublished
-                ? 'bg-slate-900 text-white border-emerald-500/30 shadow-emerald-500/5'
-                : 'bg-slate-900 text-white border-cyan-500/30 shadow-cyan-500/5'
+            <div className={`p-4 sm:p-5 rounded-3xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl backdrop-blur-xl ${isPublished
+                ? 'bg-slate-900/90 text-white border-emerald-500/30 shadow-emerald-500/5'
+                : 'bg-slate-900/90 text-white border-cyan-500/30 shadow-cyan-500/5'
               }`}>
               <div className="flex items-center gap-3.5 min-w-0 w-full sm:w-auto">
-                <div className={`w-10 h-10 rounded-2xl shrink-0 flex items-center justify-center ${isPublished
-                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                    : 'bg-cyan-500/15 text-[#00BCFF] border border-cyan-500/30'
+                <div className={`w-11 h-11 rounded-2xl shrink-0 flex items-center justify-center border shadow-inner ${isPublished
+                    ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                    : 'bg-cyan-500/15 text-[#00BCFF] border-cyan-500/30'
                   }`}>
                   {isPublished ? <CheckCircle2 className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
                 </div>
@@ -657,24 +674,32 @@ export const DashboardPage = () => {
                       {isPublished ? 'Live & Public' : 'Private Draft Mode'}
                     </span>
                     <a
-                      href={`/profile/${customHandle || 'alexmorgan'}`}
+                      href={`/profile/${customHandle || profile?.username || 'user'}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-slate-700/80 transition-colors flex items-center gap-1"
+                      className="text-[10px] font-mono px-2.5 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-slate-700/80 transition-colors flex items-center gap-1.5"
                     >
-                      <span>enlazer.app/@{customHandle || 'username'}</span>
+                      <span>enlazer.cloud/@{customHandle || profile?.username || 'username'}</span>
                       <ExternalLink className="w-2.5 h-2.5 text-slate-400" />
                     </a>
                   </div>
                   <p className="text-xs text-slate-300 leading-relaxed font-medium">
                     {isPublished
-                      ? 'Your profile is live! Edits update instantly without re-paying.'
-                      : 'Draft is private to you. Publish to go live + get your free NFC card shipped.'}
+                      ? 'Your digital profile is live! Instant synchronization active across all NFC taps.'
+                      : 'Draft is private to you. Publish to go live & claim your free custom NFC physical card.'}
                   </p>
                 </div>
               </div>
 
-              <div className="shrink-0 w-full sm:w-auto flex items-center gap-2">
+              <div className="shrink-0 w-full sm:w-auto flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => setIsQuickShareModalOpen(true)}
+                  className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-cyan-400 border border-cyan-500/30 font-extrabold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
+                >
+                  <QrCode className="w-4 h-4 text-[#00BCFF]" />
+                  <span>Share QR Code</span>
+                </button>
+
                 {!isPublished ? (
                   <button
                     onClick={() => setIsPublishModalOpen(true)}
@@ -692,15 +717,6 @@ export const DashboardPage = () => {
                       {copiedLink ? <Check className="w-3.5 h-3.5 text-slate-950" /> : <Copy className="w-3.5 h-3.5 text-slate-950" />}
                       <span>{copiedLink ? 'Copied!' : 'Copy Live Link'}</span>
                     </button>
-                    <a
-                      href={`/profile/${customHandle || 'alexmorgan'}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-1"
-                      title="View Live Profile in New Tab"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5 text-cyan-400" />
-                    </a>
                   </div>
                 )}
               </div>
@@ -756,6 +772,17 @@ export const DashboardPage = () => {
                     setNewSocialValue={setNewSocialValue}
                     handleAddSocialHandle={handleAddSocialHandle}
                     handleRemoveSocialHandle={handleRemoveSocialHandle}
+                  />
+
+                  {/* 5. Custom Bio Button Links */}
+                  <CustomLinksManager
+                    customLinks={customLinks}
+                    newLinkLabel={newLinkLabel}
+                    setNewLinkLabel={setNewLinkLabel}
+                    newLinkUrl={newLinkUrl}
+                    setNewLinkUrl={setNewLinkUrl}
+                    handleAddCustomLink={handleAddCustomLink}
+                    handleRemoveCustomLink={handleRemoveCustomLink}
                   />
 
                   {/* Save Profile Updates Action Button */}
@@ -1566,6 +1593,15 @@ export const DashboardPage = () => {
         onClose={() => setIsActivateModalOpen(false)}
       />
 
+      {/* Quick Share QR Modal */}
+      <QuickShareModal
+        isOpen={isQuickShareModalOpen}
+        onClose={() => setIsQuickShareModalOpen(false)}
+        profile={profile}
+        customHandle={customHandle}
+        saveContactToPhone={saveContactToPhone}
+      />
+
       {/* Publish Profile & Free Card Claim Modal */}
       <PublishModal
         isOpen={isPublishModalOpen}
@@ -1613,105 +1649,167 @@ export const DashboardPage = () => {
       {/* Google Contacts API Connect Modal */}
       {isGoogleModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-6 text-white shadow-2xl relative">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 text-white shadow-2xl relative overflow-hidden">
+            {/* Top Subtle Decorative Background Glow */}
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
+
             <button
               onClick={() => setIsGoogleModalOpen(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-white p-1 rounded-xl transition-colors cursor-pointer"
+              className="absolute top-5 right-5 text-slate-400 hover:text-white p-1.5 rounded-xl transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="space-y-3 text-center sm:text-left">
-              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-[#00BCFF] flex items-center justify-center mx-auto sm:mx-0">
-                <Globe className="w-6 h-6" />
+              <div className="w-12 h-12 rounded-2xl bg-white text-slate-950 flex items-center justify-center mx-auto sm:mx-0 shadow-lg border border-slate-700">
+                <svg className="w-6 h-6" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  />
+                </svg>
               </div>
               <div>
-                <h3 className="text-lg font-black text-white">Connect Google Contacts</h3>
+                <h3 className="text-lg font-black text-white">Google Contacts Auth</h3>
                 <p className="text-xs text-slate-300 leading-relaxed mt-1">
-                  Connect your Google account to automatically push received NFC contact cards straight to your Google Contacts cloud address book.
+                  Authenticate with Google OAuth to automatically sync captured leads straight to your Google Contacts address book.
                 </p>
               </div>
             </div>
 
-            <form onSubmit={handleConnectGoogle} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-extrabold text-slate-300 block">
-                  Google Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
-                  <input
-                    type="email"
-                    required
-                    placeholder="name@gmail.com"
-                    value={googleEmailInput}
-                    onChange={(e) => setGoogleEmailInput(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 text-xs font-bold rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-[#00BCFF]"
-                  />
+            {googleAccessToken ? (
+              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 space-y-3">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 shrink-0" />
+                  <div>
+                    <span className="text-xs font-black block">Connected to Google</span>
+                    <span className="text-[11px] text-slate-300 font-mono block truncate">{googleUserEmail || 'Google Account'}</span>
+                  </div>
                 </div>
-                <span className="text-[10px] text-slate-400 block">
-                  Contacts will sync directly to this Google account address book.
-                </span>
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      disconnectGoogleAccount();
+                      showToastNotification('success', 'Disconnected Google Account.');
+                    }}
+                    className="w-full py-2 bg-slate-800 hover:bg-slate-750 text-rose-400 font-bold text-xs rounded-xl border border-slate-700 transition-all cursor-pointer text-center"
+                  >
+                    Disconnect Account
+                  </button>
+                </div>
               </div>
-
-              {/* Toggle Developer / Advanced Settings */}
-              <div className="pt-1">
+            ) : (
+              <div className="space-y-4">
+                {/* Official Google Auth Login CTA Button */}
                 <button
                   type="button"
-                  onClick={() => setShowDevOptions(!showDevOptions)}
-                  className="text-[10px] font-bold text-slate-400 hover:text-cyan-400 transition-colors"
-                >
-                  {showDevOptions ? 'Hide Developer Credentials' : '⚙️ Advanced Developer Credentials'}
-                </button>
-
-                {showDevOptions && (
-                  <div className="mt-3 p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3 animate-in fade-in">
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-extrabold text-slate-400 block">OAuth Client ID</label>
-                      <input
-                        type="text"
-                        placeholder="Google Client ID"
-                        value={manualClientIdInput}
-                        onChange={(e) => setManualClientIdInput(e.target.value)}
-                        className="w-full px-3 py-2 text-[11px] rounded-lg bg-slate-900 border border-slate-700 text-white"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-extrabold text-slate-400 block">Custom OAuth Bearer Token</label>
-                      <input
-                        type="password"
-                        placeholder="Bearer token"
-                        value={manualTokenInput}
-                        onChange={(e) => setManualTokenInput(e.target.value)}
-                        className="w-full px-3 py-2 text-[11px] rounded-lg bg-slate-900 border border-slate-700 text-white"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="pt-2 flex items-center gap-3">
-                <button
-                  type="submit"
+                  onClick={handleConnectGoogle}
                   disabled={googleConnectLoading}
-                  className="flex-1 py-3 bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95 shadow-md shadow-cyan-500/20"
+                  className="w-full py-3.5 bg-white hover:bg-slate-100 text-slate-900 font-extrabold text-xs sm:text-sm rounded-2xl transition-all cursor-pointer flex items-center justify-center gap-3 shadow-lg shadow-white/5 active:scale-95 disabled:opacity-50"
                 >
                   {googleConnectLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin text-slate-900" />
                   ) : (
-                    <Globe className="w-4 h-4" />
+                    <svg className="w-5 h-5" viewBox="0 0 24 24">
+                      <path
+                        fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      />
+                      <path
+                        fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                      />
+                      <path
+                        fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                      />
+                    </svg>
                   )}
-                  <span>{googleConnectLoading ? 'Connecting...' : 'Sign in & Connect Google'}</span>
+                  <span>{googleConnectLoading ? 'Authenticating with Google...' : 'Sign in with Google OAuth'}</span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setIsGoogleModalOpen(false)}
-                  className="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
+
+                {/* Email Override / Alternative Auth */}
+                <div className="pt-2 border-t border-slate-800 space-y-3">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-extrabold text-slate-400 block">
+                      Or Connect via Google Email
+                    </label>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <Mail className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                        <input
+                          type="email"
+                          placeholder="name@gmail.com"
+                          value={googleEmailInput}
+                          onChange={(e) => setGoogleEmailInput(e.target.value)}
+                          className="w-full pl-9 pr-3 py-2 text-xs font-bold rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-[#00BCFF]"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleConnectGoogle()}
+                        className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-extrabold cursor-pointer shrink-0"
+                      >
+                        Connect Email
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Toggle Developer Credentials */}
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setShowDevOptions(!showDevOptions)}
+                      className="text-[10px] font-bold text-slate-400 hover:text-cyan-400 transition-colors"
+                    >
+                      {showDevOptions ? 'Hide Developer Settings' : '⚙️ Custom OAuth Client Credentials'}
+                    </button>
+
+                    {showDevOptions && (
+                      <div className="mt-2.5 p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2.5 animate-in fade-in">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-extrabold text-slate-400 block">Google Client ID</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. xxxx.apps.googleusercontent.com"
+                            value={manualClientIdInput}
+                            onChange={(e) => setManualClientIdInput(e.target.value)}
+                            className="w-full px-3 py-2 text-[11px] rounded-lg bg-slate-900 border border-slate-700 text-white font-mono"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-extrabold text-slate-400 block">Bearer Token</label>
+                          <input
+                            type="password"
+                            placeholder="Google OAuth Access Token"
+                            value={manualTokenInput}
+                            onChange={(e) => setManualTokenInput(e.target.value)}
+                            className="w-full px-3 py-2 text-[11px] rounded-lg bg-slate-900 border border-slate-700 text-white font-mono"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            </form>
+            )}
           </div>
         </div>
       )}

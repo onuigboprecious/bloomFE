@@ -119,7 +119,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
               Publish Page & Claim Free NFC Card
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Publishing makes <strong className="text-[#00BCFF]">enlazer.app/@{profile.username || 'username'}</strong> live + ships your free NFC card across Nigeria.
+              Publishing makes <strong className="text-[#00BCFF]">enlazer.cloud/@{profile.username || 'username'}</strong> live + ships your free NFC card across Nigeria.
             </p>
           </div>
 
@@ -225,7 +225,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
           <div className="bg-slate-50 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-xl p-3.5 space-y-2 text-xs">
             <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
               <span className="font-bold text-slate-900 dark:text-white">
-                Profile Publishing Plan (enlazer.app/@{profile.username || 'username'})
+                Profile Publishing Plan (enlazer.cloud/@{profile.username || 'username'})
               </span>
               <span className="font-bold font-mono">₦35,000</span>
             </div>
@@ -282,7 +282,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
               Congratulations! Your Page is Live!
             </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
-              Your profile is now publicly live at <strong className="text-[#00BCFF]">enlazer.app/@{profile.username || 'username'}</strong>. Your free custom {activeFinish.name} is encoded and processing for delivery!
+              Your profile is now publicly live at <strong className="text-[#00BCFF]">enlazer.cloud/@{profile.username || 'username'}</strong>. Your free custom {activeFinish.name} is encoded and processing for delivery!
             </p>
           </div>
 
@@ -290,12 +290,12 @@ export const PublishModal = ({ isOpen, onClose }) => {
             <div className="flex justify-between">
               <span className="text-slate-500 dark:text-slate-400">Live Profile URL</span>
               <a
-                href={`https://enlazer.app/@${profile.username || 'username'}`}
+                href={`https://enlazer.cloud/@${profile.username || 'username'}`}
                 target="_blank"
                 rel="noreferrer"
                 className="font-bold text-[#00BCFF] hover:underline"
               >
-                enlazer.app/@{profile.username || 'username'}
+                enlazer.cloud/@{profile.username || 'username'}
               </a>
             </div>
             <div className="flex justify-between">

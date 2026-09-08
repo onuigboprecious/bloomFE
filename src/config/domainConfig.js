@@ -1,7 +1,7 @@
 // Domain configuration for Enlazer multi-domain architecture
 export const DOMAIN_CONFIG = {
   MARKETING_DOMAIN: 'enlazer.com.ng',
-  APP_DOMAIN: 'enlazer.app'
+  APP_DOMAIN: 'enlazer.cloud'
 };
 
 /**
@@ -22,7 +22,7 @@ export const getMarketingDomainUrl = (path = '/') => {
 };
 
 /**
- * Returns full URL for app dashboard & digital profiles (enlazer.app)
+ * Returns full URL for app dashboard & digital profiles (enlazer.cloud)
  */
 export const getAppDomainUrl = (path = '/dashboard') => {
   if (typeof window === 'undefined') return path;
@@ -39,7 +39,7 @@ export const getAppDomainUrl = (path = '/dashboard') => {
 };
 
 /**
- * Checks if current request hostname is enlazer.app domain
+ * Checks if current request hostname is enlazer.cloud domain
  */
 export const isAppDomain = () => {
   if (typeof window === 'undefined') return false;

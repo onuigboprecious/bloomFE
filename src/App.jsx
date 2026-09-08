@@ -180,13 +180,13 @@ export const AppRoutes = () => {
       <RouteSyncBridge />
       <Routes>
         {/* 1. Home / Root Route */}
-        {/* On enlazer.app domain root (/), redirect to /dashboard. On enlazer.com.ng, render HomePage */}
+        {/* On enlazer.cloud domain root (/), redirect to /dashboard. On enlazer.com.ng, render HomePage */}
         <Route path="/" element={isApp ? <Navigate to="/dashboard" replace /> : <HomePage />} />
 
-        {/* 2. Dashboard Route (enlazer.app/dashboard) */}
+        {/* 2. Dashboard Route (enlazer.cloud/dashboard) */}
         <Route path="/dashboard" element={<DashboardPage />} />
 
-        {/* 3. Profile & NFC Card Tap Views (enlazer.app/profile, enlazer.app/@username, enlazer.app/card/:cardUid) */}
+        {/* 3. Profile & NFC Card Tap Views (enlazer.cloud/profile, enlazer.cloud/@username, enlazer.cloud/card/:cardUid) */}
         <Route path="/profile" element={<CardTapHandler />} />
         <Route path="/@:username" element={<CardTapHandler />} />
         <Route path="/card/:cardUid" element={<CardTapHandler />} />
