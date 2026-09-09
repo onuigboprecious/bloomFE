@@ -57,7 +57,7 @@ export const ReturnsGuaranteePage = () => {
         </div>
 
         {/* Claim Warranty Box */}
-        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-8 sm:p-10 rounded-3xl text-white text-center space-y-4 border border-slate-700 shadow-xl">
+        <div className="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white text-center space-y-4 border border-slate-700 shadow-xl">
           <h3 className="text-2xl font-bold">Need a Card Replacement?</h3>
           <p className="text-slate-300 text-sm max-w-xl mx-auto leading-relaxed">
             Contact support with your Order ID or registered email, and our fulfillment team will assist you immediately.

@@ -830,7 +830,7 @@ export const DashboardPage = () => {
                     </div>
                   )}
 
-                  <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 border border-cyan-500/30 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+                  <div className="p-6 rounded-2xl bg-slate-950 border border-cyan-500/30 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
                     <div className="space-y-2 relative z-10">
                       <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/20 text-[#00BCFF] border border-cyan-500/40 text-[10px] font-extrabold uppercase">
                         <ShieldCheck className="w-3.5 h-3.5" /> NTAG216 Verified Primary Tag

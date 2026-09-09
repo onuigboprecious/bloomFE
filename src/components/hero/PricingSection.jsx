@@ -23,7 +23,13 @@ export const PricingSection = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center space-y-3 max-w-4xl mx-auto mb-12 sm:mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center space-y-3 max-w-4xl mx-auto mb-12 sm:mb-16"
+        >
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <span className="text-[#00BCFF] text-xs sm:text-sm font-extrabold tracking-wider uppercase shrink-0">
               SIMPLE, TRANSPARENT PRICING
@@ -38,13 +44,20 @@ export const PricingSection = () => {
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
             No credit card needed to design your profile. Every publish plan includes a free custom NFC card or wristband delivered anywhere in Nigeria.
           </p>
-        </div>
+        </motion.div>
 
         {/* 2 Main Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
 
           {/* TIER 1: FREE TO BUILD */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-7 sm:p-8 flex flex-col justify-between shadow-sm relative">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-30px" }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            transition={{ duration: 0.6 }}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-7 sm:p-8 flex flex-col justify-between shadow-sm hover:shadow-xl transition-all relative"
+          >
             <div className="space-y-6">
               <div className="space-y-2">
                 <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
@@ -84,16 +97,23 @@ export const PricingSection = () => {
             <div className="pt-8">
               <button
                 onClick={handleStartBuilding}
-                className="w-full py-3.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-white text-slate-900 dark:text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer bg-transparent"
+                className="w-full py-3.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-white text-slate-900 dark:text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
               >
                 Build Your Free Page
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {/* TIER 2: PUBLISH & LAUNCH (FEATURED) */}
-          <div className="bg-slate-900 text-white border-2 border-[#00BCFF] rounded-3xl p-7 sm:p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-[#00BCFF] text-slate-950 text-[10px] font-black uppercase tracking-wider px-4 py-1 rounded-bl-xl">
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-30px" }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            transition={{ duration: 0.6 }}
+            className="bg-slate-900 text-white border-2 border-[#00BCFF] rounded-3xl p-7 sm:p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 bg-[#00BCFF] text-slate-950 text-[10px] font-black uppercase tracking-wider px-4 py-1 rounded-bl-xl shadow-md">
               Includes Free NFC Card
             </div>
 
@@ -142,7 +162,7 @@ export const PricingSection = () => {
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
-          </div>
+          </motion.div>
 
         </div>
 

@@ -35,7 +35,13 @@ export const Testimonials = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
 
         {/* Section Header */}
-        <div className="text-center space-y-4 max-w-4xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center space-y-4 max-w-4xl mx-auto"
+        >
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <div className="inline-flex items-center gap-2 text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
               <ShieldCheck className="w-3.5 h-3.5 text-[#00BCFF]" />
@@ -48,10 +54,14 @@ export const Testimonials = () => {
               Loved by creators, consultants & professionals
             </h2>
           </div>
-        </div>
+        </motion.div>
 
         {/* Auto-scrollable Testimonial Cards Slider */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7 }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onTouchStart={() => setIsHovered(true)}
@@ -114,7 +124,7 @@ export const Testimonials = () => {
             ))}
           </div>
 
-        </div>
+        </motion.div>
 
       </div>
     </section>
@@ -122,4 +132,3 @@ export const Testimonials = () => {
 };
 
 export default Testimonials;
-

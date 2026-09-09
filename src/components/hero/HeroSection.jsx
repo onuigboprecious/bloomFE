@@ -18,9 +18,6 @@ export const HeroSection = () => {
   return (
     <section id="hero" className="relative -mt-20 pt-28 sm:pt-32 md:pt-36 pb-16 sm:pb-24 overflow-hidden bg-[#F8FAFC] dark:bg-[#030712] text-slate-900 dark:text-white transition-colors duration-300 min-h-[85vh] flex items-center justify-center">
 
-      {/* Ambient Radial Background Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[500px] bg-radial from-[#00BCFF]/10 dark:from-[#00BCFF]/15 via-sky-950/5 dark:via-sky-950/10 to-transparent blur-3xl pointer-events-none z-0"></div>
-
       {/* 3D Globe Background Layer */}
       <div className="absolute -top-12 sm:-top-16 left-1/2 -translate-x-1/2 w-[1200px] sm:w-[1400px] md:w-[1600px] h-[780px] pointer-events-none opacity-25 dark:opacity-30 z-0 flex items-center justify-center">
         <div className="w-full h-full">
@@ -49,7 +46,6 @@ export const HeroSection = () => {
             Create your profile, add your WhatsApp, socials and portfolio, then share it all with one simple tap.
           </p>
 
-
           {/* Trust Badges with Green Checkmarks */}
           <div className="pt-3 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
             <div className="flex items-center gap-2">
@@ -68,12 +64,8 @@ export const HeroSection = () => {
 
           {/* Real-Life Physical CR80 Dimensions NFC Smart Card Preview */}
           <div className="pt-8 sm:pt-12 max-w-[420px] sm:max-w-[460px] mx-auto">
-            <div className="relative w-full aspect-[1.586/1] bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800/90 rounded-2xl p-6 sm:p-7 shadow-2xl text-white backdrop-blur-2xl text-left overflow-hidden flex flex-col justify-between">
+            <div className="relative w-full aspect-[1.586/1] bg-slate-900 border border-slate-800/90 rounded-2xl p-6 sm:p-7 shadow-2xl text-white backdrop-blur-2xl text-left overflow-hidden flex flex-col justify-between">
               
-              {/* Metallic Glass Highlight Layer */}
-              <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-cyan-500/10 via-transparent to-transparent pointer-events-none rounded-2xl"></div>
-              <div className="absolute -top-32 -left-32 w-64 h-64 bg-cyan-400/15 rounded-full blur-3xl pointer-events-none"></div>
-
               {/* Card Header: Brand Logo + NFC Icon */}
               <div className="flex items-center justify-between relative z-10">
                 <span className="font-extrabold text-2xl sm:text-3xl tracking-tight text-white select-none">

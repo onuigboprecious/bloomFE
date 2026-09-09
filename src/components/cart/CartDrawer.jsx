@@ -112,7 +112,7 @@ export const CartDrawer = () => {
                         {item.image ? (
                           <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                         ) : (
-                          <div className={`w-full h-full ${item.color || 'bg-gradient-to-br from-cyan-600 to-slate-900'} p-1.5 flex flex-col justify-between text-[8px] font-black text-white`}>
+                          <div className={`w-full h-full ${item.color || 'bg-cyan-900'} p-1.5 flex flex-col justify-between text-[8px] font-black text-white`}>
                             <span>enlazer</span>
                             <span className="self-end text-[7px]">NFC</span>
                           </div>

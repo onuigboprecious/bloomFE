@@ -15,7 +15,13 @@ export const FaqSection = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="text-center space-y-3 mb-14">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center space-y-3 mb-14"
+        >
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <div className="inline-flex items-center gap-2 text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
               <HelpCircle className="w-3.5 h-3.5 text-[#00BCFF]" />
@@ -31,15 +37,19 @@ export const FaqSection = () => {
           <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">
             Everything you need to know about building your free profile, publishing live, and free NFC card delivery.
           </p>
-        </div>
+        </motion.div>
 
         {/* Accordion List */}
         <div className="space-y-4">
-          {mockNfcFaqs.map((faq) => {
+          {mockNfcFaqs.map((faq, idx) => {
             const isOpen = openFaqId === faq.id;
             return (
-              <div
+              <motion.div
                 key={faq.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-20px" }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
                 className={`rounded-2xl border transition-all ${
                   isOpen
                     ? 'border-cyan-200 dark:border-cyan-800/60 bg-cyan-50/20 dark:bg-cyan-950/20 shadow-md'
@@ -77,7 +87,7 @@ export const FaqSection = () => {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </motion.div>
             );
           })}
         </div>

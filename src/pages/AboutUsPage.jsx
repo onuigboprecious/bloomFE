@@ -32,9 +32,8 @@ export const AboutUsPage = () => {
         {/* SECTION 1: HERO HEADER WITH FLOATING STAT BADGES */}
         <div className="relative pt-6 pb-12 overflow-hidden rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 p-8 sm:p-12 shadow-sm">
           
-          {/* Subtle Background Pattern & Ambient Lighting */}
+          {/* Subtle Background Pattern */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute inset-0 bg-[radial-gradient(#00BCFF_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none" />
 
           {/* Floating Stat Card 1 (Left) */}
           <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 flex-col p-4 rounded-2xl bg-white/90 dark:bg-slate-950/90 border border-slate-200 dark:border-slate-800 shadow-xl backdrop-blur-md z-10 animate-in fade-in slide-in-from-left-4 duration-500">
@@ -107,7 +106,7 @@ export const AboutUsPage = () => {
             </div>
 
             {/* Card 2: Vision (Highlighted Cyan Accent Card) */}
-            <div className="bg-gradient-to-br from-[#00BCFF] via-cyan-500 to-cyan-600 text-slate-950 p-7 rounded-3xl shadow-xl shadow-cyan-500/20 border border-cyan-400 space-y-4 relative overflow-hidden transform hover:-translate-y-1 transition-transform">
+            <div className="bg-[#00BCFF] text-slate-950 p-7 rounded-3xl shadow-xl shadow-cyan-500/20 border border-cyan-400 space-y-4 relative overflow-hidden transform hover:-translate-y-1 transition-transform">
               <div className="w-12 h-12 rounded-2xl bg-slate-950/20 text-slate-950 border border-slate-950/20 flex items-center justify-center">
                 <Compass className="w-6 h-6 stroke-[2.5]" />
               </div>
@@ -161,7 +160,7 @@ export const AboutUsPage = () => {
 
             {/* Central Node Badge */}
             <div className="flex justify-center my-8 md:my-0 relative z-20">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#00BCFF] via-cyan-400 to-cyan-300 text-slate-950 flex flex-col items-center justify-center shadow-[0_0_50px_rgba(0,188,255,0.4)] border-4 border-white dark:border-slate-900 transition-transform hover:scale-110">
+              <div className="w-24 h-24 rounded-full bg-[#00BCFF] text-slate-950 flex flex-col items-center justify-center shadow-[0_0_50px_rgba(0,188,255,0.4)] border-4 border-white dark:border-slate-900 transition-transform hover:scale-110">
                 <Rss className="w-9 h-9 stroke-[2.5]" />
                 <span className="text-[9px] font-black tracking-widest uppercase mt-0.5">Enlazer NFC</span>
               </div>

@@ -12,7 +12,7 @@ const VIDEO_STEPS = {
       'No app installation needed for the recipient — works on 100% of modern phones.',
       'Auto-formats phone numbers & email addresses for 1-tap direct dialing.'
     ],
-    previewBg: 'from-cyan-900/40 to-slate-950',
+    previewBg: 'bg-slate-900',
     accentColor: '#00BCFF'
   },
   2: {
@@ -24,7 +24,7 @@ const VIDEO_STEPS = {
       'WhatsApp handle opens a pre-configured chat window in 1 tap.',
       'Customize primary call-to-action buttons for high conversion.'
     ],
-    previewBg: 'from-purple-900/40 to-slate-950',
+    previewBg: 'bg-slate-900',
     accentColor: '#A855F7'
   },
   3: {
@@ -36,7 +36,7 @@ const VIDEO_STEPS = {
       'Real-time responsiveness across dark mode and light mode devices.',
       'High-impact glassmorphism and animated ambient glow backdrops.'
     ],
-    previewBg: 'from-emerald-900/40 to-slate-950',
+    previewBg: 'bg-slate-900',
     accentColor: '#10B981'
   },
   4: {
@@ -48,7 +48,7 @@ const VIDEO_STEPS = {
       'Copy your custom branded URL to place in email signatures or social bios.',
       'Optionally link physical NFC cards or wristbands whenever they arrive.'
     ],
-    previewBg: 'from-amber-900/40 to-slate-950',
+    previewBg: 'bg-slate-900',
     accentColor: '#F59E0B'
   }
 };
@@ -114,10 +114,8 @@ export const VideoWalkthroughModal = ({ isOpen, onClose, step = 1 }) => {
             </button>
           </div>
 
-          {/* Interactive Simulated Video Player Viewport */}
-          <div className={`relative h-64 sm:h-72 bg-gradient-to-br ${videoData.previewBg} flex flex-col justify-between p-6 overflow-hidden`}>
-            {/* Animated Ambient Visual Effect */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(0,188,255,0.15),transparent_60%)] pointer-events-none" />
+          {/* Header Video Preview Screen */}
+          <div className="relative h-64 sm:h-72 bg-slate-900 flex flex-col justify-between p-6 overflow-hidden">
 
             {/* Video Content Scene Overlay */}
             <div className="relative z-10 space-y-3 max-w-md">
