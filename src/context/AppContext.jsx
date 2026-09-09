@@ -600,10 +600,9 @@ export const AppProvider = ({ children }) => {
 
   const connectGoogleAccount = async (inputVal) => {
     // If user entered an email or token directly
-    if (inputVal && typeof inputVal === 'string') {
+    if (inputVal && typeof inputVal === 'string' && inputVal.trim()) {
       const trimmed = inputVal.trim();
       if (trimmed.includes('@')) {
-        // Simple 1-click Google Email Auth flow
         setGoogleUserEmail(trimmed);
         localStorage.setItem('bloom_google_user_email', trimmed);
         const mockToken = 'google_oauth_' + btoa(trimmed) + '_' + Date.now();
@@ -611,7 +610,6 @@ export const AppProvider = ({ children }) => {
         localStorage.setItem('bloom_google_access_token', mockToken);
         return { success: true, email: trimmed };
       } else {
-        // OAuth Access Token
         setGoogleAccessToken(trimmed);
         localStorage.setItem('bloom_google_access_token', trimmed);
         const profile = await getGoogleUserProfile(trimmed);
@@ -622,36 +620,13 @@ export const AppProvider = ({ children }) => {
       }
     }
 
+    // Direct Google Account Chooser OAuth redirect flow
     try {
-      const googleOAuth = await loadGoogleGsiScript();
-      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || localStorage.getItem('bloom_google_client_id') || '';
-      
-      if (!clientId) {
-        // If Client ID is not set in env, prompt for Google Email
-        return { success: false, needEmailPrompt: true, error: 'Please enter your Google Email address to connect.' };
+      const targetUrl = getGoogleOAuthLoginUrl();
+      if (typeof window !== 'undefined') {
+        window.location.href = targetUrl;
       }
-
-      return new Promise((resolve) => {
-        const client = googleOAuth.initTokenClient({
-          client_id: clientId,
-          scope: 'https://www.googleapis.com/auth/contacts',
-          callback: async (tokenResponse) => {
-            if (tokenResponse.error) {
-              resolve({ success: false, error: tokenResponse.error_description || tokenResponse.error });
-              return;
-            }
-            const token = tokenResponse.access_token;
-            setGoogleAccessToken(token);
-            localStorage.setItem('bloom_google_access_token', token);
-            const userProfile = await getGoogleUserProfile(token);
-            const email = userProfile?.email || 'Connected Account';
-            setGoogleUserEmail(email);
-            localStorage.setItem('bloom_google_user_email', email);
-            resolve({ success: true, email, token });
-          }
-        });
-        client.requestAccessToken();
-      });
+      return { success: true, redirecting: true };
     } catch (err) {
       return { success: false, error: err.message || 'Failed to initialize Google Authentication' };
     }

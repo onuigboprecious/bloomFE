@@ -15,7 +15,7 @@ export const mockProfileData = {
   email: "alex.morgan@enlazer.com.ng",
   phone: "+234 803 123 4567",
   website: "https://alexmorgan.design",
-  location: "Lagos & Abuja, Nigeria",
+  location: "buja, Nigeria",
   theme: "dark-luxe", // 'dark-luxe' | 'neon-cyber' | 'sunset-amber' | 'emerald-green'
   layout: "stack", // 'stack' | 'grid' | 'linktree'
   is_published: false, // Core state: Draft by default until published
