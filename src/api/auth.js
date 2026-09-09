@@ -52,7 +52,19 @@ export async function googleAuthApi({ token, idToken, credential }) {
 }
 
 export function getGoogleOAuthLoginUrl() {
-  const baseUrl = import.meta.env.VITE_API_URL || 'https://bloombe.onrender.com';
+  let baseUrl = import.meta.env.VITE_API_URL || 'https://bloombe.onrender.com';
+  
+  if (typeof window !== 'undefined') {
+    const isLocalhost = (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname.endsWith('.local')
+    );
+    if (!isLocalhost && baseUrl.includes('localhost')) {
+      baseUrl = 'https://bloombe.onrender.com';
+    }
+  }
+
   return `${baseUrl}/api/auth/google/login`;
 }
 

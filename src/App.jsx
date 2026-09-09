@@ -35,19 +35,26 @@ import ClaimCardPage from './pages/ClaimCardPage';
 import InvalidCardPage from './pages/InvalidCardPage';
 import CardTapHandler from './pages/CardTapHandler';
 
-// Home Page Layout Component (enlazer.com.ng)
+import SEO from './components/common/SEO';
+
+// Home Page Layout Component (enlazer.cloud)
 export const HomePage = () => {
   const { isWaitlistModalOpen, closeWaitlistModal, isPublishModalOpen, setIsPublishModalOpen } = useApp();
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors overflow-x-hidden relative pb-16">
+      <SEO
+        title="Enlazer — Your Whole Self, One Tap Away"
+        description="Create your free Enlazer profile and share your WhatsApp, socials, and portfolio with one NFC card tap."
+        url="https://enlazer.cloud/"
+      />
       <Navbar />
       <main>
         <HeroSection />
         <ConnectionBanner />
         <HeroShowcase />
-        <Testimonials />
         <PricingSection />
+        <Testimonials />
         <FaqSection />
       </main>
       <Footer />
@@ -58,6 +65,7 @@ export const HomePage = () => {
     </div>
   );
 };
+
 
 
 // Route & App Context Synchronization Bridge (Multi-domain Aware)
@@ -148,7 +156,18 @@ const RouteSyncBridge = () => {
 
       // Perform cross-domain redirects in production environments
       if (!isDev) {
-        const appPages = ['dashboard', 'profile', 'card-tap', 'claim-card'];
+        const appPages = [
+          'login',
+          'signup',
+          'forgot-password',
+          'reset-password',
+          'dashboard',
+          'profile',
+          'card-tap',
+          'claim-card',
+          'invalid-card',
+          'onboarding'
+        ];
         const isTargetAppPage = appPages.includes(currentPage);
         const currentlyOnAppDomain = isAppDomain();
 
@@ -172,19 +191,84 @@ const RouteSyncBridge = () => {
   return null;
 };
 
+// Guard for protected routes requiring authentication
+const RequireAuth = ({ children }) => {
+  const { isAuthenticated, authLoading } = useApp();
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex items-center justify-center p-4 text-center">
+        <div className="space-y-4">
+          <div className="w-12 h-12 border-4 border-[#00BCFF] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-xs font-bold text-slate-500 dark:text-slate-400">Verifying session...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+// Guard to redirect authenticated users away from auth pages (/login, /signup) to /dashboard
+const RedirectIfAuth = ({ children }) => {
+  const { isAuthenticated, authLoading } = useApp();
+
+  if (authLoading) {
+    return null;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+};
+
 export const AppRoutes = () => {
   const isApp = isAppDomain();
+  const { isAuthenticated, authLoading } = useApp();
 
   return (
     <>
       <RouteSyncBridge />
       <Routes>
         {/* 1. Home / Root Route */}
-        {/* On enlazer.cloud domain root (/), redirect to /dashboard. On enlazer.com.ng, render HomePage */}
-        <Route path="/" element={isApp ? <Navigate to="/dashboard" replace /> : <HomePage />} />
+        {/* On enlazer.cloud domain root (/), redirect unauthenticated to /login, authenticated to /dashboard */}
+        <Route
+          path="/"
+          element={
+            isApp ? (
+              authLoading ? (
+                <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex items-center justify-center p-4 text-center">
+                  <div className="space-y-4">
+                    <div className="w-12 h-12 border-4 border-[#00BCFF] border-t-transparent rounded-full animate-spin mx-auto" />
+                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400">Verifying session...</p>
+                  </div>
+                </div>
+              ) : isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            ) : (
+              <HomePage />
+            )
+          }
+        />
 
         {/* 2. Dashboard Route (enlazer.cloud/dashboard) */}
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <RequireAuth>
+              <DashboardPage />
+            </RequireAuth>
+          }
+        />
 
         {/* 3. Profile & NFC Card Tap Views (enlazer.cloud/profile, enlazer.cloud/@username, enlazer.cloud/card/:cardUid) */}
         <Route path="/profile" element={<CardTapHandler />} />
@@ -192,8 +276,22 @@ export const AppRoutes = () => {
         <Route path="/card/:cardUid" element={<CardTapHandler />} />
 
         {/* Auth Pages */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
+        <Route
+          path="/login"
+          element={
+            <RedirectIfAuth>
+              <LoginPage />
+            </RedirectIfAuth>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <RedirectIfAuth>
+              <SignUpPage />
+            </RedirectIfAuth>
+          }
+        />
         <Route path="/claim" element={<ClaimCardPage />} />
         <Route path="/invalid-card" element={<InvalidCardPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -212,7 +310,20 @@ export const AppRoutes = () => {
         <Route path="/returns" element={<ReturnsGuaranteePage />} />
 
         {/* Fallback route */}
-        <Route path="*" element={isApp ? <CardTapHandler /> : <HomePage />} />
+        <Route
+          path="*"
+          element={
+            isApp ? (
+              isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            ) : (
+              <HomePage />
+            )
+          }
+        />
       </Routes>
     </>
   );

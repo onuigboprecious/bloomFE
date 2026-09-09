@@ -1,0 +1,8 @@
+# Robots.txt for Enlazer - https://enlazer.cloud
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+
+# Sitemap location
+Sitemap: https://enlazer.cloud/sitemap.xml

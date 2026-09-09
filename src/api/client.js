@@ -1,4 +1,15 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://bloombe.onrender.com';
+let API_BASE_URL = import.meta.env.VITE_API_URL || 'https://bloombe.onrender.com';
+
+if (typeof window !== 'undefined') {
+  const isLocalhost = (
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1' ||
+    window.location.hostname.endsWith('.local')
+  );
+  if (!isLocalhost && API_BASE_URL.includes('localhost')) {
+    API_BASE_URL = 'https://bloombe.onrender.com';
+  }
+}
 
 export async function apiClient(endpoint, options = {}) {
   const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;

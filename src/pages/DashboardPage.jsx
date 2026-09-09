@@ -544,17 +544,6 @@ export const DashboardPage = () => {
                 <div className="pt-6 border-t border-slate-800 space-y-2">
                   <button
                     onClick={() => {
-                      setIsActivateModalOpen(true);
-                      setIsMobileSidebarOpen(false);
-                    }}
-                    className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <Plus className="w-4 h-4 text-cyan-400" />
-                    <span>Activate New Card</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
                       setIsMobileSidebarOpen(false);
                       logoutUser();
                       setCurrentPage('home');
@@ -630,14 +619,6 @@ export const DashboardPage = () => {
             {/* Sidebar Bottom Action Button */}
             <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80 space-y-2">
               <button
-                onClick={() => setIsActivateModalOpen(true)}
-                className="w-full py-3 rounded-xl bg-slate-900 dark:bg-slate-800 text-white font-extrabold text-xs hover:bg-slate-800 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
-              >
-                <Plus className="w-4 h-4 text-cyan-400" />
-                <span>Activate New Card</span>
-              </button>
-
-              <button
                 onClick={() => {
                   logoutUser();
                   setCurrentPage('home');
@@ -692,14 +673,6 @@ export const DashboardPage = () => {
               </div>
 
               <div className="shrink-0 w-full sm:w-auto flex flex-wrap items-center gap-2">
-                <button
-                  onClick={() => setIsQuickShareModalOpen(true)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-cyan-400 border border-cyan-500/30 font-extrabold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
-                >
-                  <QrCode className="w-4 h-4 text-[#00BCFF]" />
-                  <span>Share QR Code</span>
-                </button>
-
                 {!isPublished ? (
                   <button
                     onClick={() => setIsPublishModalOpen(true)}
@@ -731,15 +704,7 @@ export const DashboardPage = () => {
                 {/* Left Side: Combined Creator Bio & Profile Details Editor */}
                 <div className="lg:col-span-7 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6 shadow-sm">
 
-                  <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-4">
-                    <div>
-                      <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                        <User className="w-5 h-5 text-[#00BCFF]" />
-                        <span>Profile</span>
-                      </h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">All-in-one editor for handle, contact details, social links & bio buttons.</p>
-                    </div>
-                  </div>
+
 
                   {/* Personal & Contact Information */}
                   <PersonalInfoForm

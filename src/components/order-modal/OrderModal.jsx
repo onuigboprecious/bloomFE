@@ -56,7 +56,10 @@ export const OrderModal = () => {
     // Non-blocking async backend notification
     const notifyBackend = async () => {
       try {
-        const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+        let backendUrl = import.meta.env.VITE_API_URL || 'https://bloombe.onrender.com';
+        if (typeof window !== 'undefined' && !['localhost', '127.0.0.1'].includes(window.location.hostname) && backendUrl.includes('localhost')) {
+          backendUrl = 'https://bloombe.onrender.com';
+        }
         await fetch(`${backendUrl}/api/orders`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
