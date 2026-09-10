@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getCardTapProfileApi } from '../api/profile';
+import { getCardTapProfileApi, getPublicProfileApi } from '../api/profile';
 import { recordTapApi } from '../api/analytics';
 import ProfileView from '../components/profile/ProfileView';
 import ClaimCardPage from './ClaimCardPage';
 import InvalidCardPage from './InvalidCardPage';
+import { mockProfileData } from '../data/mockData';
 
 export const CardTapHandler = () => {
   const [loading, setLoading] = useState(true);
@@ -14,63 +15,126 @@ export const CardTapHandler = () => {
   const [cardUid, setCardUid] = useState('');
 
   useEffect(() => {
-    // Parse cardUid and sig from window.location.pathname (/card/:cardUid) and search params (?sig=...)
+    // Parse cardUid, handle, and sig from window.location.pathname (/card/:cardUid, /@username, /profile/:username)
     const pathname = window.location.pathname;
     const searchParams = new URLSearchParams(window.location.search);
+    
     const cardMatch = pathname.match(/\/card\/([^\/]+)/);
-    const handleMatch = pathname.match(/\/@?([^\/]+)/);
+    const atHandleMatch = pathname.match(/\/@([^\/]+)/);
+    const profileHandleMatch = pathname.match(/\/profile\/([^\/]+)/);
+    const rootHandleMatch = pathname.match(/^\/([a-zA-Z0-9_\-]+)$/);
+    
+    const reservedPaths = ['/login', '/signup', '/dashboard', '/onboarding', '/claim', '/invalid-card', '/reset-password', '/forgot-password', '/cards', '/wristbands', '/about', '/press', '/support', '/legal', '/privacy', '/terms', '/security', '/returns'];
     
     let identifier = '';
-    if (cardMatch) {
+    let isHandle = false;
+
+    if (cardMatch && cardMatch[1]) {
       identifier = cardMatch[1];
+    } else if (atHandleMatch && atHandleMatch[1]) {
+      identifier = atHandleMatch[1];
+      isHandle = true;
+    } else if (profileHandleMatch && profileHandleMatch[1]) {
+      identifier = profileHandleMatch[1];
+      isHandle = true;
+    } else if (rootHandleMatch && rootHandleMatch[1] && !reservedPaths.includes(pathname.toLowerCase())) {
+      identifier = rootHandleMatch[1];
+      isHandle = true;
     } else if (searchParams.get('cardUid')) {
       identifier = searchParams.get('cardUid');
     } else if (searchParams.get('username')) {
       identifier = searchParams.get('username');
-    } else if (handleMatch && handleMatch[1]) {
-      identifier = handleMatch[1];
+      isHandle = true;
     }
     
+    const cleanUid = identifier.replace(/^@/, '').trim();
     const sig = searchParams.get('sig') || '';
-    const uid = identifier;
-    setCardUid(uid);
+    setCardUid(cleanUid || identifier);
 
     async function fetchTapProfile() {
-      if (!uid) {
+      // Check local storage profile first
+      let localProfile = null;
+      try {
+        const saved = localStorage.getItem('bloom_profile');
+        if (saved) {
+          localProfile = JSON.parse(saved);
+        }
+      } catch (e) {}
+
+      if (!cleanUid) {
+        if (localProfile && localProfile.username) {
+          setProfileData(localProfile);
+          setStatus('profile');
+          setLoading(false);
+          return;
+        }
         setInvalidReason('unregistered_card');
-        setErrorMessage('No card UID or identifier found in URL');
+        setErrorMessage('No profile handle or card identifier found in URL');
         setStatus('invalid');
         setLoading(false);
         return;
       }
 
+      // If viewing current user's profile handle or cardUid locally
+      if (
+        localProfile &&
+        (localProfile.username?.toLowerCase() === cleanUid.toLowerCase() ||
+         localProfile.cardUid === cleanUid)
+      ) {
+        setProfileData(localProfile);
+        setStatus('profile');
+        setLoading(false);
+        recordTapApi(cleanUid, 'NFC Tap').catch(() => {});
+        return;
+      }
+
       try {
-        const response = await getCardTapProfileApi(uid, sig);
+        let response;
+        if (isHandle) {
+          try {
+            response = await getPublicProfileApi(cleanUid, sig);
+          } catch (err) {
+            response = await getCardTapProfileApi(cleanUid, sig);
+          }
+        } else {
+          response = await getCardTapProfileApi(cleanUid, sig);
+        }
         setProfileData(response);
         setStatus('profile');
-        // Record tap event asynchronously
-        recordTapApi(uid, 'NFC Tap').catch(() => {});
+        recordTapApi(cleanUid, 'NFC Tap').catch(() => {});
       } catch (error) {
+        // Fallback to mock profile if mock handle matches
+        if (mockProfileData && mockProfileData.username?.toLowerCase() === cleanUid.toLowerCase()) {
+          setProfileData(mockProfileData);
+          setStatus('profile');
+          setLoading(false);
+          return;
+        }
+
+        // Fallback to local profile if available
+        if (localProfile) {
+          setProfileData(localProfile);
+          setStatus('profile');
+          setLoading(false);
+          return;
+        }
+
         const errPayload = error.data || {};
         const errCode = errPayload.error || '';
 
         if (error.status === 409 || errCode === 'unclaimed_card') {
-          // 409 Conflict: Provisioned Unclaimed Card -> Redirect to /claim?cardUid=...
-          const targetUid = errPayload.cardUid || uid;
+          const targetUid = errPayload.cardUid || cleanUid;
           setCardUid(targetUid);
           setStatus('claim');
         } else if (error.status === 401 || errCode === 'invalid_signature') {
-          // 401 Unauthorized: Invalid / Tampered Signature -> Redirect to /invalid-card?reason=tampered_signature
           setInvalidReason('tampered_signature');
           setErrorMessage(errPayload.message || 'Hardware card signature verification failed');
           setStatus('invalid');
         } else if (error.status === 404 || errCode === 'unregistered_card') {
-          // 404 Not Found: Unregistered Card -> Redirect to /invalid-card?reason=unregistered_card
           setInvalidReason('unregistered_card');
-          setErrorMessage(errPayload.message || 'This card has not been registered or provisioned in our system');
+          setErrorMessage(errPayload.message || 'This profile card has not been registered in our system');
           setStatus('invalid');
         } else {
-          // Fallback invalid error
           setInvalidReason('unregistered_card');
           setErrorMessage(errPayload.message || error.message || 'Unrecognized card response');
           setStatus('invalid');

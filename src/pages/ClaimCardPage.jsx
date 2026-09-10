@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, ShieldCheck, CreditCard, LogIn, UserPlus, Eye, LayoutDashboard } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ShieldCheck, CreditCard, LogIn, UserPlus, LayoutDashboard } from 'lucide-react';
 import Button from '../components/ui/Button';
-import MobilePhonePreview from '../components/ui/MobilePhonePreview';
 import { useApp } from '../context/AppContext';
 import { claimCardApi } from '../api/profile';
 
@@ -51,55 +50,60 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex flex-col justify-between relative overflow-hidden transition-colors">
-      {/* Background Ambient Glow */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-cyan-400/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] flex flex-col justify-between relative overflow-hidden transition-colors">
 
       {/* Top Header Row */}
       <div className="max-w-7xl w-full mx-auto px-6 py-6 flex items-center justify-between z-10">
         <button
           onClick={() => setCurrentPage('home')}
-          className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-transparent hover:bg-slate-200/50 dark:hover:bg-slate-800/50 px-3.5 py-2 rounded-full transition-all duration-300 cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-bold text-[var(--text-dim)] hover:text-[var(--text)] bg-[var(--card-hover)] px-3.5 py-2 rounded-full transition-all duration-300 cursor-pointer border border-[var(--border)]"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Home</span>
         </button>
 
         <button onClick={() => setCurrentPage('home')} className="flex items-center gap-0.5 group">
-          <span className="text-2xl font-black tracking-tight text-slate-950 dark:text-white font-['Plus_Jakarta_Sans']">enlazer</span>
-          <span className="text-2xl font-black text-[#00BCFF] group-hover:scale-125 transition-transform">.</span>
+          <span className="text-2xl font-black tracking-tight text-[var(--text)] font-['Plus_Jakarta_Sans']">enlazer</span>
+          <span className="text-2xl font-black text-[var(--accent)] group-hover:scale-125 transition-transform">.</span>
         </button>
       </div>
 
       {/* Main Claim Container */}
       <div className="w-full max-w-lg mx-auto px-4 py-8 z-10 my-auto">
+        
+        {/* Welcome Header Text - Left Aligned, Not in a Card Box */}
+        <div className="mb-5 text-left space-y-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--text)] tracking-tight">
+            Welcome to Enlazer!
+          </h1>
+          <p className="text-sm font-medium text-[var(--text-dim)]">
+            You've tapped a brand new NFC Card.
+          </p>
+        </div>
+
         <motion.div
-          initial={{ opacity: 0, y: 25, scale: 0.98 }}
+          initial={{ opacity: 0, y: 20, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-100/90 dark:border-slate-800 relative text-center space-y-6"
+          transition={{ duration: 0.4 }}
+          className="bg-[var(--card)] rounded-2xl p-6 sm:p-8 shadow-xl border border-[var(--border)] text-left space-y-6"
         >
-          {/* Welcome Banner */}
-          <div className="p-4 rounded-2xl bg-cyan-50 dark:bg-slate-800/80 border border-cyan-200 dark:border-slate-700 text-cyan-800 dark:text-cyan-300 text-xs sm:text-sm font-bold flex items-center justify-center gap-2">
-            <span>Welcome to Enlazer! You've tapped a brand new NFC Card.</span>
-          </div>
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-xl bg-[var(--card-hover)] text-[var(--accent)] border border-[var(--border)] flex items-center justify-center shrink-0">
+              <CreditCard className="w-7 h-7" />
+            </div>
 
-          <div className="w-16 h-16 rounded-2xl bg-slate-950 text-[#00BCFF] border border-cyan-500/30 flex items-center justify-center mx-auto shadow-xl">
-            <CreditCard className="w-8 h-8" />
-          </div>
-
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              Claim Your Enlazer Card
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono">
-              Hardware ID: <strong className="text-slate-900 dark:text-white">{cardUid}</strong>
-            </p>
+            <div>
+              <h2 className="text-xl font-extrabold text-[var(--text)] tracking-tight">
+                Claim Your Enlazer Card
+              </h2>
+              <p className="text-xs text-[var(--text-dim)] mt-1 font-mono">
+                Hardware ID: <strong className="text-[var(--text)]">{cardUid}</strong>
+              </p>
+            </div>
           </div>
 
           {errorMessage && (
-            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs font-semibold text-rose-600 dark:text-rose-400 text-center">
+            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs font-semibold text-rose-500 text-left">
               {errorMessage}
             </div>
           )}
@@ -108,32 +112,23 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="py-2 space-y-6 text-center"
+              className="py-2 space-y-5 text-left"
             >
               <div className="space-y-2">
-                <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-[var(--success)]/10 text-[var(--success)] flex items-center justify-center border border-[var(--success)]/20">
                   <CheckCircle2 className="w-7 h-7 stroke-[2.5]" />
                 </div>
-                <h3 className="text-xl font-black text-slate-900 dark:text-white">Card #{cardUid} Successfully Linked!</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                  Below is the live preview of what people see when they tap your physical Enlazer card:
+                <h3 className="text-xl font-extrabold text-[var(--text)]">Card #{cardUid} Successfully Linked!</h3>
+                <p className="text-xs text-[var(--text-dim)]">
+                  Your physical Enlazer NFC card has been claimed and linked to your account.
                 </p>
               </div>
 
-              {/* Live Mobile Tap Preview Screen */}
-              <div className="pt-2">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[11px] font-bold mb-4">
-                  <Eye className="w-3.5 h-3.5" />
-                  <span>Live Card Tap Preview</span>
-                </div>
-                <MobilePhonePreview data={profile} />
-              </div>
-
-              <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
                 <Button
                   onClick={() => setCurrentPage('dashboard')}
                   variant="primary"
-                  className="bg-[#00BCFF] hover:bg-cyan-500 text-slate-950 font-black py-3 px-6 text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                  className="bg-[var(--accent)] text-white font-bold py-3 px-6 text-xs flex items-center justify-center gap-2 cursor-pointer shadow-xs hover:opacity-90"
                 >
                   <LayoutDashboard className="w-4 h-4" />
                   <span>Go to My Dashboard</span>
@@ -141,19 +136,19 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
               </div>
             </motion.div>
           ) : (
-            <div className="space-y-4 pt-2">
+            <div className="space-y-4 pt-1">
               {isAuthenticated ? (
                 /* Authenticated State */
                 <div className="space-y-4">
-                  <p className="text-xs text-slate-600 dark:text-slate-300">
-                    Logged in as <strong className="text-slate-900 dark:text-white">{user?.email || 'User'}</strong>. Link this physical card to your profile now.
+                  <p className="text-xs text-[var(--text-dim)]">
+                    Logged in as <strong className="text-[var(--text)]">{user?.email || 'User'}</strong>. Link this physical card to your profile now.
                   </p>
                   <Button
                     onClick={handleClaimCard}
                     variant="primary"
                     size="lg"
                     disabled={isSubmitting}
-                    className="w-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold py-4 text-sm shadow-lg shadow-cyan-400/30 cursor-pointer flex items-center justify-center gap-2"
+                    className="w-full bg-[var(--accent)] hover:opacity-90 text-white font-bold py-3.5 text-sm shadow-xs cursor-pointer flex items-center justify-center gap-2"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">
@@ -171,22 +166,22 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
               ) : (
                 /* Unauthenticated State */
                 <div className="space-y-3">
-                  <p className="text-xs text-slate-600 dark:text-slate-300">
+                  <p className="text-xs text-[var(--text-dim)]">
                     Log in or create a free Enlazer account to associate this physical NFC card with your profile.
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     <Button
                       onClick={() => handleRedirectAuth('login')}
                       variant="secondary"
-                      className="w-full py-3.5 text-xs font-bold flex items-center justify-center gap-2 border-slate-300 dark:border-slate-700"
+                      className="w-full py-3 text-xs font-bold flex items-center justify-center gap-2 bg-[var(--card-hover)] border-[var(--border)] text-[var(--text)] hover:border-[var(--accent)]"
                     >
-                      <LogIn className="w-4 h-4 text-[#00BCFF]" />
+                      <LogIn className="w-4 h-4 text-[var(--accent)]" />
                       <span>Log In to Claim</span>
                     </Button>
                     <Button
                       onClick={() => handleRedirectAuth('signup')}
                       variant="primary"
-                      className="w-full py-3.5 text-xs font-bold bg-[#00BCFF] text-white flex items-center justify-center gap-2"
+                      className="w-full py-3 text-xs font-bold bg-[var(--accent)] text-white flex items-center justify-center gap-2 hover:opacity-90"
                     >
                       <UserPlus className="w-4 h-4" />
                       <span>Create Account to Claim</span>
@@ -200,7 +195,7 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
       </div>
 
       {/* Footer copyright */}
-      <div className="text-center py-6 text-xs text-slate-400 dark:text-slate-500 z-10">
+      <div className="text-center py-6 text-xs text-[var(--text-faint)] z-10">
         © {new Date().getFullYear()} Enlazer Card Technologies Ltd. All rights reserved.
       </div>
     </div>
@@ -208,3 +203,4 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
 };
 
 export default ClaimCardPage;
+

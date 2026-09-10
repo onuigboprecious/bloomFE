@@ -27,7 +27,7 @@ export const PrivacyPolicyPage = () => {
               1. Data We Collect
             </h2>
             <p>
-              When you create an Enlazer account, order a physical NFC card, or customize your digital profile handle (`enlazer.com.ng/@username`), we collect:
+              When you create an Enlazer account, order a physical NFC card, or customize your digital profile handle (`enlazer.cloud/@username`), we collect:
             </p>
             <ul className="list-disc pl-5 space-y-1">
               <li><strong>Account Credentials:</strong> Name, email address, hashed passwords, and handle.</li>

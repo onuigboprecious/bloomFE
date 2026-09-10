@@ -127,7 +127,8 @@ const RouteSyncBridge = () => {
   // 1. Sync URL -> App Context state on route change / initial load
   useEffect(() => {
     const pathname = location.pathname;
-    if (pathname.startsWith('/card/') || pathname.startsWith('/@')) {
+    const isReserved = Object.keys(pathToPage).includes(pathname.toLowerCase());
+    if (pathname.startsWith('/card/') || pathname.startsWith('/@') || pathname.startsWith('/profile/') || (!isReserved && pathname !== '/')) {
       setCurrentPage('card-tap');
     } else {
       const page = pathToPage[pathname.toLowerCase()];
@@ -137,7 +138,39 @@ const RouteSyncBridge = () => {
     }
   }, [location.pathname, setCurrentPage, currentPage]);
 
-  // 2. Sync App Context state -> URL (and cross-domain navigation if required in production)
+  // 2. Initial load domain check for production
+  useEffect(() => {
+    const isDev = typeof window !== 'undefined' && (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname.endsWith('.local')
+    );
+
+    if (!isDev) {
+      const pathname = location.pathname;
+      const isAppPath =
+        pathname.startsWith('/dashboard') ||
+        pathname.startsWith('/profile') ||
+        pathname.startsWith('/@') ||
+        pathname.startsWith('/card/') ||
+        ['/login', '/signup', '/claim', '/invalid-card', '/forgot-password', '/reset-password'].includes(pathname.toLowerCase());
+
+      const currentlyOnAppDomain = isAppDomain();
+
+      if (isAppPath && !currentlyOnAppDomain) {
+        window.location.href = getAppDomainUrl(pathname + location.search);
+        return;
+      }
+
+      const isMarketingPath = ['/cards', '/wristbands', '/about', '/press', '/support', '/legal', '/privacy', '/terms', '/security', '/returns'].includes(pathname.toLowerCase());
+      if (isMarketingPath && currentlyOnAppDomain) {
+        window.location.href = getMarketingDomainUrl(pathname + location.search);
+        return;
+      }
+    }
+  }, [location.pathname, location.search]);
+
+  // 3. Sync App Context state -> URL (and cross-domain navigation if required in production)
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -147,7 +180,13 @@ const RouteSyncBridge = () => {
 
     if (prevPageRef.current !== currentPage) {
       prevPageRef.current = currentPage;
-      const targetPath = pageToPath[currentPage] || '/';
+      let targetPath = pageToPath[currentPage] || '/';
+      
+      // Preserve dynamic profile/card-tap paths (/@username, /card/:uid, /profile/:username, /username)
+      if (currentPage === 'card-tap' || currentPage === 'profile') {
+        targetPath = location.pathname;
+      }
+
       const isDev = typeof window !== 'undefined' && (
         window.location.hostname === 'localhost' ||
         window.location.hostname === '127.0.0.1' ||
@@ -270,8 +309,9 @@ export const AppRoutes = () => {
           }
         />
 
-        {/* 3. Profile & NFC Card Tap Views (enlazer.cloud/profile, enlazer.cloud/@username, enlazer.cloud/card/:cardUid) */}
+        {/* 3. Profile & NFC Card Tap Views (enlazer.cloud/profile, enlazer.cloud/@username, enlazer.cloud/profile/:username, enlazer.cloud/card/:cardUid) */}
         <Route path="/profile" element={<CardTapHandler />} />
+        <Route path="/profile/:username" element={<CardTapHandler />} />
         <Route path="/@:username" element={<CardTapHandler />} />
         <Route path="/card/:cardUid" element={<CardTapHandler />} />
 
@@ -308,6 +348,9 @@ export const AppRoutes = () => {
         <Route path="/terms" element={<TermsOfServicePage />} />
         <Route path="/security" element={<SecurityPage />} />
         <Route path="/returns" element={<ReturnsGuaranteePage />} />
+
+        {/* Dynamic Handle Profile route */}
+        <Route path="/:username" element={<CardTapHandler />} />
 
         {/* Fallback route */}
         <Route

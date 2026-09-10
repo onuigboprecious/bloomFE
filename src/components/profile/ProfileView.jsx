@@ -89,7 +89,7 @@ export const ProfileView = ({ data }) => {
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400",
     email: "hello@enlazer.com.ng",
     phone: "+234 812 345 6789",
-    website: "https://enlazer.com.ng",
+    website: "https://enlazer.cloud",
     location: "Lagos, Nigeria",
     theme: "dark-luxe",
     template: "corporate-pro",
@@ -98,7 +98,7 @@ export const ProfileView = ({ data }) => {
       linkedin: "johndoe",
       twitter: "johndoe",
       instagram: "johndoe.design",
-      website: "https://enlazer.com.ng"
+      website: "https://enlazer.cloud"
     }
   };
 
@@ -311,7 +311,7 @@ export const ProfileView = ({ data }) => {
 
       {/* Footer Powered By */}
       <div className={`text-center pt-8 text-xs ${theme.footerText} z-10`}>
-        Powered by <span className={`font-bold ${theme.textPrimary}`}>enlazer.com.ng</span> — smart NFC technology
+        Powered by <span className={`font-bold ${theme.textPrimary}`}>enlazer.cloud</span> — smart NFC technology
       </div>
 
       <ShareBackModal

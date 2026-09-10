@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Copy, Check, ExternalLink, Download, QrCode, Smartphone, Sparkles, Share2 } from 'lucide-react';
+import { getAppDomainUrl } from '../../config/domainConfig';
 
 export const QuickShareModal = ({ isOpen, onClose, profile, customHandle, saveContactToPhone }) => {
   const [copied, setCopied] = useState(false);
-  const liveUrl = `${window.location.origin}/profile/${customHandle || profile?.username || 'user'}`;
+  const liveUrl = getAppDomainUrl(`/@${customHandle || profile?.username || 'user'}`);
 
   if (!isOpen) return null;
 

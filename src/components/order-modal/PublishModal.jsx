@@ -5,6 +5,7 @@ import Modal from '../ui/Modal';
 import Input from '../ui/Input';
 import { useApp } from '../../context/AppContext';
 import { mockCardFinishes } from '../../data/mockData';
+import { getAppDomainUrl } from '../../config/domainConfig';
 
 export const PublishModal = ({ isOpen, onClose }) => {
   const { profile = {}, publishProfile, selectedFinish, setSelectedFinish } = useApp();
@@ -290,7 +291,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
             <div className="flex justify-between">
               <span className="text-slate-500 dark:text-slate-400">Live Profile URL</span>
               <a
-                href={`https://enlazer.cloud/@${profile.username || 'username'}`}
+                href={getAppDomainUrl(`/@${profile.username || 'username'}`)}
                 target="_blank"
                 rel="noreferrer"
                 className="font-bold text-[#00BCFF] hover:underline"

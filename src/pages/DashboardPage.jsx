@@ -65,6 +65,7 @@ import QuickShareModal from '../components/ui/QuickShareModal';
 import SocialIcon from '../components/ui/SocialIcon';
 import { THEMES, TEMPLATES } from '../components/profile/ProfileView';
 import { useApp } from '../context/AppContext';
+import { getAppDomainUrl } from '../config/domainConfig';
 import { mockAnalyticsHourly } from '../data/mockData';
 import PersonalInfoForm from '../components/dashboard/PersonalInfoForm';
 import SocialHandlesManager from '../components/dashboard/SocialHandlesManager';
@@ -358,7 +359,7 @@ export const DashboardPage = () => {
   };
 
   const handleCopyProfileLink = () => {
-    const profileUrl = `https://www.enlazer.com.ng/@${customHandle}`;
+    const profileUrl = getAppDomainUrl(`/@${customHandle}`);
     navigator.clipboard.writeText(profileUrl);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
@@ -425,165 +426,198 @@ export const DashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors">
+    <div className="min-h-screen text-[var(--text)] bg-[var(--bg)] transition-colors pb-24 md:pb-12">
 
-      <div className="w-full max-w-[1700px] mx-auto px-3 sm:px-4 lg:px-6 pt-3 pb-20">
+      <div className="w-full max-w-[1500px] mx-auto px-3 sm:px-4 lg:px-6 pt-4 space-y-6">
 
-        {/* Mobile Sticky Top Header with Sidebar Drawer Toggle */}
-        <div className="md:hidden flex items-center justify-between bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 mb-6 shadow-sm">
+        {/* Top Brand Bar */}
+        <header className="flex items-center justify-between p-4 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-md">
           <div className="flex items-center gap-3">
-            <img
-              src={profile?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400"}
-              alt={profile?.name || 'User'}
-              className="w-10 h-10 rounded-xl object-cover border border-cyan-400"
-            />
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm text-white shadow-xs bg-[var(--accent)]">
+              E
+            </div>
             <div>
-              <h2 className="text-sm font-black text-slate-900 dark:text-white leading-tight">{profile?.name || 'User'}</h2>
-              <span className="text-[10px] text-cyan-500 font-extrabold uppercase">
-                {navTabs.find((t) => t.id === activeTab)?.label}
+              <h1 className="text-base font-extrabold text-[var(--text)] tracking-tight flex items-center gap-2">
+                Enlazer <span className="text-[10px] font-mono font-bold text-[var(--accent)] px-2 py-0.5 rounded-md bg-[var(--accent)]/10 border border-[var(--accent)]/20">DASHBOARD</span>
+              </h1>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--card-hover)] border border-[var(--border)]">
+              <span className={`w-2 h-2 rounded-full ${isPublished ? 'bg-[var(--success)] animate-pulse' : 'bg-amber-400'}`} />
+              <span className="text-[11px] font-bold text-[var(--text)] hidden sm:inline">
+                {isPublished ? 'Live & Public' : 'Draft Mode'}
               </span>
             </div>
-          </div>
 
-          <div className="flex items-center gap-2">
             <button
-              onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 cursor-pointer"
+              onClick={handleCopyProfileLink}
+              className="px-4 py-2 rounded-xl bg-[var(--accent)] text-white font-bold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-sm hover:opacity-90 active:scale-95"
             >
-              {isMobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5 text-[#00BCFF]" />}
+              {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+              <span className="hidden sm:inline">{copiedLink ? 'Copied!' : 'Copy Bio Link'}</span>
             </button>
           </div>
-        </div>
+        </header>
 
-        {/* Mobile Drawer Overlay */}
-        <AnimatePresence>
-          {isMobileSidebarOpen && (
-            <div className="md:hidden fixed inset-0 z-50 flex">
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setIsMobileSidebarOpen(false)}
-                className="fixed inset-0 bg-slate-950/80 backdrop-blur-xs"
-              />
+        {/* PROFILE HEADER (Numbers Up Front & Story Ring Identity) */}
+        <section className="p-6 sm:p-8 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-md">
+          {/* Desktop Profile Header */}
+          <div className="hidden md:flex items-start justify-between gap-6">
+            <div className="flex items-start gap-6 min-w-0">
+              {/* 88px Story Ring Avatar */}
+              <div className="story-ring-wrap w-[88px] h-[88px] shrink-0">
+                <div className="story-ring-inner">
+                  <img
+                    src={avatar || profile?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400"}
+                    alt={name || profile?.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
 
-              {/* Sidebar Content */}
-              <motion.div
-                initial={{ x: '-100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '-100%' }}
-                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="relative w-80 max-w-[85vw] bg-slate-900 border-r border-slate-800 p-6 flex flex-col justify-between h-full z-10 text-white shadow-2xl"
-              >
-                <div className="space-y-6">
-                  {/* User Info Header */}
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-                    <div className="flex items-center gap-3">
-                      <img src={profile?.avatar || null} alt={profile?.name || 'User'} className="w-12 h-12 rounded-xl object-cover border-2 border-cyan-400 shrink-0" />
-                      <div className="space-y-1 min-w-0">
-                        <h3 className="font-extrabold text-sm text-white truncate">{profile.name}</h3>
-                        <div className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-lg">
-                          <span className="text-[10px] font-mono text-[#00BCFF] font-bold truncate">enlazer.cloud/@{customHandle}</span>
-                          <button
-                            onClick={handleCopyProfileLink}
-                            className="p-0.5 hover:bg-cyan-500/20 rounded text-[#00BCFF] transition-colors cursor-pointer shrink-0"
-                            title="Copy Bio Link"
-                          >
-                            {copiedLink ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                          </button>
-                        </div>
-                        <span className="text-[10px] font-semibold text-emerald-400 flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3" /> Tag #{activeCardUid}
-                        </span>
-                      </div>
-                    </div>
-                    <button onClick={() => setIsMobileSidebarOpen(false)} className="p-1 rounded-lg text-slate-400 hover:text-white shrink-0">
-                      <X className="w-5 h-5" />
-                    </button>
+              <div className="space-y-3 min-w-0">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-2xl font-extrabold text-[var(--text)] tracking-tight">{name || profile?.name}</h2>
+                    <ShieldCheck className="w-5 h-5 text-[var(--accent)]" />
                   </div>
+                  <p className="text-xs font-mono text-[var(--accent)] font-semibold">enlazer.cloud/@{customHandle || profile?.username}</p>
+                </div>
 
-                  {/* Nav Links */}
-                  <div className="space-y-1.5">
-                    {navTabs.map((tab) => {
-                      const TabIcon = tab.icon;
-                      const isActive = activeTab === tab.id;
-                      return (
-                        <button
-                          key={tab.id}
-                          onClick={() => {
-                            setActiveTab(tab.id);
-                            setIsMobileSidebarOpen(false);
-                          }}
-                          className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${isActive
-                            ? 'bg-[#00BCFF] text-slate-950 shadow-md shadow-cyan-500/20'
-                            : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                            }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <TabIcon className="w-4 h-4" />
-                            <span>{tab.label}</span>
-                          </div>
-                          {tab.badge && (
-                            <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-[#00BCFF] text-[9px] font-extrabold uppercase">
-                              {tab.badge}
-                            </span>
-                          )}
-                          {tab.count !== undefined && (
-                            <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[10px] font-mono">
-                              {tab.count}
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
+                {/* NUMBERS UP FRONT STAT ROW */}
+                <div className="flex items-center gap-8 pt-1 border-y border-[var(--border)] py-3">
+                  <div>
+                    <div className="text-[19px] font-extrabold text-[var(--text)] leading-none">1,482</div>
+                    <div className="text-[11px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Taps</div>
+                  </div>
+                  <div className="w-px h-7 bg-[var(--border)]" />
+                  <div>
+                    <div className="text-[19px] font-extrabold text-[var(--text)] leading-none">892</div>
+                    <div className="text-[11px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Viewers</div>
+                  </div>
+                  <div className="w-px h-7 bg-[var(--border)]" />
+                  <div>
+                    <div className="text-[19px] font-extrabold text-[var(--success)] leading-none">14.8%</div>
+                    <div className="text-[11px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Conversion</div>
                   </div>
                 </div>
 
-                {/* Sidebar Bottom Actions */}
-                <div className="pt-6 border-t border-slate-800 space-y-2">
-                  <button
-                    onClick={() => {
-                      setIsMobileSidebarOpen(false);
-                      logoutUser();
-                      setCurrentPage('home');
-                    }}
-                    className="w-full py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold text-xs border border-red-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <LogOut className="w-4 h-4 text-rose-400" />
-                    <span>Log Out</span>
-                  </button>
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
-
-        {/* Main Dashboard Layout (Desktop Sidebar + Content Area) */}
-        <div className="flex flex-col md:flex-row gap-5 items-start">
-
-          {/* Desktop Left Sidebar (Fixed / Sticky, Auto Height) */}
-          <aside className="hidden md:flex flex-col w-64 shrink-0 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-5 space-y-6 shadow-sm sticky top-3 h-fit">
-
-            {/* User Profile Badge & Theme Toggle */}
-            <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800/80">
-              <div className="flex items-center gap-3 min-w-0">
-                <img
-                  src={profile?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400"}
-                  alt={profile?.name || 'User'}
-                  className="w-11 h-11 rounded-2xl object-cover border-2 border-cyan-400 shadow-xs shrink-0"
-                />
-                <div className="space-y-1 min-w-0 flex-1">
-                  <h3 className="font-extrabold text-sm text-slate-900 dark:text-white truncate">{profile?.name || 'User'}</h3>
-                  <span className="text-[10px] font-semibold text-emerald-500 dark:text-emerald-400 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> Tag #{activeCardUid}
-                  </span>
-                </div>
+                <p className="text-xs text-[var(--text-dim)] max-w-2xl leading-relaxed font-normal">
+                  {bio || profile?.bio || "Digital creator & NFC innovator. Tap to view custom links, socials, and contact details."}
+                </p>
               </div>
             </div>
 
-            {/* Navigation Tabs */}
-            <nav className="space-y-1.5">
+            <div className="flex flex-col items-end gap-3 shrink-0">
+              {!isPublished ? (
+                <button
+                  onClick={() => setIsPublishModalOpen(true)}
+                  className="px-5 py-2.5 rounded-xl bg-[var(--accent)] text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer flex items-center gap-2 hover:opacity-90 active:scale-95"
+                >
+                  <Rocket className="w-4 h-4 text-white" />
+                  <span>Publish Profile</span>
+                </button>
+              ) : (
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--success)]/10 border border-[var(--success)]/30 text-[var(--success)] text-xs font-bold">
+                  <span className="w-2 h-2 rounded-full bg-[var(--success)] animate-pulse" />
+                  <span>Live & Public Tag #{activeCardUid}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Centered Profile Header */}
+          <div className="md:hidden flex flex-col items-center text-center space-y-4">
+            {/* 76px Story Ring Avatar */}
+            <div className="story-ring-wrap w-[76px] h-[76px]">
+              <div className="story-ring-inner">
+                <img
+                  src={avatar || profile?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400"}
+                  alt={name || profile?.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <div className="flex items-center justify-center gap-1.5">
+                <h2 className="text-xl font-extrabold text-[var(--text)]">{name || profile?.name}</h2>
+                <ShieldCheck className="w-4 h-4 text-[var(--accent)]" />
+              </div>
+              <p className="text-xs font-mono text-[var(--accent)]">enlazer.cloud/@{customHandle || profile?.username}</p>
+            </div>
+
+            {/* NUMBERS UP FRONT STAT ROW (MOBILE) */}
+            <div className="flex items-center justify-center gap-6 w-full py-3 border-y border-[var(--border)]">
+              <div>
+                <div className="text-[18px] font-extrabold text-[var(--text)] leading-none">1,482</div>
+                <div className="text-[10px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Taps</div>
+              </div>
+              <div className="w-px h-6 bg-[var(--border)]" />
+              <div>
+                <div className="text-[18px] font-extrabold text-[var(--text)] leading-none">892</div>
+                <div className="text-[10px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Viewers</div>
+              </div>
+              <div className="w-px h-6 bg-[var(--border)]" />
+              <div>
+                <div className="text-[18px] font-extrabold text-[var(--success)] leading-none">14.8%</div>
+                <div className="text-[10px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Conversion</div>
+              </div>
+            </div>
+
+            <p className="text-xs text-[var(--text-dim)] max-w-md leading-relaxed font-normal">
+              {bio || profile?.bio || "Digital creator & NFC innovator."}
+            </p>
+
+            {/* Side-by-Side Mobile CTA Buttons */}
+            <div className="flex items-center gap-3 w-full pt-1">
+              <button
+                onClick={handleCopyProfileLink}
+                className="flex-1 py-2.5 rounded-xl bg-[var(--accent)] text-white font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 shadow-xs"
+              >
+                {copiedLink ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4 text-white" />}
+                <span>{copiedLink ? 'Copied!' : 'Copy Profile Link'}</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('settings')}
+                className="py-2.5 px-4 rounded-xl bg-[var(--card-hover)] border border-[var(--border)] text-[var(--text)] font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95"
+              >
+                <Settings className="w-4 h-4 text-[var(--accent)]" />
+                <span>Settings</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Main Dashboard Grid (Sidebar + Content) */}
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+
+          {/* FLAT SIDEBAR NAV (Desktop) */}
+          <aside className="hidden md:flex flex-col w-60 shrink-0 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 space-y-6 sticky top-4 h-fit">
+            
+            {/* Sidebar User Mini Avatar */}
+            <div className="flex items-center gap-3 pb-3 border-b border-[var(--border)]">
+              <div className="story-ring-wrap w-[38px] h-[38px]">
+                <div className="story-ring-inner">
+                  <img
+                    src={avatar || profile?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400"}
+                    alt={profile?.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-extrabold text-xs text-[var(--text)] truncate">{profile?.name}</h3>
+                <span className="text-[10px] text-[var(--success)] font-semibold flex items-center gap-1">
+                  Tag #{activeCardUid}
+                </span>
+              </div>
+            </div>
+
+            {/* Flat Navigation items */}
+            <nav className="space-y-1">
               {navTabs.map((tab) => {
                 const TabIcon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -591,23 +625,16 @@ export const DashboardPage = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${isActive
-                      ? 'bg-[#00BCFF] text-slate-950 shadow-md shadow-cyan-500/20'
-                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white'
-                      }`}
+                    className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
+                      isActive ? 'nav-item-active' : 'text-[var(--text-dim)] hover:text-[var(--text)] hover:bg-[var(--card-hover)]'
+                    }`}
                   >
                     <div className="flex items-center gap-3">
-                      <TabIcon className="w-4 h-4" />
+                      <TabIcon className={`w-4 h-4 ${isActive ? 'text-[var(--accent)]' : 'text-[var(--text-dim)]'}`} />
                       <span>{tab.label}</span>
                     </div>
-                    {tab.badge && (
-                      <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${isActive ? 'bg-slate-950 text-white' : 'bg-cyan-500/10 text-[#00BCFF]'
-                        }`}>
-                        {tab.badge}
-                      </span>
-                    )}
                     {tab.count !== undefined && (
-                      <span className="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-mono">
+                      <span className="px-2 py-0.5 rounded-full bg-[var(--card-hover)] text-[var(--accent)] text-[10px] font-mono">
                         {tab.count}
                       </span>
                     )}
@@ -616,84 +643,22 @@ export const DashboardPage = () => {
               })}
             </nav>
 
-            {/* Sidebar Bottom Action Button */}
-            <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80 space-y-2">
+            <div className="pt-3 border-t border-[var(--border)]">
               <button
                 onClick={() => {
                   logoutUser();
                   setCurrentPage('home');
                 }}
-                className="w-full py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 dark:text-red-400 font-extrabold text-xs border border-red-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 font-bold text-xs border border-rose-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <LogOut className="w-4 h-4 text-rose-500" />
                 <span>Log Out</span>
               </button>
             </div>
-
           </aside>
 
-          {/* Right Main Content Panel */}
+          {/* Right Content Area */}
           <div className="flex-1 w-full space-y-6">
-
-            {/* DRAFT VS PUBLISHED STATUS BANNER */}
-            <div className={`p-4 sm:p-5 rounded-3xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl backdrop-blur-xl ${isPublished
-                ? 'bg-slate-900/90 text-white border-emerald-500/30 shadow-emerald-500/5'
-                : 'bg-slate-900/90 text-white border-cyan-500/30 shadow-cyan-500/5'
-              }`}>
-              <div className="flex items-center gap-3.5 min-w-0 w-full sm:w-auto">
-                <div className={`w-11 h-11 rounded-2xl shrink-0 flex items-center justify-center border shadow-inner ${isPublished
-                    ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
-                    : 'bg-cyan-500/15 text-[#00BCFF] border-cyan-500/30'
-                  }`}>
-                  {isPublished ? <CheckCircle2 className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
-                </div>
-                <div className="space-y-1 min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className={`text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 ${isPublished ? 'text-emerald-400' : 'text-[#00BCFF]'
-                      }`}>
-                      {isPublished && <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />}
-                      {isPublished ? 'Live & Public' : 'Private Draft Mode'}
-                    </span>
-                    <a
-                      href={`/profile/${customHandle || profile?.username || 'user'}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[10px] font-mono px-2.5 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-slate-700/80 transition-colors flex items-center gap-1.5"
-                    >
-                      <span>enlazer.cloud/@{customHandle || profile?.username || 'username'}</span>
-                      <ExternalLink className="w-2.5 h-2.5 text-slate-400" />
-                    </a>
-                  </div>
-                  <p className="text-xs text-slate-300 leading-relaxed font-medium">
-                    {isPublished
-                      ? 'Your digital profile is live! Instant synchronization active across all NFC taps.'
-                      : 'Draft is private to you. Publish to go live & claim your free custom NFC physical card.'}
-                  </p>
-                </div>
-              </div>
-
-              <div className="shrink-0 w-full sm:w-auto flex flex-wrap items-center gap-2">
-                {!isPublished ? (
-                  <button
-                    onClick={() => setIsPublishModalOpen(true)}
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95"
-                  >
-                    <Rocket className="w-4 h-4 text-slate-950" />
-                    <span>Publish Page (₦35,000)</span>
-                  </button>
-                ) : (
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <button
-                      onClick={handleCopyProfileLink}
-                      className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md shadow-cyan-500/20 active:scale-95"
-                    >
-                      {copiedLink ? <Check className="w-3.5 h-3.5 text-slate-950" /> : <Copy className="w-3.5 h-3.5 text-slate-950" />}
-                      <span>{copiedLink ? 'Copied!' : 'Copy Live Link'}</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
 
             {/* TAB CONTENTS */}
 
@@ -701,10 +666,8 @@ export const DashboardPage = () => {
             {activeTab === 'creators' && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-                {/* Left Side: Combined Creator Bio & Profile Details Editor */}
-                <div className="lg:col-span-7 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6 shadow-sm">
-
-
+                {/* Left Side: Creator Form */}
+                <div className="lg:col-span-7 bg-[var(--card)] p-6 sm:p-7 rounded-2xl border border-[var(--border)] space-y-6">
 
                   {/* Personal & Contact Information */}
                   <PersonalInfoForm
@@ -727,7 +690,7 @@ export const DashboardPage = () => {
                     setBio={setBio}
                   />
 
-                  {/* 4. Connected Social Handles */}
+                  {/* 4. Connected Social Handles (Story Bar Design) */}
                   <SocialHandlesManager
                     socialHandlesList={socialHandlesList}
                     setSocialHandlesList={setSocialHandlesList}
@@ -751,16 +714,16 @@ export const DashboardPage = () => {
                   />
 
                   {/* Save Profile Updates Action Button */}
-                  <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+                  <div className="pt-4 border-t border-[var(--border)] flex justify-end">
                     <button
                       onClick={handleSaveProfile}
                       type="button"
                       disabled={isSaving}
-                      className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-[#00BCFF] hover:bg-cyan-400 disabled:opacity-50 text-[#0F172A] font-black text-xs transition-all shadow-lg shadow-cyan-500/20 cursor-pointer active:scale-95 text-center flex items-center justify-center gap-2"
+                      className="w-full sm:w-auto px-8 py-3 rounded-xl disabled:opacity-50 bg-[var(--accent)] text-white font-bold text-xs transition-all shadow-xs cursor-pointer hover:opacity-90 active:scale-95 text-center flex items-center justify-center gap-2"
                     >
                       {isSaving ? (
                         <>
-                          <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
+                          <Loader2 className="w-4 h-4 animate-spin text-white" />
                           <span>Saving Updates...</span>
                         </>
                       ) : (
@@ -772,9 +735,9 @@ export const DashboardPage = () => {
                 </div>
 
                 {/* Right Side: Mobile Phone Live Preview */}
-                <div className="lg:col-span-5 sticky top-3 h-fit flex flex-col items-center w-full">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center justify-center gap-1.5 mb-3.5">
-                    <Smartphone className="w-3.5 h-3.5 text-[#00BCFF]" /> Live Profile Preview
+                <div className="lg:col-span-5 sticky top-4 h-fit flex flex-col items-center w-full">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--accent)] flex items-center justify-center gap-1.5 mb-3">
+                    <Smartphone className="w-3.5 h-3.5 text-[var(--accent)]" /> Live Bio Preview
                   </span>
                   <MobilePhonePreview
                     data={{
@@ -809,15 +772,15 @@ export const DashboardPage = () => {
             {/* TAB 2: MY PHYSICAL CARDS */}
             {activeTab === 'cards' && (
               <div className="space-y-6">
-                <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div className="bg-[var(--card)] p-6 sm:p-8 rounded-2xl border border-[var(--border)] space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
                     <div>
-                      <h3 className="text-xl font-black text-slate-900 dark:text-white">Active Physical Cards</h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">Manage NFC hardware tags linked to your account.</p>
+                      <h3 className="text-xl font-black text-[var(--text)]">Active Physical Cards</h3>
+                      <p className="text-xs text-[var(--text-dim)]">Manage NFC hardware tags linked to your account.</p>
                     </div>
                     <button
                       onClick={() => setIsActivateModalOpen(true)}
-                      className="px-5 py-2.5 rounded-xl bg-[#00BCFF] hover:bg-cyan-500 text-slate-950 font-black text-xs transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 rounded-xl bg-[var(--accent)] hover:opacity-90 text-white font-bold text-xs transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Plus className="w-4 h-4" />
                       <span>Activate Additional Card</span>
@@ -825,23 +788,23 @@ export const DashboardPage = () => {
                   </div>
 
                   {cardLinkMsg && (
-                    <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold animate-in fade-in">
+                    <div className="p-3.5 rounded-xl bg-[var(--success)]/10 border border-[var(--success)]/30 text-[var(--success)] text-xs font-bold animate-in fade-in">
                       {cardLinkMsg}
                     </div>
                   )}
 
-                  <div className="p-6 rounded-2xl bg-slate-950 border border-cyan-500/30 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+                  <div className="p-6 rounded-2xl bg-[var(--card-hover)] border border-[var(--border)] text-[var(--text)] shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
                     <div className="space-y-2 relative z-10">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/20 text-[#00BCFF] border border-cyan-500/40 text-[10px] font-extrabold uppercase">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20 text-[10px] font-extrabold uppercase">
                         <ShieldCheck className="w-3.5 h-3.5" /> NTAG216 Verified Primary Tag
                       </div>
                       <h4 className="text-2xl font-mono font-black">{activeCardUid}</h4>
-                      <p className="text-xs text-slate-400">Linked to account: <strong className="text-white">{profile.name}</strong></p>
+                      <p className="text-xs text-[var(--text-dim)]">Linked to account: <strong className="text-[var(--text)]">{profile.name}</strong></p>
                     </div>
                   </div>
 
-                  <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-3">
-                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white">
+                  <div className="p-5 rounded-2xl bg-[var(--card-hover)] border border-[var(--border)] space-y-3">
+                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-[var(--text)]">
                       Link & Bind New Physical Card UID
                     </h4>
                     <form onSubmit={handleLinkNewCard} className="flex gap-2 max-w-md">
@@ -850,11 +813,11 @@ export const DashboardPage = () => {
                         value={newCardUidInput}
                         onChange={(e) => setNewCardUidInput(e.target.value.toUpperCase())}
                         placeholder="e.g. ENL-9921-NFC"
-                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white px-4 py-2.5 rounded-xl text-xs font-mono font-bold focus:outline-none focus:border-[#00BCFF]"
+                        className="w-full bg-[var(--card)] border border-[var(--border)] text-[var(--text)] px-4 py-2.5 rounded-xl text-xs font-mono font-bold focus:outline-none focus:border-[var(--accent)]"
                       />
                       <button
                         type="submit"
-                        className="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 text-white font-bold text-xs hover:bg-slate-800 cursor-pointer shrink-0"
+                        className="px-5 py-2.5 rounded-xl bg-[var(--accent)] text-white font-bold text-xs hover:opacity-90 cursor-pointer shrink-0"
                       >
                         Bind UID
                       </button>
@@ -895,23 +858,23 @@ export const DashboardPage = () => {
               };
 
               return (
-                <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-6 animate-in fade-in duration-300">
+                <div className="bg-[var(--card)] p-6 sm:p-8 rounded-2xl border border-[var(--border)] space-y-6 animate-in fade-in duration-300">
 
                   {/* Tab Title Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
                     <div>
-                      <h3 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                        <Users className="w-5 h-5 text-[#00BCFF]" />
+                      <h3 className="text-xl font-black text-[var(--text)] flex items-center gap-2">
+                        <Users className="w-5 h-5 text-[var(--accent)]" />
                         <span>Received Contacts</span>
                       </h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Contact details, roles, and notes shared back by people when they tap your Enlazer card.</p>
+                      <p className="text-xs text-[var(--text-dim)] mt-1">Contact details, roles, and notes shared back by people when they tap your Enlazer card.</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-[#00BCFF] font-bold text-xs">
+                      <span className="px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] font-bold text-xs">
                         {leadsArray.length} Total
                       </span>
                       {filteredLeads.length !== leadsArray.length && (
-                        <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold text-xs">
+                        <span className="px-3 py-1 rounded-full bg-[var(--card-hover)] text-[var(--text-dim)] font-bold text-xs">
                           {filteredLeads.length} Found
                         </span>
                       )}
@@ -919,26 +882,26 @@ export const DashboardPage = () => {
                   </div>
 
                   {/* Google Contacts API Integration Status Card */}
-                  <div className="p-4 rounded-2xl bg-slate-900 text-white border border-cyan-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md">
+                  <div className="p-4 rounded-2xl bg-[var(--card-hover)] text-[var(--text)] border border-[var(--border)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-[#00BCFF] flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-2xl bg-[var(--accent)]/10 border border-[var(--accent)]/20 text-[var(--accent)] flex items-center justify-center shrink-0">
                         <Globe className="w-5 h-5" />
                       </div>
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <h4 className="text-xs font-black text-white">Google Contacts Direct Sync</h4>
+                          <h4 className="text-xs font-black text-[var(--text)]">Google Contacts Direct Sync</h4>
                           {googleAccessToken ? (
-                            <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold border border-emerald-500/30 flex items-center gap-1">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className="px-2.5 py-0.5 rounded-md bg-[var(--success)]/20 text-[var(--success)] text-[10px] font-extrabold border border-[var(--success)]/30 flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" />
                               Connected ({googleUserEmail || 'Active Sync Token'})
                             </span>
                           ) : (
-                            <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-extrabold border border-slate-700">
+                            <span className="px-2 py-0.5 rounded-md bg-[var(--card)] text-[var(--text-dim)] text-[10px] font-extrabold border border-[var(--border)]">
                               Not Connected
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-slate-300 mt-0.5">
+                        <p className="text-[11px] text-[var(--text-dim)] mt-0.5">
                           {googleAccessToken
                             ? 'Your Google account is connected! Push contacts directly to your cloud address book in 1-click.'
                             : 'Connect your Google Account to sync captured contacts directly via Google People API.'}
@@ -951,7 +914,7 @@ export const DashboardPage = () => {
                         <button
                           type="button"
                           onClick={disconnectGoogleAccount}
-                          className="px-3.5 py-2 rounded-xl border border-slate-700 hover:border-red-500/40 text-slate-300 hover:text-red-400 text-xs font-bold transition-all cursor-pointer"
+                          className="px-3.5 py-2 rounded-xl border border-[var(--border)] text-[var(--text-dim)] hover:text-rose-500 text-xs font-bold transition-all cursor-pointer"
                         >
                           Disconnect
                         </button>
@@ -959,7 +922,7 @@ export const DashboardPage = () => {
                         <button
                           type="button"
                           onClick={() => setIsGoogleModalOpen(true)}
-                          className="px-4 py-2 rounded-xl bg-[#00BCFF] hover:bg-cyan-400 text-slate-950 font-black text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-md shadow-cyan-500/20 active:scale-95"
+                          className="px-4 py-2 rounded-xl bg-[var(--accent)] text-white font-bold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-xs hover:opacity-90 active:scale-95"
                         >
                           <Globe className="w-3.5 h-3.5" />
                           <span>Connect Google Contacts</span>
@@ -1778,6 +1741,34 @@ export const DashboardPage = () => {
           </div>
         </div>
       )}
+
+      {/* MOBILE FIXED BOTTOM TAB BAR (Section 4.5) */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[#10192B] border-t border-[#1E2A42] h-16 flex items-center justify-around px-2 shadow-2xl">
+        {navTabs.map((tab) => {
+          const TabIcon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className="flex flex-col items-center justify-center gap-1 flex-1 py-1 cursor-pointer"
+            >
+              <div
+                className={`w-9 h-7 rounded-lg flex items-center justify-center transition-all ${
+                  isActive ? 'text-white shadow-sm' : 'bg-[#16223A] text-[#8B98AE]'
+                }`}
+                style={isActive ? { background: 'var(--grad)' } : {}}
+              >
+                <TabIcon className="w-4 h-4" />
+              </div>
+              <span className={`text-[10px] font-bold ${isActive ? 'text-[#F1F5F9]' : 'text-[#5A6784]'}`}>
+                {tab.id === 'creators' ? 'Profile' : tab.id === 'cards' ? 'Hardware' : tab.id === 'leads' ? 'Contacts' : tab.id === 'analytics' ? 'Analytics' : 'Settings'}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
+
     </div>
   );
 };

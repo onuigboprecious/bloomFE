@@ -25,7 +25,7 @@ export const TermsOfServicePage = () => {
             <div className="space-y-2">
               <h3 className="text-[#00BCFF] font-extrabold text-sm uppercase tracking-wider">1. Acceptance of Terms</h3>
               <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
-                By accessing the Enlazer website, purchasing a physical Enlazer NFC Smart Card or Wristband, or creating a digital handle (`enlazer.com.ng/@username`), you agree to be bound by these Terms of Service.
+                By accessing the Enlazer website, purchasing a physical Enlazer NFC Smart Card or Wristband, or creating a digital handle (`enlazer.cloud/@username`), you agree to be bound by these Terms of Service.
               </p>
             </div>
 
@@ -39,7 +39,7 @@ export const TermsOfServicePage = () => {
             <div className="space-y-2">
               <h3 className="text-[#00BCFF] font-extrabold text-sm uppercase tracking-wider">3. Acceptable Use</h3>
               <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
-                Users may not host illegal content, malicious links, phishing material, or impersonate other individuals on their public Enlazer handles (`enlazer.com.ng/@username`). Enlazer reserves the right to suspend handles violating community guidelines.
+                Users may not host illegal content, malicious links, phishing material, or impersonate other individuals on their public Enlazer handles (`enlazer.cloud/@username`). Enlazer reserves the right to suspend handles violating community guidelines.
               </p>
             </div>
 

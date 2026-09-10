@@ -16,7 +16,7 @@ export const HeroSection = () => {
   };
 
   return (
-    <section id="hero" className="relative -mt-20 pt-28 sm:pt-32 md:pt-36 pb-16 sm:pb-24 overflow-hidden bg-[#F8FAFC] dark:bg-[#030712] text-slate-900 dark:text-white transition-colors duration-300 min-h-[85vh] flex items-center justify-center">
+    <section id="hero" className="relative -mt-20 pt-28 sm:pt-32 md:pt-36 pb-16 sm:pb-24 overflow-hidden bg-white dark:bg-[#070F1E] text-slate-900 dark:text-white transition-colors duration-300 min-h-[85vh] flex items-center justify-center">
 
       {/* 3D Globe Background Layer */}
       <div className="absolute -top-12 sm:-top-16 left-1/2 -translate-x-1/2 w-[1200px] sm:w-[1400px] md:w-[1600px] h-[780px] pointer-events-none opacity-25 dark:opacity-30 z-0 flex items-center justify-center">
