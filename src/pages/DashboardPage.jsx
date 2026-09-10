@@ -359,7 +359,7 @@ export const DashboardPage = () => {
   };
 
   const handleCopyProfileLink = () => {
-    const profileUrl = getAppDomainUrl(`/@${customHandle}`);
+    const profileUrl = getAppDomainUrl(`/${customHandle}`);
     navigator.clipboard.writeText(profileUrl);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
@@ -483,7 +483,7 @@ export const DashboardPage = () => {
                     <h2 className="text-2xl font-extrabold text-[var(--text)] tracking-tight">{name || profile?.name}</h2>
                     <ShieldCheck className="w-5 h-5 text-[var(--accent)]" />
                   </div>
-                  <p className="text-xs font-mono text-[var(--accent)] font-semibold">enlazer.cloud/@{customHandle || profile?.username}</p>
+                  <p className="text-xs font-mono text-[var(--accent)] font-semibold">enlazer.cloud/{customHandle || profile?.username}</p>
                 </div>
 
                 {/* NUMBERS UP FRONT STAT ROW */}
@@ -546,7 +546,7 @@ export const DashboardPage = () => {
                 <h2 className="text-xl font-extrabold text-[var(--text)]">{name || profile?.name}</h2>
                 <ShieldCheck className="w-4 h-4 text-[var(--accent)]" />
               </div>
-              <p className="text-xs font-mono text-[var(--accent)]">enlazer.cloud/@{customHandle || profile?.username}</p>
+              <p className="text-xs font-mono text-[var(--accent)]">enlazer.cloud/{customHandle || profile?.username}</p>
             </div>
 
             {/* NUMBERS UP FRONT STAT ROW (MOBILE) */}

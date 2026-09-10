@@ -33,7 +33,7 @@ export const SettingsStudio = ({
             </label>
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono text-[#38BDF8] font-bold bg-[#16223A] px-3.5 py-2.5 rounded-xl border border-[#1E2A42] shrink-0">
-                enlazer.cloud/@
+                enlazer.cloud/
               </span>
               <input
                 type="text"
@@ -43,7 +43,7 @@ export const SettingsStudio = ({
                 className="flex-1 bg-[#16223A] border border-[#1E2A42] text-[#F1F5F9] rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#38BDF8]"
               />
             </div>
-            <p className="text-[11px] text-[#8B98AE]">Your public URL: https://enlazer.cloud/@{customHandle || 'username'}</p>
+            <p className="text-[11px] text-[#8B98AE]">Your public URL: https://enlazer.cloud/{customHandle || 'username'}</p>
           </div>
 
           {/* Email Account */}

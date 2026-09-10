@@ -5,7 +5,7 @@ import { getAppDomainUrl } from '../../config/domainConfig';
 
 export const QuickShareModal = ({ isOpen, onClose, profile, customHandle, saveContactToPhone }) => {
   const [copied, setCopied] = useState(false);
-  const liveUrl = getAppDomainUrl(`/@${customHandle || profile?.username || 'user'}`);
+  const liveUrl = getAppDomainUrl(`/${customHandle || profile?.username || 'user'}`);
 
   if (!isOpen) return null;
 
@@ -87,7 +87,7 @@ export const QuickShareModal = ({ isOpen, onClose, profile, customHandle, saveCo
             {/* Profile Handle Badge */}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-xs font-mono text-cyan-300">
               <Share2 className="w-3.5 h-3.5 text-[#00BCFF]" />
-              <span className="truncate max-w-[220px]">enlazer.cloud/@{customHandle || profile?.username || 'user'}</span>
+              <span className="truncate max-w-[220px]">enlazer.cloud/{customHandle || profile?.username || 'user'}</span>
             </div>
           </div>
 

@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Download, User, Mail, Phone, Globe, MapPin, Share2, MessageCircle,
-  ExternalLink, CheckCircle2, ShieldCheck, Link as LinkIcon, Check, Copy
+  ExternalLink, CheckCircle2, ShieldCheck, Link as LinkIcon, Check, Copy, CreditCard, Sparkles
 } from 'lucide-react';
 import SocialIcon from '../ui/SocialIcon';
 import ShareBackModal from '../ui/ShareBackModal';
 import { saveContactToPhone } from '../../utils/vcard';
+import { useApp } from '../../context/AppContext';
 
 // Enlazer Primary Brand Theme: Enlazer Cyan Dark (#00BCFF & Deep Slate)
 export const THEMES = {
@@ -76,6 +77,7 @@ const resolveSocialUrl = (network, rawValue) => {
 };
 
 export const ProfileView = ({ data }) => {
+  const { setCurrentPage } = useApp() || {};
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [savedContact, setSavedContact] = useState(false);
@@ -111,19 +113,21 @@ export const ProfileView = ({ data }) => {
     setTimeout(() => setSavedContact(false), 3000);
   };
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 3000);
+  const handleGetOwnCard = () => {
+    if (setCurrentPage) {
+      setCurrentPage('home');
+    } else {
+      window.location.href = '/';
+    }
   };
 
   return (
-    <div className={`min-h-screen ${theme.bg} transition-colors flex flex-col justify-between relative overflow-hidden py-8 px-4`}>
+    <div className={`min-h-screen ${theme.bg} transition-colors flex flex-col justify-between relative overflow-hidden py-4 sm:py-8 px-2 sm:px-6`}>
       {/* Background Ambient Glow */}
       <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] ${theme.glow} rounded-full blur-3xl pointer-events-none`} />
 
       {/* Top Bar Header */}
-      <div className="max-w-md mx-auto w-full flex items-center justify-between mb-6 z-10">
+      <div className="max-w-md sm:max-w-lg mx-auto w-full flex items-center justify-between mb-4 sm:mb-6 px-1 sm:px-0 z-10">
         <div className="flex items-center gap-0.5">
           <span className={`text-xl font-black tracking-tight font-['Plus_Jakarta_Sans'] ${theme.textPrimary}`}>enlazer</span>
           <span className="text-xl font-black text-[#00BCFF]">.</span>
@@ -135,12 +139,12 @@ export const ProfileView = ({ data }) => {
       </div>
 
       {/* Main Profile Container */}
-      <div className="max-w-md mx-auto w-full z-10 my-auto">
+      <div className="max-w-md sm:max-w-lg mx-auto w-full z-10 my-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className={`${theme.card} backdrop-blur-xl rounded-3xl p-6 sm:p-7 border relative overflow-hidden text-left`}
+          className={`${theme.card} backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4.5 sm:p-7 border relative overflow-hidden text-left`}
         >
           {/* CORPORATE & PROFESSIONALS PROFILE CARD */}
           <div className="space-y-5">
@@ -287,23 +291,13 @@ export const ProfileView = ({ data }) => {
             )}
           </div>
 
-          {/* Shared Link Copy Footer */}
-          <div className="pt-3 text-center border-t border-slate-800/50 mt-4">
+          {/* CTA Footer: Suggest users get their own Enlazer card & navigate back to marketing page */}
+          <div className="pt-3 text-center mt-3">
             <button
-              onClick={handleCopyLink}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer"
+              onClick={handleGetOwnCard}
+              className="inline-flex items-center justify-center text-xs font-bold text-[#00BCFF] hover:text-cyan-300 hover:underline transition-all cursor-pointer py-1"
             >
-              {copied ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-[#00BCFF]" />
-                  <span className="text-[#00BCFF] font-bold">Profile Link Copied!</span>
-                </>
-              ) : (
-                <>
-                  <Share2 className="w-3.5 h-3.5 text-[#00BCFF]" />
-                  <span>Share this digital card</span>
-                </>
-              )}
+              <span>Get Your Own Enlazer NFC Card & Wristband →</span>
             </button>
           </div>
         </motion.div>
@@ -311,7 +305,7 @@ export const ProfileView = ({ data }) => {
 
       {/* Footer Powered By */}
       <div className={`text-center pt-8 text-xs ${theme.footerText} z-10`}>
-        Powered by <span className={`font-bold ${theme.textPrimary}`}>enlazer.cloud</span> — smart NFC technology
+        Powered by <button onClick={handleGetOwnCard} className={`font-bold ${theme.textPrimary} hover:text-[#00BCFF] transition-colors cursor-pointer`}>Infarbloom</button> — IaaS Solutions
       </div>
 
       <ShareBackModal
@@ -326,3 +320,4 @@ export const ProfileView = ({ data }) => {
 };
 
 export default ProfileView;
+
