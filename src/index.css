@@ -7,11 +7,13 @@
   --bg: #F8FAFC;
   --card: #FFFFFF;
   --card-hover: #F1F5F9;
+  --input-bg: #F1F5F9;
+  --input-border: #CBD5E1;
   --border: #E2E8F0;
   --accent: #0284C7;
   --success: #10B981;
   --text: #0F172A;
-  --text-dim: #64748B;
+  --text-dim: #475569;
   --text-faint: #94A3B8;
   --grad: #0284C7; /* Solid accent, no gradient */
 }
@@ -21,6 +23,8 @@ html.dark, .dark {
   --bg: #070B14;
   --card: #10192B;
   --card-hover: #16223A;
+  --input-bg: #16223A;
+  --input-border: #1E2A42;
   --border: #1E2A42;
   --accent: #38BDF8;
   --success: #34D399;

@@ -12,24 +12,24 @@ export const CustomLinksManager = ({
 }) => {
   return (
     <div className="pt-2 space-y-6">
-      <div className="flex items-center justify-between border-b border-[#1E2A42] pb-3">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-[#F1F5F9] flex items-center gap-2">
-          <LinkIcon className="w-4 h-4 text-[#38BDF8]" />
+      <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text)] flex items-center gap-2">
+          <LinkIcon className="w-4 h-4 text-[var(--accent)]" />
           <span>Custom Bio Buttons & Action Links</span>
         </h4>
-        <span className="text-[11px] font-mono text-[#38BDF8] font-extrabold uppercase">
+        <span className="text-[11px] font-mono text-[var(--accent)] font-extrabold uppercase">
           {customLinks.length} Active Buttons
         </span>
       </div>
 
       {/* Active Custom Bio Buttons */}
       {customLinks.length === 0 ? (
-        <div className="p-6 rounded-2xl bg-[#10192B] border border-dashed border-[#1E2A42] text-center space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] flex items-center justify-center mx-auto border border-[#38BDF8]/20">
+        <div className="p-6 rounded-2xl bg-[var(--card)] border border-dashed border-[var(--border)] text-center space-y-2">
+          <div className="w-10 h-10 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center mx-auto border border-[var(--accent)]/20">
             <LinkIcon className="w-5 h-5" />
           </div>
-          <p className="text-xs font-bold text-[#F1F5F9]">No custom action buttons added yet.</p>
-          <p className="text-[11px] text-[#8B98AE] max-w-sm mx-auto">
+          <p className="text-xs font-bold text-[var(--text)]">No custom action buttons added yet.</p>
+          <p className="text-[11px] text-[var(--text-dim)] max-w-sm mx-auto">
             Add custom portfolio buttons, pitch decks, Calendly booking links, online store URLs, or music streams!
           </p>
         </div>
@@ -38,24 +38,24 @@ export const CustomLinksManager = ({
           {customLinks.map((item) => (
             <div
               key={item.id}
-              className="p-3.5 rounded-xl bg-[#10192B] border border-[#1E2A42] flex items-center justify-between gap-3 hover:border-[#38BDF8]/40 transition-all shadow-xs group"
+              className="p-3.5 rounded-xl bg-[var(--card)] border border-[var(--border)] flex items-center justify-between gap-3 hover:border-[var(--accent)]/40 transition-all shadow-xs group"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2 rounded-lg bg-[#16223A] text-[#38BDF8] border border-[#1E2A42] shrink-0">
-                  <LinkIcon className="w-4 h-4 text-[#38BDF8]" />
+                <div className="p-2 rounded-lg bg-[var(--input-bg)] text-[var(--accent)] border border-[var(--border)] shrink-0">
+                  <LinkIcon className="w-4 h-4 text-[var(--accent)]" />
                 </div>
                 <div className="min-w-0 space-y-0.5">
-                  <span className="text-xs font-bold text-[#F1F5F9] truncate flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-[var(--text)] truncate flex items-center gap-1.5">
                     {item.label}
-                    <ExternalLink className="w-3 h-3 text-[#8B98AE] opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ExternalLink className="w-3 h-3 text-[var(--text-dim)] opacity-0 group-hover:opacity-100 transition-opacity" />
                   </span>
-                  <span className="text-[10px] text-[#38BDF8] font-mono truncate block">{item.url}</span>
+                  <span className="text-[10px] text-[var(--accent)] font-mono truncate block">{item.url}</span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => handleRemoveCustomLink(item.id)}
-                className="p-1.5 text-[#8B98AE] hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer shrink-0"
+                className="p-1.5 text-[var(--text-dim)] hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer shrink-0"
                 title="Delete Link"
               >
                 <Trash2 className="w-4 h-4" />
@@ -68,39 +68,46 @@ export const CustomLinksManager = ({
       {/* Add New Link Form */}
       <form
         onSubmit={handleAddCustomLink}
-        className="p-5 rounded-2xl bg-[#10192B] border border-[#1E2A42] space-y-3"
+        className="p-5 rounded-2xl bg-[var(--card)] border border-[var(--border)] space-y-3"
       >
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#F1F5F9] block">
+          <span className="text-xs font-bold uppercase tracking-wider text-[var(--text)] block">
             Create Custom Bio Button
           </span>
-          <span className="text-[11px] text-[#8B98AE]">Add label & full URL</span>
+          <span className="text-[11px] text-[var(--text-dim)]">Label & Destination URL</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input
-            type="text"
-            placeholder="Button Title (e.g. Download My Portfolio)"
-            value={newLinkLabel}
-            onChange={(e) => setNewLinkLabel(e.target.value)}
-            className="bg-[#16223A] border border-[#1E2A42] text-[#F1F5F9] rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#38BDF8]"
-          />
-          <input
-            type="url"
-            placeholder="Target URL (https://...)"
-            value={newLinkUrl}
-            onChange={(e) => setNewLinkUrl(e.target.value)}
-            className="bg-[#16223A] border border-[#1E2A42] text-[#F1F5F9] rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#38BDF8]"
-          />
+          <div className="space-y-1">
+            <label className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text)]">Button Label</label>
+            <input
+              type="text"
+              placeholder="e.g. Download Pitch Deck"
+              value={newLinkLabel}
+              onChange={(e) => setNewLinkLabel(e.target.value)}
+              className="w-full bg-[var(--input-bg)] border border-[var(--border)] text-[var(--text)] rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[var(--accent)]"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text)]">Target URL</label>
+            <input
+              type="url"
+              placeholder="https://drive.google.com/..."
+              value={newLinkUrl}
+              onChange={(e) => setNewLinkUrl(e.target.value)}
+              className="w-full bg-[var(--input-bg)] border border-[var(--border)] text-[var(--text)] rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[var(--accent)]"
+            />
+          </div>
         </div>
-        
+
         <button
           type="submit"
           style={{ background: 'var(--grad)' }}
           className="w-full py-2.5 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-md"
         >
           <Plus className="w-4 h-4 text-white" />
-          <span>Add Custom Bio Button</span>
+          <span>Add Custom Button to Bio</span>
         </button>
       </form>
     </div>

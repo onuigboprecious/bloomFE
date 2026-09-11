@@ -26,7 +26,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
   }, [profile.email, profile.name, profile.phone]);
 
   const activeFinish = selectedFinish || mockCardFinishes[0];
-  const publishPrice = 35000;
+  const publishPrice = 19999;
 
   const handleClose = () => {
     if (onClose) onClose();
@@ -228,7 +228,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
               <span className="font-bold text-slate-900 dark:text-white">
                 Profile Publishing Plan (enlazer.cloud/@{profile.username || 'username'})
               </span>
-              <span className="font-bold font-mono">₦35,000</span>
+              <span className="font-bold font-mono">₦19,999</span>
             </div>
 
             <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
@@ -246,7 +246,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
             <div className="flex items-center justify-between">
               <span className="text-sm font-black text-slate-900 dark:text-white">Total Payable</span>
               <span className="text-xl font-black text-[#00BCFF] font-mono">
-                ₦35,000
+                ₦19,999
               </span>
             </div>
           </div>

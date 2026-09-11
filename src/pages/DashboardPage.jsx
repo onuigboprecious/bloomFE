@@ -56,8 +56,10 @@ import {
   Clock,
   Hourglass,
   MessageCircle,
-  Paperclip
+  Paperclip,
+  Info
 } from 'lucide-react';
+import { getAnalyticsApi } from '../api/analytics';
 import MobilePhonePreview from '../components/ui/MobilePhonePreview';
 import ActivateCardModal from '../components/onboarding/ActivateCardModal';
 import PublishModal from '../components/order-modal/PublishModal';
@@ -77,6 +79,7 @@ import NotesChecklistWidget from '../components/dashboard/NotesChecklistWidget';
 export const DashboardPage = () => {
   const {
     profile,
+    authLoading,
     saveFullProfile,
     updateProfileField,
     updateSocialLink,
@@ -111,6 +114,35 @@ export const DashboardPage = () => {
   const [copiedLink, setCopiedLink] = useState(false);
   const [newCardUidInput, setNewCardUidInput] = useState('');
   const [cardLinkMsg, setCardLinkMsg] = useState('');
+  const [backendStats, setBackendStats] = useState({ taps: 0, viewers: 0, conversion: '0%' });
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadStats() {
+      try {
+        setStatsLoading(true);
+        const res = await getAnalyticsApi();
+        if (mounted && res) {
+          const taps = res.taps_count ?? res.total_taps ?? profile?.taps_count ?? 0;
+          const viewers = res.views_count ?? res.unique_viewers ?? profile?.views_count ?? taps;
+          const conversion = taps > 0 ? ((viewers / taps) * 100).toFixed(1) + '%' : (res.conversion_rate ? res.conversion_rate + '%' : '0%');
+          setBackendStats({ taps, viewers, conversion });
+        }
+      } catch (e) {
+        if (mounted) {
+          const taps = profile?.taps_count || profile?.tapsCount || 0;
+          const viewers = profile?.views_count || profile?.viewsCount || taps;
+          const conversion = taps > 0 ? ((viewers / taps) * 100).toFixed(1) + '%' : '0%';
+          setBackendStats({ taps, viewers, conversion });
+        }
+      } finally {
+        if (mounted) setStatsLoading(false);
+      }
+    }
+    loadStats();
+    return () => { mounted = false; };
+  }, [profile]);
 
   // Google Contacts API State
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
@@ -414,12 +446,12 @@ export const DashboardPage = () => {
     { id: 'settings', label: 'Account Settings', icon: Settings }
   ];
 
-  if (!profile) {
+  if (!profile || authLoading || statsLoading) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex items-center justify-center p-4 text-center">
+      <div className="min-h-screen bg-[var(--bg)] flex flex-col items-center justify-center p-4 text-center">
         <div className="space-y-4">
           <div className="w-12 h-12 border-4 border-[#00BCFF] border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs font-bold text-slate-500">Loading your Enlazer dashboard...</p>
+          <p className="text-xs font-bold text-[var(--text-dim)]">Loading your Enlazer dashboard...</p>
         </div>
       </div>
     );
@@ -432,23 +464,38 @@ export const DashboardPage = () => {
 
         {/* Top Brand Bar */}
         <header className="flex items-center justify-between p-4 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-md">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm text-white shadow-xs bg-[var(--accent)]">
-              E
-            </div>
-            <div>
-              <h1 className="text-base font-extrabold text-[var(--text)] tracking-tight flex items-center gap-2">
-                Enlazer <span className="text-[10px] font-mono font-bold text-[var(--accent)] px-2 py-0.5 rounded-md bg-[var(--accent)]/10 border border-[var(--accent)]/20">DASHBOARD</span>
-              </h1>
-            </div>
-          </div>
+          <button
+            onClick={() => setCurrentPage && setCurrentPage('home')}
+            className="flex items-center gap-0.5 cursor-pointer hover:opacity-80 transition-opacity"
+            title="Enlazer Home"
+          >
+            <span className="text-xl sm:text-2xl font-black tracking-tight font-['Plus_Jakarta_Sans'] text-[var(--text)]">enlazer</span>
+            <span className="text-xl sm:text-2xl font-black text-[#00BCFF] dark:text-[#38BDF8]">.</span>
+          </button>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--card-hover)] border border-[var(--border)]">
-              <span className={`w-2 h-2 rounded-full ${isPublished ? 'bg-[var(--success)] animate-pulse' : 'bg-amber-400'}`} />
-              <span className="text-[11px] font-bold text-[var(--text)] hidden sm:inline">
-                {isPublished ? 'Live & Public' : 'Draft Mode'}
-              </span>
+            {/* Interactive Status Pill with Hover Tooltip */}
+            <div className="relative group flex items-center">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--card-hover)] border border-[var(--border)] cursor-pointer hover:border-[var(--accent)] transition-all shadow-xs">
+                <span className={`w-2.5 h-2.5 rounded-full ${isPublished ? 'bg-[var(--success)] animate-pulse' : 'bg-amber-400'}`} />
+                <span className="text-[11px] font-bold text-[var(--text)] hidden sm:inline">
+                  {isPublished ? 'Live & Public' : 'Draft Mode'}
+                </span>
+                <Info className="w-3.5 h-3.5 text-[var(--text-dim)] group-hover:text-[var(--accent)] transition-colors" />
+              </div>
+
+              {/* Hover Tooltip Popup */}
+              <div className="absolute right-0 top-full mt-2 w-64 p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-200 z-50 text-left">
+                <div className="flex items-center gap-2 text-xs font-bold text-[var(--text)] mb-1">
+                  <span className={`w-2 h-2 rounded-full ${isPublished ? 'bg-[var(--success)]' : 'bg-amber-400'}`} />
+                  <span>{isPublished ? 'Profile is Live' : 'Draft Mode Active'}</span>
+                </div>
+                <p className="text-[11px] text-[var(--text-dim)] leading-relaxed">
+                  {isPublished
+                    ? 'Your profile is live! Anyone scanning your NFC card or visiting your link sees your latest profile.'
+                    : 'Your edits are saved as a draft. Click "Publish Profile" to make your card live to the public!'}
+                </p>
+              </div>
             </div>
 
             <button
@@ -486,20 +533,20 @@ export const DashboardPage = () => {
                   <p className="text-xs font-mono text-[var(--accent)] font-semibold">enlazer.cloud/{customHandle || profile?.username}</p>
                 </div>
 
-                {/* NUMBERS UP FRONT STAT ROW */}
+                {/* NUMBERS UP FRONT STAT ROW (Real Backend Data) */}
                 <div className="flex items-center gap-8 pt-1 border-y border-[var(--border)] py-3">
                   <div>
-                    <div className="text-[19px] font-extrabold text-[var(--text)] leading-none">1,482</div>
+                    <div className="text-[19px] font-extrabold text-[var(--text)] leading-none">{backendStats.taps.toLocaleString()}</div>
                     <div className="text-[11px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Taps</div>
                   </div>
                   <div className="w-px h-7 bg-[var(--border)]" />
                   <div>
-                    <div className="text-[19px] font-extrabold text-[var(--text)] leading-none">892</div>
+                    <div className="text-[19px] font-extrabold text-[var(--text)] leading-none">{backendStats.viewers.toLocaleString()}</div>
                     <div className="text-[11px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Viewers</div>
                   </div>
                   <div className="w-px h-7 bg-[var(--border)]" />
                   <div>
-                    <div className="text-[19px] font-extrabold text-[var(--success)] leading-none">14.8%</div>
+                    <div className="text-[19px] font-extrabold text-[var(--success)] leading-none">{backendStats.conversion}</div>
                     <div className="text-[11px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Conversion</div>
                   </div>
                 </div>
@@ -511,7 +558,7 @@ export const DashboardPage = () => {
             </div>
 
             <div className="flex flex-col items-end gap-3 shrink-0">
-              {!isPublished ? (
+              {!isPublished && (
                 <button
                   onClick={() => setIsPublishModalOpen(true)}
                   className="px-5 py-2.5 rounded-xl bg-[var(--accent)] text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer flex items-center gap-2 hover:opacity-90 active:scale-95"
@@ -519,11 +566,6 @@ export const DashboardPage = () => {
                   <Rocket className="w-4 h-4 text-white" />
                   <span>Publish Profile</span>
                 </button>
-              ) : (
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--success)]/10 border border-[var(--success)]/30 text-[var(--success)] text-xs font-bold">
-                  <span className="w-2 h-2 rounded-full bg-[var(--success)] animate-pulse" />
-                  <span>Live & Public Tag #{activeCardUid}</span>
-                </div>
               )}
             </div>
           </div>
@@ -552,17 +594,17 @@ export const DashboardPage = () => {
             {/* NUMBERS UP FRONT STAT ROW (MOBILE) */}
             <div className="flex items-center justify-center gap-6 w-full py-3 border-y border-[var(--border)]">
               <div>
-                <div className="text-[18px] font-extrabold text-[var(--text)] leading-none">1,482</div>
+                <div className="text-[18px] font-extrabold text-[var(--text)] leading-none">{backendStats.taps.toLocaleString()}</div>
                 <div className="text-[10px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Taps</div>
               </div>
               <div className="w-px h-6 bg-[var(--border)]" />
               <div>
-                <div className="text-[18px] font-extrabold text-[var(--text)] leading-none">892</div>
+                <div className="text-[18px] font-extrabold text-[var(--text)] leading-none">{backendStats.viewers.toLocaleString()}</div>
                 <div className="text-[10px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Viewers</div>
               </div>
               <div className="w-px h-6 bg-[var(--border)]" />
               <div>
-                <div className="text-[18px] font-extrabold text-[var(--success)] leading-none">14.8%</div>
+                <div className="text-[18px] font-extrabold text-[var(--success)] leading-none">{backendStats.conversion}</div>
                 <div className="text-[10px] font-bold uppercase text-[var(--text-faint)] tracking-[0.06em] mt-1">Conversion</div>
               </div>
             </div>
@@ -795,9 +837,6 @@ export const DashboardPage = () => {
 
                   <div className="p-6 rounded-2xl bg-[var(--card-hover)] border border-[var(--border)] text-[var(--text)] shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
                     <div className="space-y-2 relative z-10">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20 text-[10px] font-extrabold uppercase">
-                        <ShieldCheck className="w-3.5 h-3.5" /> NTAG216 Verified Primary Tag
-                      </div>
                       <h4 className="text-2xl font-mono font-black">{activeCardUid}</h4>
                       <p className="text-xs text-[var(--text-dim)]">Linked to account: <strong className="text-[var(--text)]">{profile.name}</strong></p>
                     </div>

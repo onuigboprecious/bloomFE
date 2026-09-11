@@ -19,7 +19,7 @@ import {
   getGoogleOAuthLoginUrl,
 } from '../api';
 import ShareBackModal from '../components/ui/ShareBackModal';
-import { createGoogleContact, getGoogleUserProfile, loadGoogleGsiScript } from '../services/googleContacts';
+import { createGoogleContact, getGoogleUserProfile, loadGoogleGsiScript, requestGoogleContactsToken } from '../services/googleContacts';
 
 const AppContext = createContext();
 
@@ -598,18 +598,29 @@ export const AppProvider = ({ children }) => {
     }
   });
 
+  // Check for google_access_token in URL query parameters from OAuth redirect
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tokenFromUrl = params.get('google_access_token');
+      if (tokenFromUrl) {
+        setGoogleAccessToken(tokenFromUrl);
+        localStorage.setItem('bloom_google_access_token', tokenFromUrl);
+        getGoogleUserProfile(tokenFromUrl).then((prof) => {
+          if (prof?.email) {
+            setGoogleUserEmail(prof.email);
+            localStorage.setItem('bloom_google_user_email', prof.email);
+          }
+        });
+      }
+    }
+  }, []);
+
   const connectGoogleAccount = async (inputVal) => {
-    // If user entered an email or token directly
+    // 1. If explicit token string passed
     if (inputVal && typeof inputVal === 'string' && inputVal.trim()) {
       const trimmed = inputVal.trim();
-      if (trimmed.includes('@')) {
-        setGoogleUserEmail(trimmed);
-        localStorage.setItem('bloom_google_user_email', trimmed);
-        const mockToken = 'google_oauth_' + btoa(trimmed) + '_' + Date.now();
-        setGoogleAccessToken(mockToken);
-        localStorage.setItem('bloom_google_access_token', mockToken);
-        return { success: true, email: trimmed };
-      } else {
+      if (!trimmed.includes('@') && !trimmed.startsWith('google_oauth_')) {
         setGoogleAccessToken(trimmed);
         localStorage.setItem('bloom_google_access_token', trimmed);
         const profile = await getGoogleUserProfile(trimmed);
@@ -620,7 +631,23 @@ export const AppProvider = ({ children }) => {
       }
     }
 
-    // Direct Google Account Chooser OAuth redirect flow
+    // 2. Try client-side Google GIS OAuth popup first for direct OAuth Access Token with Contacts Scope
+    try {
+      const token = await requestGoogleContactsToken();
+      if (token) {
+        setGoogleAccessToken(token);
+        localStorage.setItem('bloom_google_access_token', token);
+        const userProf = await getGoogleUserProfile(token);
+        const email = userProf?.email || 'Google Account';
+        setGoogleUserEmail(email);
+        localStorage.setItem('bloom_google_user_email', email);
+        return { success: true, email };
+      }
+    } catch (gsiErr) {
+      console.warn('GIS Popup failed or closed, falling back to backend redirect:', gsiErr);
+    }
+
+    // 3. Fallback: Backend OAuth redirect
     try {
       const targetUrl = getGoogleOAuthLoginUrl();
       if (typeof window !== 'undefined') {
@@ -640,17 +667,26 @@ export const AppProvider = ({ children }) => {
   };
 
   const syncLeadToGoogle = async (lead) => {
-    if (!googleAccessToken) {
-      throw new Error('Please connect your Google Account first.');
+    if (!googleAccessToken || googleAccessToken.startsWith('google_oauth_')) {
+      disconnectGoogleAccount();
+      throw new Error('Google authorization missing. Please click "Connect Google Contacts" to authorize.');
     }
-    const result = await createGoogleContact(lead, googleAccessToken);
-    const leadId = lead.id || `lead-${lead.name}-${lead.email}`;
-    setSyncedLeadIds((prev) => {
-      const updated = Array.from(new Set([...prev, leadId]));
-      localStorage.setItem('bloom_synced_leads', JSON.stringify(updated));
-      return updated;
-    });
-    return result;
+    try {
+      const result = await createGoogleContact(lead, googleAccessToken);
+      const leadId = lead.id || `lead-${lead.name}-${lead.email}`;
+      setSyncedLeadIds((prev) => {
+        const updated = Array.from(new Set([...prev, leadId]));
+        localStorage.setItem('bloom_synced_leads', JSON.stringify(updated));
+        return updated;
+      });
+      return result;
+    } catch (err) {
+      if (err.message && (err.message.includes('authentication credentials') || err.message.includes('401') || err.message.includes('OAuth'))) {
+        disconnectGoogleAccount();
+        throw new Error('Google authorization expired or invalid. Please click "Connect Google Contacts" to authorize.');
+      }
+      throw err;
+    }
   };
 
   const syncBulkLeadsToGoogle = async (leadsList) => {

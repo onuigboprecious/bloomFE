@@ -32,7 +32,7 @@ export const TermsOfServicePage = () => {
             <div className="space-y-2">
               <h3 className="text-[#00BCFF] font-extrabold text-sm uppercase tracking-wider">2. Physical Card Ownership</h3>
               <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
-                Purchased Enlazer NFC Cards are single-time hardware transactions (₦35,000 for standard finishes). You retain full lifetime ownership of your physical card. Your digital profile remains free forever, with optional pro tier handle & analytics upgrades available.
+                Purchased Enlazer NFC Cards are single-time hardware transactions (₦19,999 for standard finishes). You retain full lifetime ownership of your physical card. Your digital profile remains free forever, with optional pro tier handle & analytics upgrades available.
               </p>
             </div>
 

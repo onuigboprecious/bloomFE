@@ -55,7 +55,7 @@ export const mockProfileLayouts = [
 
 export const mockPricingTiers = {
   currency: "₦",
-  publishPrice: 35000,
+  publishPrice: 19999,
   customDomainPrice: 15000,
   freeFeatures: [
     "100% Free to build & customize your profile",
@@ -87,7 +87,7 @@ export const mockCardFinishes = [
     category: "card",
     material: "Deep Matte PVC + Micro NFC Chip",
     tagline: "Sleek, minimalist & ultra durable",
-    price: 35000,
+    price: 19999,
     color: "bg-slate-950 text-white",
     cardGradient: "bg-slate-950",
     chipColor: "border-cyan-400/40 text-cyan-400",
@@ -100,7 +100,7 @@ export const mockCardFinishes = [
     category: "card",
     material: "Laser-Engraved Anodized Steel",
     tagline: "Weighty executive premium finish",
-    price: 35000,
+    price: 19999,
     color: "bg-slate-800 text-white",
     cardGradient: "bg-slate-900",
     chipColor: "border-amber-400/60 text-amber-300",
@@ -113,7 +113,7 @@ export const mockCardFinishes = [
     category: "card",
     material: "Brushed Metallic Alloy",
     tagline: "Unforgettable luxury sheen",
-    price: 35000,
+    price: 19999,
     color: "bg-rose-950 text-white",
     cardGradient: "bg-rose-950",
     chipColor: "border-rose-400/60 text-rose-300",
@@ -126,7 +126,7 @@ export const mockCardFinishes = [
     category: "card",
     material: "Sustainably Sourced Natural Wood",
     tagline: "Organic texture & eco-friendly",
-    price: 35000,
+    price: 19999,
     color: "bg-amber-950 text-amber-100",
     cardGradient: "bg-amber-950",
     chipColor: "border-amber-500/50 text-amber-400",
@@ -139,7 +139,7 @@ export const mockCardFinishes = [
     category: "wristband",
     material: "IP68 Waterproof Eco-Silicone",
     tagline: "Sleek, stealthy & indestructible",
-    price: 35000,
+    price: 19999,
     color: "bg-slate-950 text-white",
     cardGradient: "bg-slate-950",
     chipColor: "border-cyan-400/60 text-cyan-300",
@@ -152,7 +152,7 @@ export const mockCardFinishes = [
     category: "wristband",
     material: "IP68 Waterproof Eco-Silicone",
     tagline: "Vibrant high-visibility tech finish",
-    price: 35000,
+    price: 19999,
     color: "bg-cyan-700 text-white",
     cardGradient: "bg-cyan-950",
     chipColor: "border-cyan-400/60 text-cyan-300",
@@ -165,7 +165,7 @@ export const mockNfcFaqs = [
   {
     id: "faq-1",
     question: "Is it really free to start? When do I pay?",
-    answer: "Yes, 100% free! You can sign up, claim your handle, build your complete digital profile, upload your avatar, add unlimited links, and preview your live page draft without entering any credit card or payment info. You only pay (₦35,000) when you are ready to publish your page live — and your payment includes a free custom NFC card or wristband shipped straight to your door!"
+    answer: "Yes, 100% free! You can sign up, claim your handle, build your complete digital profile, upload your avatar, add unlimited links, and preview your live page draft without entering any credit card or payment info. You only pay (₦19,999) when you are ready to publish your page live — and your payment includes a free custom NFC card or wristband shipped straight to your door!"
   },
   {
     id: "faq-2",

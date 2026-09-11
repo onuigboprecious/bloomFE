@@ -125,3 +125,33 @@ export const loadGoogleGsiScript = () => {
     document.body.appendChild(script);
   });
 };
+
+/**
+ * Request real Google Contacts OAuth access token via GIS popup
+ */
+export const requestGoogleContactsToken = async (clientId) => {
+  const oauth2 = await loadGoogleGsiScript();
+  return new Promise((resolve, reject) => {
+    try {
+      const client = oauth2.initTokenClient({
+        client_id: clientId || '758197775988-d3v091q437jks5slbcf76aql1sghq2ed.apps.googleusercontent.com',
+        scope: 'https://www.googleapis.com/auth/contacts openid email profile',
+        callback: (response) => {
+          if (response.error) {
+            reject(new Error(response.error_description || response.error));
+            return;
+          }
+          if (response.access_token) {
+            resolve(response.access_token);
+          } else {
+            reject(new Error('No OAuth access token returned by Google'));
+          }
+        },
+      });
+      client.requestAccessToken();
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
