@@ -127,14 +127,32 @@ export const loadGoogleGsiScript = () => {
 };
 
 /**
- * Request real Google Contacts OAuth access token via GIS popup
+ * Request real Google Contacts OAuth access token via GIS
+ * Supports silent background token refresh via prompt = ''
  */
-export const requestGoogleContactsToken = async (clientId) => {
+export const requestGoogleContactsToken = async (clientIdOrOpts = {}, promptVal = null) => {
+  let clientId = '';
+  let prompt = promptVal;
+
+  if (typeof clientIdOrOpts === 'object' && clientIdOrOpts !== null) {
+    clientId = clientIdOrOpts.clientId || '';
+    if (clientIdOrOpts.prompt !== undefined) {
+      prompt = clientIdOrOpts.prompt;
+    }
+  } else if (typeof clientIdOrOpts === 'string') {
+    clientId = clientIdOrOpts;
+  }
+
+  const resolvedClientId = clientId || 
+    (typeof window !== 'undefined' && localStorage.getItem('bloom_google_client_id')) || 
+    import.meta.env.VITE_GOOGLE_CLIENT_ID || 
+    '297316783483-0shs98r6sdbt8a6s6i911ap6bbqcimf6.apps.googleusercontent.com';
+
   const oauth2 = await loadGoogleGsiScript();
   return new Promise((resolve, reject) => {
     try {
       const client = oauth2.initTokenClient({
-        client_id: clientId || (typeof window !== 'undefined' && localStorage.getItem('bloom_google_client_id')) || import.meta.env.VITE_GOOGLE_CLIENT_ID || '297316783483-0shs98r6sdbt8a6s6i911ap6bbqcimf6.apps.googleusercontent.com',
+        client_id: resolvedClientId,
         scope: 'https://www.googleapis.com/auth/contacts openid email profile',
         callback: (response) => {
           if (response.error) {
@@ -148,10 +166,16 @@ export const requestGoogleContactsToken = async (clientId) => {
           }
         },
       });
-      client.requestAccessToken();
+
+      if (prompt !== null && prompt !== undefined) {
+        client.requestAccessToken({ prompt });
+      } else {
+        client.requestAccessToken();
+      }
     } catch (err) {
       reject(err);
     }
   });
 };
+
 

@@ -598,7 +598,28 @@ export const AppProvider = ({ children }) => {
     }
   });
 
-  // Check for google_access_token in URL query parameters from OAuth redirect
+  // Helper function to silently auto-renew Google Contacts access token in the background
+  const refreshGoogleTokenSilently = async () => {
+    try {
+      const newToken = await requestGoogleContactsToken({ prompt: '' });
+      if (newToken) {
+        setGoogleAccessToken(newToken);
+        localStorage.setItem('bloom_google_access_token', newToken);
+        localStorage.setItem('bloom_google_connected', 'true');
+        const userProf = await getGoogleUserProfile(newToken);
+        if (userProf?.email) {
+          setGoogleUserEmail(userProf.email);
+          localStorage.setItem('bloom_google_user_email', userProf.email);
+        }
+        return newToken;
+      }
+    } catch (err) {
+      console.log('Silent Google token auto-refresh attempt did not succeed:', err?.message || err);
+    }
+    return null;
+  };
+
+  // Check for google_access_token in URL query parameters from OAuth redirect and handle auto-renewal when online
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -606,13 +627,26 @@ export const AppProvider = ({ children }) => {
       if (tokenFromUrl) {
         setGoogleAccessToken(tokenFromUrl);
         localStorage.setItem('bloom_google_access_token', tokenFromUrl);
+        localStorage.setItem('bloom_google_connected', 'true');
         getGoogleUserProfile(tokenFromUrl).then((prof) => {
           if (prof?.email) {
             setGoogleUserEmail(prof.email);
             localStorage.setItem('bloom_google_user_email', prof.email);
           }
         });
+      } else if (localStorage.getItem('bloom_google_connected') === 'true' || localStorage.getItem('bloom_google_user_email')) {
+        // Attempt silent background refresh on page mount / app startup if user was previously connected
+        refreshGoogleTokenSilently();
       }
+
+      const handleOnline = () => {
+        if (localStorage.getItem('bloom_google_connected') === 'true' || localStorage.getItem('bloom_google_user_email')) {
+          refreshGoogleTokenSilently();
+        }
+      };
+
+      window.addEventListener('online', handleOnline);
+      return () => window.removeEventListener('online', handleOnline);
     }
   }, []);
 
@@ -623,6 +657,7 @@ export const AppProvider = ({ children }) => {
       if (!trimmed.includes('@') && !trimmed.startsWith('google_oauth_')) {
         setGoogleAccessToken(trimmed);
         localStorage.setItem('bloom_google_access_token', trimmed);
+        localStorage.setItem('bloom_google_connected', 'true');
         const profile = await getGoogleUserProfile(trimmed);
         const email = profile?.email || 'Connected Google Account';
         setGoogleUserEmail(email);
@@ -637,6 +672,7 @@ export const AppProvider = ({ children }) => {
       if (token) {
         setGoogleAccessToken(token);
         localStorage.setItem('bloom_google_access_token', token);
+        localStorage.setItem('bloom_google_connected', 'true');
         const userProf = await getGoogleUserProfile(token);
         const email = userProf?.email || 'Google Account';
         setGoogleUserEmail(email);
@@ -664,15 +700,24 @@ export const AppProvider = ({ children }) => {
     setGoogleUserEmail('');
     localStorage.removeItem('bloom_google_access_token');
     localStorage.removeItem('bloom_google_user_email');
+    localStorage.removeItem('bloom_google_connected');
   };
 
   const syncLeadToGoogle = async (lead) => {
-    if (!googleAccessToken || googleAccessToken.startsWith('google_oauth_')) {
+    let currentToken = googleAccessToken;
+
+    if (!currentToken || currentToken.startsWith('google_oauth_')) {
+      // Attempt silent auto-renewal first before rejecting
+      currentToken = await refreshGoogleTokenSilently();
+    }
+
+    if (!currentToken) {
       disconnectGoogleAccount();
       throw new Error('Google authorization missing. Please click "Connect Google Contacts" to authorize.');
     }
+
     try {
-      const result = await createGoogleContact(lead, googleAccessToken);
+      const result = await createGoogleContact(lead, currentToken);
       const leadId = lead.id || `lead-${lead.name}-${lead.email}`;
       setSyncedLeadIds((prev) => {
         const updated = Array.from(new Set([...prev, leadId]));
@@ -681,29 +726,66 @@ export const AppProvider = ({ children }) => {
       });
       return result;
     } catch (err) {
+      // If authorization expired or HTTP 401 occurs, attempt transparent silent refresh and retry once!
       if (err.message && (err.message.includes('authentication credentials') || err.message.includes('401') || err.message.includes('OAuth'))) {
+        console.log('Google token expired. Attempting background auto-renewal...');
+        const freshToken = await refreshGoogleTokenSilently();
+        if (freshToken) {
+          const retryResult = await createGoogleContact(lead, freshToken);
+          const leadId = lead.id || `lead-${lead.name}-${lead.email}`;
+          setSyncedLeadIds((prev) => {
+            const updated = Array.from(new Set([...prev, leadId]));
+            localStorage.setItem('bloom_synced_leads', JSON.stringify(updated));
+            return updated;
+          });
+          return retryResult;
+        }
+
         disconnectGoogleAccount();
-        throw new Error('Google authorization expired or invalid. Please click "Connect Google Contacts" to authorize.');
+        throw new Error('Google authorization expired. Please click "Connect Google Contacts" to re-authorize.');
       }
       throw err;
     }
   };
 
   const syncBulkLeadsToGoogle = async (leadsList) => {
-    if (!googleAccessToken) {
+    let currentToken = googleAccessToken;
+
+    if (!currentToken || currentToken.startsWith('google_oauth_')) {
+      currentToken = await refreshGoogleTokenSilently();
+    }
+
+    if (!currentToken) {
       throw new Error('Please connect your Google Account first.');
     }
+
     let successCount = 0;
     let failCount = 0;
     const newlySynced = [];
 
     for (const item of leadsList) {
       try {
-        await createGoogleContact(item, googleAccessToken);
+        await createGoogleContact(item, currentToken);
         const leadId = item.id || `lead-${item.name}-${item.email}`;
         newlySynced.push(leadId);
         successCount++;
       } catch (e) {
+        if (e.message && (e.message.includes('authentication credentials') || e.message.includes('401'))) {
+          // Attempt refresh once during bulk loop if token expired
+          const refreshed = await refreshGoogleTokenSilently();
+          if (refreshed) {
+            currentToken = refreshed;
+            try {
+              await createGoogleContact(item, currentToken);
+              const leadId = item.id || `lead-${item.name}-${item.email}`;
+              newlySynced.push(leadId);
+              successCount++;
+              continue;
+            } catch (retryErr) {
+              console.error('Failed to sync lead on retry:', item, retryErr);
+            }
+          }
+        }
         console.error('Failed to sync lead to Google:', item, e);
         failCount++;
       }
