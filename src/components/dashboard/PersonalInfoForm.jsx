@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Camera, Mail, Phone, MapPin, Briefcase, Building, Sparkles } from 'lucide-react';
+import { User, Camera, Mail, Phone, MapPin, Briefcase, Building, FileText } from 'lucide-react';
 
 export const PersonalInfoForm = ({
   avatar,
@@ -28,9 +28,6 @@ export const PersonalInfoForm = ({
           <User className="w-4 h-4 text-[#38BDF8]" />
           <span>Personal Identity & Contact Info</span>
         </h4>
-        <span className="text-[10px] font-mono text-[#38BDF8] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-[#38BDF8]/10 border border-[#38BDF8]/20">
-          Core Card Profile
-        </span>
       </div>
 
       {/* Profile Avatar Card with Story Ring */}
@@ -166,7 +163,7 @@ export const PersonalInfoForm = ({
       {/* Bio / Creator Pitch */}
       <div className="space-y-1.5">
         <label className="text-xs font-bold uppercase tracking-wider text-[#F1F5F9] flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Bio / Pitch Summary
+          <FileText className="w-3.5 h-3.5 text-[#38BDF8]" /> Bio / Pitch Summary
         </label>
         <textarea
           rows={3}

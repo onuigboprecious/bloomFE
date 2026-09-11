@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Share2, Trash2, Plus, CheckCircle2, Sparkles, X } from 'lucide-react';
+import { Share2, Trash2, Plus, CheckCircle2, Sparkles, X, Pencil } from 'lucide-react';
 import SocialIcon from '../ui/SocialIcon';
 
 export const SocialHandlesManager = ({
@@ -24,7 +24,7 @@ export const SocialHandlesManager = ({
             <span>Social Channels & Identity</span>
           </h4>
         </div>
-        <span className="text-[10px] font-mono text-[#38BDF8] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-[#38BDF8]/10 border border-[#38BDF8]/20">
+        <span className="text-[11px] font-mono text-[#38BDF8] font-extrabold uppercase">
           {socialHandlesList.length} Connected
         </span>
       </div>
@@ -81,6 +81,7 @@ export const SocialHandlesManager = ({
                     {item.platform}
                   </span>
                   <input
+                    id={`social-input-${item.id}`}
                     type="text"
                     value={item.handle}
                     onChange={(e) => {
@@ -88,17 +89,33 @@ export const SocialHandlesManager = ({
                       setSocialHandlesList(updated);
                     }}
                     placeholder="@handle or URL"
-                    className="w-full bg-transparent text-xs font-semibold text-[#F1F5F9] focus:outline-none truncate"
+                    className="w-full bg-transparent text-xs font-semibold text-[#F1F5F9] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]/50 rounded px-1 -ml-1 truncate"
                   />
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveSocialHandle(item.id)}
-                  className="p-1.5 text-[#8B98AE] hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer shrink-0"
-                  title="Remove handle"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const inputEl = document.getElementById(`social-input-${item.id}`);
+                      if (inputEl) {
+                        inputEl.focus();
+                        inputEl.select();
+                      }
+                    }}
+                    className="p-1.5 text-[#8B98AE] hover:text-[#38BDF8] hover:bg-[#38BDF8]/10 rounded-lg transition-colors cursor-pointer"
+                    title="Edit handle"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSocialHandle(item.id)}
+                    className="p-1.5 text-[#8B98AE] hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
+                    title="Remove handle"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>

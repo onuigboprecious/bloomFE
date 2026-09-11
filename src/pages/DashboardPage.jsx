@@ -1506,6 +1506,7 @@ export const DashboardPage = () => {
                 darkMode={darkMode}
                 toggleDarkMode={toggleDarkMode}
                 handleSaveProfile={handleSaveProfile}
+                isSaving={isSaving}
               />
             )}
 

@@ -1,5 +1,6 @@
-import React from 'react';
-import { Settings, Moon, Sun, CheckCircle2, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Settings, Moon, Sun, CheckCircle2, ShieldCheck, XCircle, Loader2, AlertCircle } from 'lucide-react';
+import { checkHandleApi } from '../../api/profile';
 
 export const SettingsStudio = ({
   customHandle,
@@ -7,8 +8,64 @@ export const SettingsStudio = ({
   profile,
   darkMode,
   toggleDarkMode,
-  handleSaveProfile
+  handleSaveProfile,
+  isSaving
 }) => {
+  const [handleStatus, setHandleStatus] = useState('idle'); // 'idle' | 'checking' | 'available' | 'taken' | 'invalid'
+  const [handleMessage, setHandleMessage] = useState('');
+
+  useEffect(() => {
+    const clean = (customHandle || '').toLowerCase().trim();
+
+    if (!clean) {
+      setHandleStatus('invalid');
+      setHandleMessage('Username handle cannot be empty');
+      return;
+    }
+
+    if (clean.length < 3) {
+      setHandleStatus('invalid');
+      setHandleMessage('Username handle must be at least 3 characters');
+      return;
+    }
+
+    if (!/^[a-z0-9_-]+$/.test(clean)) {
+      setHandleStatus('invalid');
+      setHandleMessage('Username can only contain lowercase letters, numbers, underscores, and hyphens');
+      return;
+    }
+
+    // If handle matches user's current handle
+    if (profile?.username && clean === profile.username.toLowerCase()) {
+      setHandleStatus('available');
+      setHandleMessage('This is your current active handle');
+      return;
+    }
+
+    setHandleStatus('checking');
+    setHandleMessage('Checking handle availability...');
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await checkHandleApi(clean);
+        if (res && res.available) {
+          setHandleStatus('available');
+          setHandleMessage(`enlazer.cloud/${clean} is available!`);
+        } else {
+          setHandleStatus('taken');
+          setHandleMessage(`@${clean} is already taken by another account`);
+        }
+      } catch (err) {
+        setHandleStatus('idle');
+        setHandleMessage('');
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [customHandle, profile?.username]);
+
+  const isFormDisabled = handleStatus === 'taken' || handleStatus === 'invalid' || handleStatus === 'checking';
+
   return (
     <div className="space-y-6">
       <div className="bg-[#10192B] p-6 sm:p-7 rounded-2xl border border-[#1E2A42] space-y-6">
@@ -40,10 +97,41 @@ export const SettingsStudio = ({
                 value={customHandle}
                 onChange={(e) => setCustomHandle(e.target.value.toLowerCase().trim())}
                 placeholder="username"
-                className="flex-1 bg-[#16223A] border border-[#1E2A42] text-[#F1F5F9] rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#38BDF8]"
+                className={`flex-1 bg-[#16223A] border text-[#F1F5F9] rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none transition-colors ${
+                  handleStatus === 'taken'
+                    ? 'border-rose-500/80 focus:border-rose-500'
+                    : handleStatus === 'available'
+                    ? 'border-emerald-500/80 focus:border-emerald-500'
+                    : 'border-[#1E2A42] focus:border-[#38BDF8]'
+                }`}
               />
             </div>
-            <p className="text-[11px] text-[#8B98AE]">Your public URL: https://enlazer.cloud/{customHandle || 'username'}</p>
+
+            {/* Real-time Status Badge */}
+            {handleStatus === 'checking' && (
+              <div className="flex items-center gap-1.5 text-[11px] text-cyan-400 font-medium pt-1">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Checking handle availability...</span>
+              </div>
+            )}
+            {handleStatus === 'available' && (
+              <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-semibold pt-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{handleMessage || `enlazer.cloud/${customHandle} is available!`}</span>
+              </div>
+            )}
+            {handleStatus === 'taken' && (
+              <div className="flex items-center gap-1.5 text-[11px] text-rose-400 font-bold pt-1">
+                <XCircle className="w-3.5 h-3.5 text-rose-400" />
+                <span>{handleMessage}</span>
+              </div>
+            )}
+            {handleStatus === 'invalid' && (
+              <div className="flex items-center gap-1.5 text-[11px] text-amber-400 font-medium pt-1">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
+                <span>{handleMessage}</span>
+              </div>
+            )}
           </div>
 
           {/* Email Account */}
@@ -121,11 +209,14 @@ export const SettingsStudio = ({
         <div className="pt-4 border-t border-[#1E2A42] flex justify-end">
           <button
             onClick={handleSaveProfile}
+            disabled={isSaving || isFormDisabled}
             type="button"
-            style={{ background: 'var(--grad)' }}
-            className="w-full sm:w-auto px-8 py-3 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer active:scale-95 text-center"
+            style={{ background: isFormDisabled ? '#334155' : 'var(--grad)' }}
+            className={`w-full sm:w-auto px-8 py-3 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md text-center ${
+              isFormDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer active:scale-95'
+            }`}
           >
-            Save Settings Changes
+            {isSaving ? 'Saving...' : 'Save Settings Changes'}
           </button>
         </div>
       </div>
@@ -134,5 +225,3 @@ export const SettingsStudio = ({
 };
 
 export default SettingsStudio;
-
-

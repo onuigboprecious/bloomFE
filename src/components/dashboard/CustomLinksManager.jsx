@@ -17,7 +17,7 @@ export const CustomLinksManager = ({
           <LinkIcon className="w-4 h-4 text-[#38BDF8]" />
           <span>Custom Bio Buttons & Action Links</span>
         </h4>
-        <span className="text-[10px] font-mono text-[#38BDF8] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-[#38BDF8]/10 border border-[#38BDF8]/20">
+        <span className="text-[11px] font-mono text-[#38BDF8] font-extrabold uppercase">
           {customLinks.length} Active Buttons
         </span>
       </div>

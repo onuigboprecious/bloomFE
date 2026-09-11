@@ -186,7 +186,7 @@ export const ProfileView = ({ data }) => {
             </div>
 
             {profile.bio && (
-              <p className={`text-xs sm:text-sm ${theme.textMuted} leading-relaxed text-center font-normal px-1`}>
+              <p className={`text-xs sm:text-sm ${theme.textMuted} leading-relaxed text-left font-normal px-1`}>
                 {profile.bio}
               </p>
             )}
