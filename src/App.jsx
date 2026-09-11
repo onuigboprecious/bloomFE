@@ -35,6 +35,7 @@ import ClaimCardPage from './pages/ClaimCardPage';
 import InvalidCardPage from './pages/InvalidCardPage';
 import CardTapHandler from './pages/CardTapHandler';
 
+import SEO from './components/common/SEO';
 import GoogleOAuthDisclosure from './components/hero/GoogleOAuthDisclosure';
 
 // Home Page Layout Component (enlazer.cloud & enlazer.com.ng)
@@ -276,8 +277,30 @@ export const AppRoutes = () => {
     <>
       <RouteSyncBridge />
       <Routes>
-        {/* 1. Home / Root Route (Publicly visible to satisfy Google OAuth App Verification Requirement #6) */}
-        <Route path="/" element={<HomePage />} />
+        {/* 1. Home / Root Route */}
+        {/* On enlazer.cloud / www.enlazer.cloud app domain, redirect authenticated to /dashboard, unauthenticated to /login */}
+        {/* On enlazer.com.ng marketing domain, render HomePage */}
+        <Route
+          path="/"
+          element={
+            isApp ? (
+              authLoading ? (
+                <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex items-center justify-center p-4 text-center">
+                  <div className="space-y-4">
+                    <div className="w-12 h-12 border-4 border-[#00BCFF] border-t-transparent rounded-full animate-spin mx-auto" />
+                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400">Verifying session...</p>
+                  </div>
+                </div>
+              ) : isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            ) : (
+              <HomePage />
+            )
+          }
+        />
 
         {/* 2. Dashboard Route (enlazer.cloud/dashboard) */}
         <Route

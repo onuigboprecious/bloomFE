@@ -22,7 +22,7 @@ export const HeroShowcase = () => {
       num: "03",
       icon: CreditCard,
       title: "Publish & get your free card",
-      desc: "Pay ₦19,999 only when ready to go live. Your profile goes public instantly and your custom NFC smart card or wristband is shipped free to your door."
+      desc: "Pay ₦19,000 only when ready to go live. Your profile goes public instantly and your custom NFC smart card or wristband is shipped free to your door."
     }
   ];
 

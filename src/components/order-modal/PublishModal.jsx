@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { CheckCircle2, ShieldCheck, Lock, ArrowRight, CreditCard, Truck, Globe, MapPin } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, Lock, ArrowRight, CreditCard, Watch, Truck } from 'lucide-react';
 import Modal from '../ui/Modal';
 import Input from '../ui/Input';
 import { useApp } from '../../context/AppContext';
-import { mockCardFinishes } from '../../data/mockData';
 import { getAppDomainUrl } from '../../config/domainConfig';
 
 export const PublishModal = ({ isOpen, onClose }) => {
-  const { profile = {}, publishProfile, selectedFinish, setSelectedFinish } = useApp();
+  const { profile = {}, publishProfile } = useApp();
+  const [selectedHardware, setSelectedHardware] = useState('card'); // 'card' | 'wristband'
   const [isCompleted, setIsCompleted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -25,8 +25,26 @@ export const PublishModal = ({ isOpen, onClose }) => {
     if (profile.phone) setPhone(profile.phone);
   }, [profile.email, profile.name, profile.phone]);
 
-  const activeFinish = selectedFinish || mockCardFinishes[0];
-  const publishPrice = 19999;
+  const publishPrice = 19000;
+
+  const hardwareOptions = [
+    {
+      id: 'card',
+      name: 'Smart NFC Card',
+      category: 'Smart NFC Card',
+      desc: 'Sleek Matte Black Laser-Engraved NFC Card',
+      icon: CreditCard
+    },
+    {
+      id: 'wristband',
+      name: 'NFC Wristband',
+      category: 'Wearable Wristband',
+      desc: 'IP68 Waterproof Eco-Silicone Wristband',
+      icon: Watch
+    }
+  ];
+
+  const selectedPerkObj = hardwareOptions.find((h) => h.id === selectedHardware) || hardwareOptions[0];
 
   const handleClose = () => {
     if (onClose) onClose();
@@ -71,7 +89,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
       } catch (err) { }
       publishProfile(
         { shippingName, phone, email, deliveryAddress, city },
-        activeFinish,
+        { name: selectedPerkObj.name, category: selectedPerkObj.category },
         ref
       );
     };
@@ -83,7 +101,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
         const handler = window.PaystackPop.setup({
           key: paystackPublicKey,
           email: email,
-          amount: publishPrice * 100, // Amount in kobo (₦35,000)
+          amount: publishPrice * 100, // Amount in kobo (₦19,000)
           currency: 'NGN',
           ref: transactionRef,
           onClose: () => {
@@ -96,11 +114,9 @@ export const PublishModal = ({ isOpen, onClose }) => {
         handler.openIframe();
       } catch (err) {
         console.error('Paystack SDK error:', err);
-        // Seamless fallback mock payment completion
         finishPublishing(transactionRef);
       }
     } else {
-      // Script load fallback
       finishPublishing(transactionRef);
     }
   };
@@ -117,38 +133,49 @@ export const PublishModal = ({ isOpen, onClose }) => {
               <span>Step 2: Go Live & Get Free Hardware</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-              Publish Page & Claim Free NFC Card
+              Publish Page & Claim Free Hardware
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Publishing makes <strong className="text-[#00BCFF]">enlazer.cloud/@{profile.username || 'username'}</strong> live + ships your free NFC card across Nigeria.
+              Publishing makes <strong className="text-[#00BCFF]">enlazer.cloud/@{profile.username || 'username'}</strong> live + ships your free hardware across Nigeria.
             </p>
           </div>
 
-          {/* Hardware Finish Selection */}
+          {/* Simple Hardware Choice: Card or Wristband */}
           <div className="space-y-2">
             <label className="block text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
-              Select Free Included NFC Hardware Perk
+              Select Free Included Hardware Perk
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {mockCardFinishes.map((f) => {
-                const isSelected = activeFinish.id === f.id;
+            <div className="grid grid-cols-2 gap-3">
+              {hardwareOptions.map((option) => {
+                const OptionIcon = option.icon;
+                const isSelected = selectedHardware === option.id;
                 return (
                   <button
-                    key={f.id}
+                    key={option.id}
                     type="button"
-                    onClick={() => setSelectedFinish(f)}
-                    className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                    onClick={() => setSelectedHardware(option.id)}
+                    className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
                       isSelected
-                        ? 'border-[#00BCFF] bg-cyan-50/50 dark:bg-cyan-950/40 shadow-sm'
-                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900'
+                        ? 'border-[#00BCFF] bg-[#00BCFF]/10 ring-2 ring-[#00BCFF]/30 shadow-md'
+                        : 'border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700 bg-white dark:bg-slate-900/90'
                     }`}
                   >
-                    <span className="text-xs font-bold text-slate-900 dark:text-white block truncate">
-                      {f.name}
-                    </span>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate">
-                      {f.category === 'wristband' ? 'Wearable Wristband' : 'Smart NFC Card'}
-                    </span>
+                    <div className="flex items-center justify-between">
+                      <div className={`p-2 rounded-xl ${isSelected ? 'bg-[#00BCFF] text-slate-950' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>
+                        <OptionIcon className="w-5 h-5" />
+                      </div>
+                      <div className={`w-4.5 h-4.5 rounded-full border flex items-center justify-center ${isSelected ? 'border-[#00BCFF] bg-[#00BCFF]' : 'border-slate-600'}`}>
+                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white block">
+                        {option.name}
+                      </span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 block leading-tight mt-0.5">
+                        {option.desc}
+                      </span>
+                    </div>
                   </button>
                 );
               })}
@@ -228,11 +255,11 @@ export const PublishModal = ({ isOpen, onClose }) => {
               <span className="font-bold text-slate-900 dark:text-white">
                 Profile Publishing Plan (enlazer.cloud/@{profile.username || 'username'})
               </span>
-              <span className="font-bold font-mono">₦19,999</span>
+              <span className="font-bold font-mono">₦19,000</span>
             </div>
 
             <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
-              <span>Included Perk: {activeFinish.name} ({activeFinish.category})</span>
+              <span>Included Perk: {selectedPerkObj.name}</span>
               <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">FREE</span>
             </div>
 
@@ -246,7 +273,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
             <div className="flex items-center justify-between">
               <span className="text-sm font-black text-slate-900 dark:text-white">Total Payable</span>
               <span className="text-xl font-black text-[#00BCFF] font-mono">
-                ₦19,999
+                ₦19,000
               </span>
             </div>
           </div>
@@ -264,7 +291,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
               </span>
             ) : (
               <span className="flex items-center justify-center gap-2 text-slate-950">
-                <span>Pay ₦35,000 to Publish & Get Free NFC Card</span>
+                <span>Pay ₦19,000 to Publish & Get Free Hardware</span>
                 <ArrowRight className="w-4 h-4" />
               </span>
             )}
@@ -283,7 +310,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
               Congratulations! Your Page is Live!
             </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
-              Your profile is now publicly live at <strong className="text-[#00BCFF]">enlazer.cloud/@{profile.username || 'username'}</strong>. Your free custom {activeFinish.name} is encoded and processing for delivery!
+              Your profile is now publicly live at <strong className="text-[#00BCFF]">enlazer.cloud/@{profile.username || 'username'}</strong>. Your free custom {selectedPerkObj.name} is encoded and processing for delivery!
             </p>
           </div>
 
@@ -301,7 +328,7 @@ export const PublishModal = ({ isOpen, onClose }) => {
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500 dark:text-slate-400">Selected Physical Perk</span>
-              <span className="font-bold text-slate-900 dark:text-white">{activeFinish.name}</span>
+              <span className="font-bold text-slate-900 dark:text-white">{selectedPerkObj.name}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500 dark:text-slate-400">Delivery Location</span>

@@ -44,7 +44,7 @@ export const ConnectionBanner = () => {
           </div>
 
           <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed pt-1">
-            Build your page free with your unique handle. Pay ₦19,999 only when you're ready to publish — and your custom NFC card or wristband is delivered free across Nigeria.
+            Build your page free with your unique handle. Pay ₦19,000 only when you're ready to publish — and your custom NFC card or wristband is delivered free across Nigeria.
           </p>
         </motion.div>
 

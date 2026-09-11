@@ -326,77 +326,8 @@ export const Navbar = () => {
 
           </nav>
 
-          {/* Right Action Buttons & Profile Dropdown */}
+          {/* Right Action Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            {isAuthenticated && (
-              /* AUTHENTICATED: Profile Avatar & Dropdown Menu */
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setProfileDropdownOpen(!profileDropdownOpen);
-                    setProductsOpen(false);
-                    setSolutionsOpen(false);
-                    setResourcesOpen(false);
-                  }}
-                  className="flex items-center gap-2 p-1 pl-1.5 pr-2.5 rounded-full border border-slate-300 dark:border-slate-700 hover:border-slate-800 dark:hover:border-slate-400 bg-white dark:bg-slate-950 cursor-pointer transition-all"
-                >
-                  <img
-                    src={profile?.avatar || null}
-                    alt={profile?.name || 'User Profile'}
-                    className="w-7 h-7 rounded-full object-cover border border-slate-200 dark:border-slate-800"
-                  />
-                  <span className="text-xs font-bold text-slate-900 dark:text-white max-w-[100px] truncate">
-                    {profile.name.split(' ')[0]}
-                  </span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180 text-[#00BCFF]' : 'text-slate-400'}`} />
-                </button>
-
-                {/* Profile Dropdown Menu */}
-                {profileDropdownOpen && (
-                  <div className="absolute top-full right-0 mt-5 w-60 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 space-y-1">
-
-                    {/* User Header */}
-                    <div className="p-2.5 border-b border-slate-100 dark:border-slate-800">
-                      <span className="font-extrabold text-slate-900 dark:text-white text-xs block truncate">
-                        {profile.name}
-                      </span>
-                      <span className="text-[11px] text-slate-500 dark:text-slate-400 block truncate">
-                        {profile.email}
-                      </span>
-                    </div>
-
-                    {/* Go to Builder */}
-                    <button
-                      onClick={() => {
-                        setCurrentPage('dashboard');
-                        setProfileDropdownOpen(false);
-                      }}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left cursor-pointer"
-                    >
-                      <LayoutDashboard className="w-4 h-4 text-[#00BCFF]" />
-                      <span>Profile Builder</span>
-                    </button>
-
-                    {/* Logout */}
-                    <div className="pt-1 border-t border-slate-100 dark:border-slate-800">
-                      <button
-                        onClick={() => {
-                          logoutUser();
-                          setCurrentPage('home');
-                          setProfileDropdownOpen(false);
-                        }}
-                        className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors text-left cursor-pointer"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        <span>Log Out</span>
-                      </button>
-                    </div>
-
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Dark / Light Mode Toggle */}
             <button
               onClick={toggleDarkMode}
@@ -405,7 +336,6 @@ export const Navbar = () => {
             >
               {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
             </button>
-
           </div>
 
 

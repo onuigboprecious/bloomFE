@@ -132,7 +132,7 @@ export const PricingSection = () => {
 
               <div className="flex items-baseline gap-1">
                 <span className="text-4xl sm:text-5xl font-black text-white font-mono">
-                  ₦19,999
+                  ₦19,000
                 </span>
                 <span className="text-xs text-slate-400 font-medium">
                   / one-time payment
