@@ -134,7 +134,7 @@ export const requestGoogleContactsToken = async (clientId) => {
   return new Promise((resolve, reject) => {
     try {
       const client = oauth2.initTokenClient({
-        client_id: clientId || '758197775988-d3v091q437jks5slbcf76aql1sghq2ed.apps.googleusercontent.com',
+        client_id: clientId || (typeof window !== 'undefined' && localStorage.getItem('bloom_google_client_id')) || import.meta.env.VITE_GOOGLE_CLIENT_ID || '297316783483-0shs98r6sdbt8a6s6i911ap6bbqcimf6.apps.googleusercontent.com',
         scope: 'https://www.googleapis.com/auth/contacts openid email profile',
         callback: (response) => {
           if (response.error) {

@@ -4,10 +4,16 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-    <!-- Primary Homepage -->
+    <!-- Primary Homepage (enlazer.cloud & enlazer.com.ng) -->
     <url>
         <loc>https://enlazer.cloud/</loc>
-        <lastmod>2026-09-09</lastmod>
+        <lastmod>2026-09-11</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://enlazer.com.ng/</loc>
+        <lastmod>2026-09-11</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
@@ -15,23 +21,42 @@
     <!-- Key Landing & Feature Pages -->
     <url>
         <loc>https://enlazer.cloud/login</loc>
-        <lastmod>2026-09-09</lastmod>
+        <lastmod>2026-09-11</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://enlazer.com.ng/login</loc>
+        <lastmod>2026-09-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
         <loc>https://enlazer.cloud/register</loc>
-        <lastmod>2026-09-09</lastmod>
+        <lastmod>2026-09-11</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://enlazer.com.ng/register</loc>
+        <lastmod>2026-09-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
         <loc>https://enlazer.cloud/press</loc>
-        <lastmod>2026-09-09</lastmod>
+        <lastmod>2026-09-11</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://enlazer.com.ng/press</loc>
+        <lastmod>2026-09-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
 </urlset>
+

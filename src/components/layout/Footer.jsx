@@ -19,7 +19,7 @@ export const Footer = () => {
               <span className="text-2xl font-black text-[#00BCFF]">.</span>
             </button>
             <p className="text-slate-400 text-sm max-w-sm leading-relaxed">
-              Enlazer is the hosted digital profile platform for individual professionals in Nigeria. Build your page free, preview live drafts, and get a free custom NFC card shipped when you publish.
+              Enlazer is Africa & Nigeria's #1 NFC smart card and hosted digital profile platform. Build your profile free, share with one tap, and get doorstep NFC card delivery across FCT Abuja and all 36 states of Nigeria.
             </p>
             <div className="flex items-center gap-4 text-slate-400 text-xs pt-2">
               <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5 text-cyan-400" />Free Hosted Profile</span>
