@@ -121,7 +121,6 @@ export const DashboardPage = () => {
     let mounted = true;
     async function loadStats() {
       try {
-        setStatsLoading(true);
         const res = await getAnalyticsApi();
         if (mounted && res) {
           const taps = res.taps_count ?? res.total_taps ?? profile?.taps_count ?? 0;
@@ -142,7 +141,7 @@ export const DashboardPage = () => {
     }
     loadStats();
     return () => { mounted = false; };
-  }, [profile]);
+  }, [profile?.id, profile?.username]);
 
   // Google Contacts API State
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
