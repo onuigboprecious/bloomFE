@@ -59,12 +59,42 @@ export const PrivacyPolicyPage = () => {
             </p>
           </section>
 
+          <section id="google-user-data-policy" className="space-y-4 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border-2 border-cyan-500/40 dark:border-cyan-500/30">
+            <div className="flex items-center gap-2 text-cyan-500 font-extrabold text-xs uppercase tracking-wider">
+              <Lock className="w-4 h-4 text-cyan-400" />
+              <span>Google API Services User Data Policy</span>
+            </div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              4. Google User Data & OAuth Disclosure
+            </h2>
+            <p className="leading-relaxed">
+              Enlazer integrates with Google OAuth services to provide secure login and seamless contact synchronization. Here is full disclosure of how we request, handle, and protect your Google User Data:
+            </p>
+            <div className="space-y-3 pt-2">
+              <div className="bg-slate-50 dark:bg-slate-950/80 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                <h3 className="font-bold text-slate-900 dark:text-white text-sm">Google Authentication Scope</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  We request basic profile information (<code className="text-cyan-400">openid</code>, <code className="text-cyan-400">email</code>, <code className="text-cyan-400">profile</code>) to authenticate your identity, create your Enlazer account, and allow single-click login.
+                </p>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-950/80 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                <h3 className="font-bold text-slate-900 dark:text-white text-sm">Google Contacts API Scope (<code className="text-cyan-400">https://www.googleapis.com/auth/contacts</code>)</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  When you explicitly click "Sync to Google Contacts" on your dashboard leads, Enlazer uses this permission solely to create contact entries (name, email, phone, role) inside your personal Google Contacts account.
+                </p>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs leading-relaxed text-slate-700 dark:text-slate-300">
+              <strong>Google Limited Use Compliance:</strong> Enlazer's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer" className="text-[#00BCFF] font-bold underline">Google API Services User Data Policy</a>, including the Limited Use requirements. We do not sell, rent, or transfer Google user data to third-party brokers, advertisers, or data aggregators under any circumstances.
+            </div>
+          </section>
+
           <section className="space-y-3 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-              4. Contact Us About Your Privacy
+              5. Contact Us About Your Privacy
             </h2>
             <p>
-              If you wish to request data deletion, export your leads, or have questions regarding data security, please contact our Data Protection Officer at <a href="mailto:privacy@bloomlabs.africa" className="text-[#00BCFF] font-bold hover:underline">privacy@bloomlabs.africa</a>.
+              If you wish to request data deletion, export your leads, or have questions regarding data security or Google OAuth permissions, please contact our Data Protection Officer at <a href="mailto:support@enlazer.com.ng" className="text-[#00BCFF] font-bold hover:underline">support@enlazer.com.ng</a> or <a href="mailto:privacy@enlazer.com.ng" className="text-[#00BCFF] font-bold hover:underline">privacy@enlazer.com.ng</a>.
             </p>
           </section>
         </div>

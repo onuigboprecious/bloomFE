@@ -35,16 +35,16 @@ import ClaimCardPage from './pages/ClaimCardPage';
 import InvalidCardPage from './pages/InvalidCardPage';
 import CardTapHandler from './pages/CardTapHandler';
 
-import SEO from './components/common/SEO';
+import GoogleOAuthDisclosure from './components/hero/GoogleOAuthDisclosure';
 
-// Home Page Layout Component (enlazer.cloud)
+// Home Page Layout Component (enlazer.cloud & enlazer.com.ng)
 export const HomePage = () => {
   const { isWaitlistModalOpen, closeWaitlistModal, isPublishModalOpen, setIsPublishModalOpen } = useApp();
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors overflow-x-hidden relative pb-16">
       <SEO
-        title="Enlazer — Your Whole Self, One Tap Away"
+        title="Enlazer — #1 NFC Smart Cards & Digital Business Cards in Nigeria, FCT Abuja & Africa"
         description="Create your free Enlazer profile and share your WhatsApp, socials, and portfolio with one NFC card tap."
         url="https://enlazer.cloud/"
       />
@@ -53,6 +53,7 @@ export const HomePage = () => {
         <HeroSection />
         <ConnectionBanner />
         <HeroShowcase />
+        <GoogleOAuthDisclosure />
         <PricingSection />
         <Testimonials />
         <FaqSection />
@@ -275,29 +276,8 @@ export const AppRoutes = () => {
     <>
       <RouteSyncBridge />
       <Routes>
-        {/* 1. Home / Root Route */}
-        {/* On enlazer.cloud domain root (/), redirect unauthenticated to /login, authenticated to /dashboard */}
-        <Route
-          path="/"
-          element={
-            isApp ? (
-              authLoading ? (
-                <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex items-center justify-center p-4 text-center">
-                  <div className="space-y-4">
-                    <div className="w-12 h-12 border-4 border-[#00BCFF] border-t-transparent rounded-full animate-spin mx-auto" />
-                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400">Verifying session...</p>
-                  </div>
-                </div>
-              ) : isAuthenticated ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            ) : (
-              <HomePage />
-            )
-          }
-        />
+        {/* 1. Home / Root Route (Publicly visible to satisfy Google OAuth App Verification Requirement #6) */}
+        <Route path="/" element={<HomePage />} />
 
         {/* 2. Dashboard Route (enlazer.cloud/dashboard) */}
         <Route
