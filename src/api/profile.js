@@ -50,3 +50,24 @@ export async function joinWaitlistApi(waitlistData) {
 export function getVCardUrl(username) {
   return `${API_BASE_URL}/api/vcard/@${username}`;
 }
+
+export async function uploadImageApi(file, folder = 'avatars') {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('folder', folder);
+
+  const token = localStorage.getItem('bloom_token');
+  const response = await fetch(`${API_BASE_URL}/api/upload`, {
+    method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: formData,
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || data.error || 'Failed to upload image');
+  }
+
+  return data;
+}
+

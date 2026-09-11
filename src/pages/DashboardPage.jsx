@@ -75,6 +75,7 @@ import CustomLinksManager from '../components/dashboard/CustomLinksManager';
 import SettingsStudio from '../components/dashboard/SettingsStudio';
 import ScheduleWidget from '../components/dashboard/ScheduleWidget';
 import NotesChecklistWidget from '../components/dashboard/NotesChecklistWidget';
+import { uploadImageApi } from '../api/profile';
 
 export const DashboardPage = () => {
   const {
@@ -378,7 +379,7 @@ export const DashboardPage = () => {
     }
   }, [profile]);
 
-  const handleAvatarFileChange = (e) => {
+  const handleAvatarFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -386,6 +387,16 @@ export const DashboardPage = () => {
         setAvatar(reader.result);
       };
       reader.readAsDataURL(file);
+
+      try {
+        const res = await uploadImageApi(file, 'avatars');
+        if (res && res.url) {
+          setAvatar(res.url);
+          showToastNotification('success', 'Avatar uploaded to Cloudflare R2!');
+        }
+      } catch (err) {
+        console.warn('R2 upload skipped or unconfigured:', err);
+      }
     }
   };
 
