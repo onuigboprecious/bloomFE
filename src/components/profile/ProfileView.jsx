@@ -8,6 +8,7 @@ import SocialIcon from '../ui/SocialIcon';
 import ShareBackModal from '../ui/ShareBackModal';
 import { saveContactToPhone } from '../../utils/vcard';
 import { useApp } from '../../context/AppContext';
+import { getMarketingDomainUrl } from '../../config/domainConfig';
 
 // Enlazer Primary Brand Theme: Enlazer Cyan Dark (#00BCFF & Deep Slate)
 export const THEMES = {
@@ -114,10 +115,9 @@ export const ProfileView = ({ data }) => {
   };
 
   const handleGetOwnCard = () => {
-    if (setCurrentPage) {
-      setCurrentPage('home');
-    } else {
-      window.location.href = '/';
+    const targetUrl = getMarketingDomainUrl('/');
+    if (typeof window !== 'undefined') {
+      window.location.href = targetUrl;
     }
   };
 
