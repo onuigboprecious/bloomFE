@@ -9,42 +9,47 @@ export const DOMAIN_CONFIG = {
  */
 export const getMarketingDomainUrl = (path = '/') => {
   if (typeof window === 'undefined') return path;
+  const hostname = window.location.hostname.toLowerCase();
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.local')) {
+    return path;
+  }
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-
-  // If on enlazer.com.ng or local/preview environment, return current origin
-  return `${window.location.origin}${cleanPath}`;
+  return `${window.location.protocol}//${DOMAIN_CONFIG.MARKETING_DOMAIN}${cleanPath}`;
 };
 
 /**
- * Returns full URL for app dashboard & digital profiles
+ * Returns full URL for app dashboard & digital profiles (enlazer.cloud)
  */
 export const getAppDomainUrl = (path = '/dashboard') => {
   if (typeof window === 'undefined') return path;
   const hostname = window.location.hostname.toLowerCase();
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
-
-  // If explicitly on enlazer.cloud domain, preserve enlazer.cloud
-  if (hostname === DOMAIN_CONFIG.APP_DOMAIN || hostname.endsWith(`.${DOMAIN_CONFIG.APP_DOMAIN}`)) {
-    return `${window.location.protocol}//${DOMAIN_CONFIG.APP_DOMAIN}${cleanPath}`;
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.local')) {
+    return path;
   }
-
-  // Default to current active origin (e.g. https://enlazer.com.ng)
-  return `${window.location.origin}${cleanPath}`;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${window.location.protocol}//${DOMAIN_CONFIG.APP_DOMAIN}${cleanPath}`;
 };
 
 /**
- * Checks if current request is on app domain or serving single-page app
+ * Checks if current request is on app domain (enlazer.cloud)
  */
 export const isAppDomain = () => {
   if (typeof window === 'undefined') return true;
-  return true;
+  const hostname = window.location.hostname.toLowerCase();
+  if (hostname === DOMAIN_CONFIG.APP_DOMAIN || hostname.endsWith(`.${DOMAIN_CONFIG.APP_DOMAIN}`)) {
+    return true;
+  }
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.local')) {
+    return true;
+  }
+  return false;
 };
 
 /**
- * Checks if current request hostname is marketing domain
+ * Checks if current request hostname is marketing domain (enlazer.com.ng)
  */
 export const isMarketingDomain = () => {
   if (typeof window === 'undefined') return false;
-  return window.location.hostname.toLowerCase() === DOMAIN_CONFIG.MARKETING_DOMAIN;
+  return !isAppDomain();
 };
 

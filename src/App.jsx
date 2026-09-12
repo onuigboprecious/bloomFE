@@ -140,7 +140,40 @@ const RouteSyncBridge = () => {
     }
   }, [location.pathname, setCurrentPage, currentPage]);
 
-  // 2. Sync App Context state -> URL
+  // 2. Cross-domain check: enlazer.com.ng (marketing only) <-> enlazer.cloud (app & profiles)
+  useEffect(() => {
+    const isDev = typeof window !== 'undefined' && (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname.endsWith('.local')
+    );
+
+    if (!isDev && typeof window !== 'undefined') {
+      const hostname = window.location.hostname.toLowerCase();
+      const pathname = location.pathname.toLowerCase();
+
+      const isMarketingHost = hostname === 'enlazer.com.ng' || hostname === 'www.enlazer.com.ng';
+      const isAppHost = hostname === 'enlazer.cloud' || hostname === 'www.enlazer.cloud';
+
+      const isMarketingPath = [
+        '/', '/cards', '/wristbands', '/about', '/press', '/support', '/legal', '/privacy', '/terms', '/security', '/returns'
+      ].includes(pathname);
+
+      // If user accesses app or profile path on marketing domain (enlazer.com.ng), redirect to enlazer.cloud
+      if (isMarketingHost && !isMarketingPath) {
+        window.location.href = getAppDomainUrl(location.pathname + location.search);
+        return;
+      }
+
+      // If user accesses marketing-only path on app domain (enlazer.cloud), redirect to enlazer.com.ng
+      if (isAppHost && isMarketingPath && pathname !== '/') {
+        window.location.href = getMarketingDomainUrl(location.pathname + location.search);
+        return;
+      }
+    }
+  }, [location.pathname, location.search]);
+
+  // 3. Sync App Context state -> URL
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
