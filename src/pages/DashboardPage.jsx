@@ -346,6 +346,7 @@ export const DashboardPage = () => {
 
   const [toast, setToast] = useState({ show: false, type: 'success', message: '' });
   const [isSaving, setIsSaving] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   const showToastNotification = (type, message) => {
     setToast({ show: true, type, message });
@@ -528,9 +529,9 @@ export const DashboardPage = () => {
             <span className="text-xl sm:text-2xl font-black text-[#00BCFF] dark:text-[#38BDF8]">.</span>
           </button>
 
-          <div className="flex items-center gap-3">
-            {/* Interactive Status Pill with Hover Tooltip */}
-            <div className="relative group flex items-center">
+          <div className="flex items-center gap-2">
+            {/* Profile Status Badge (Live / Draft) with Info Tooltip (Hidden on mobile) */}
+            <div className="hidden sm:flex relative group items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--card)] border border-[var(--border)] text-xs text-[var(--text-dim)] shadow-xs cursor-help">
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--card-hover)] border border-[var(--border)] cursor-pointer hover:border-[var(--accent)] transition-all shadow-xs">
                 <span className={`w-2.5 h-2.5 rounded-full ${isPublished ? 'bg-[var(--success)] animate-pulse' : 'bg-amber-400'}`} />
                 <span className="text-[11px] font-bold text-[var(--text)] hidden sm:inline">
@@ -679,7 +680,7 @@ export const DashboardPage = () => {
               </button>
               <button
                 onClick={() => setActiveTab('settings')}
-                className="py-2.5 px-4 rounded-xl bg-[var(--card-hover)] border border-[var(--border)] text-[var(--text)] font-bold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95"
+                className="hidden sm:flex py-2.5 px-4 rounded-xl bg-[var(--card-hover)] border border-[var(--border)] text-[var(--text)] font-bold text-xs transition-all cursor-pointer items-center justify-center gap-2 active:scale-95"
               >
                 <Settings className="w-4 h-4 text-[var(--accent)]" />
                 <span>Settings</span>
@@ -831,8 +832,8 @@ export const DashboardPage = () => {
 
                 </div>
 
-                {/* Right Side: Mobile Phone Live Preview */}
-                <div className="lg:col-span-5 sticky top-4 h-fit flex flex-col items-center w-full">
+                {/* Right Side: Mobile Phone Live Preview (Desktop/Large screens only by default) */}
+                <div className="hidden lg:flex lg:col-span-5 sticky top-4 h-fit flex-col items-center w-full">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--accent)] flex items-center justify-center gap-1.5 mb-3">
                     <Smartphone className="w-3.5 h-3.5 text-[var(--accent)]" /> Live Bio Preview
                   </span>
@@ -1862,7 +1863,62 @@ export const DashboardPage = () => {
             </button>
           );
         })}
+
+        {/* Live Bio Preview Mobile Bottom Bar Button */}
+        <button
+          onClick={() => setIsPreviewModalOpen(true)}
+          className="flex flex-col items-center justify-center gap-1 flex-1 py-1 cursor-pointer"
+        >
+          <div className="w-9 h-7 rounded-lg flex items-center justify-center transition-all bg-[#00BCFF]/20 text-[#00BCFF] border border-[#00BCFF]/40 shadow-xs">
+            <Eye className="w-4 h-4" />
+          </div>
+          <span className="text-[10px] font-bold text-[#00BCFF]">
+            Preview
+          </span>
+        </button>
       </nav>
+
+      {/* Mobile Live Bio Preview Modal */}
+      {isPreviewModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 md:hidden animate-in fade-in">
+          <div className="relative w-full max-w-sm max-h-[90vh] flex flex-col items-center overflow-y-auto pt-10 pb-6 px-2 bg-slate-900/90 rounded-3xl border border-slate-800 shadow-2xl">
+            <button
+              onClick={() => setIsPreviewModalOpen(false)}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-sm shadow-md hover:bg-slate-700 transition-colors cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#00BCFF] flex items-center gap-1.5 mb-4">
+              <Smartphone className="w-4 h-4 text-[#00BCFF]" /> Live Bio Preview
+            </span>
+            <MobilePhonePreview
+              data={{
+                ...profile,
+                avatar: avatar || profile?.avatar,
+                name: name !== '' ? name : profile?.name,
+                title: title !== '' ? title : profile?.title,
+                company: company !== '' ? company : profile?.company,
+                phone: phone !== '' ? phone : profile?.phone,
+                bio: bio !== '' ? bio : profile?.bio,
+                website: website !== '' ? website : profile?.website,
+                location: location !== '' ? location : profile?.location,
+                username: customHandle !== '' ? customHandle : profile?.username,
+                showEmail,
+                theme: selectedTheme,
+                template: selectedTemplate,
+                socials: socialHandlesList.reduce((acc, curr) => {
+                  if (curr.handle) acc[curr.platform] = curr.handle;
+                  return acc;
+                }, {}),
+                customLinks: customLinks,
+                featuredTrack: featuredTrack,
+                artworks: artworks,
+                products: products,
+              }}
+            />
+          </div>
+        </div>
+      )}
 
     </div>
   );
