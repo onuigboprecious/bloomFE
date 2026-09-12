@@ -140,39 +140,7 @@ const RouteSyncBridge = () => {
     }
   }, [location.pathname, setCurrentPage, currentPage]);
 
-  // 2. Initial load domain check for production
-  useEffect(() => {
-    const isDev = typeof window !== 'undefined' && (
-      window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1' ||
-      window.location.hostname.endsWith('.local')
-    );
-
-    if (!isDev) {
-      const pathname = location.pathname;
-      const isAppPath =
-        pathname.startsWith('/dashboard') ||
-        pathname.startsWith('/profile') ||
-        pathname.startsWith('/@') ||
-        pathname.startsWith('/card/') ||
-        ['/login', '/signup', '/claim', '/invalid-card', '/forgot-password', '/reset-password'].includes(pathname.toLowerCase());
-
-      const currentlyOnAppDomain = isAppDomain();
-
-      if (isAppPath && !currentlyOnAppDomain) {
-        window.location.href = getAppDomainUrl(pathname + location.search);
-        return;
-      }
-
-      const isMarketingPath = ['/cards', '/wristbands', '/about', '/press', '/support', '/legal', '/privacy', '/terms', '/security', '/returns'].includes(pathname.toLowerCase());
-      if (isMarketingPath && currentlyOnAppDomain) {
-        window.location.href = getMarketingDomainUrl(pathname + location.search);
-        return;
-      }
-    }
-  }, [location.pathname, location.search]);
-
-  // 3. Sync App Context state -> URL (and cross-domain navigation if required in production)
+  // 2. Sync App Context state -> URL
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -187,40 +155,6 @@ const RouteSyncBridge = () => {
       // Preserve dynamic profile/card-tap paths (/@username, /card/:uid, /profile/:username, /username)
       if (currentPage === 'card-tap' || currentPage === 'profile') {
         targetPath = location.pathname;
-      }
-
-      const isDev = typeof window !== 'undefined' && (
-        window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1' ||
-        window.location.hostname.endsWith('.local')
-      );
-
-      // Perform cross-domain redirects in production environments
-      if (!isDev) {
-        const appPages = [
-          'login',
-          'signup',
-          'forgot-password',
-          'reset-password',
-          'dashboard',
-          'profile',
-          'card-tap',
-          'claim-card',
-          'invalid-card',
-          'onboarding'
-        ];
-        const isTargetAppPage = appPages.includes(currentPage);
-        const currentlyOnAppDomain = isAppDomain();
-
-        if (isTargetAppPage && !currentlyOnAppDomain) {
-          window.location.href = getAppDomainUrl(targetPath);
-          return;
-        }
-
-        if (!isTargetAppPage && currentlyOnAppDomain) {
-          window.location.href = getMarketingDomainUrl(targetPath);
-          return;
-        }
       }
 
       if (targetPath && location.pathname !== targetPath) {
