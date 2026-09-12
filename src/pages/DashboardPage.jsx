@@ -694,7 +694,7 @@ export const DashboardPage = () => {
 
           {/* FLAT SIDEBAR NAV (Desktop) */}
           <aside className="hidden md:flex flex-col w-60 shrink-0 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 space-y-6 sticky top-4 h-fit">
-            
+
             {/* Sidebar User Mini Avatar */}
             <div className="flex items-center gap-3 pb-3 border-b border-[var(--border)]">
               <div className="story-ring-wrap w-[38px] h-[38px]">
@@ -723,9 +723,8 @@ export const DashboardPage = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
-                      isActive ? 'nav-item-active' : 'text-[var(--text-dim)] hover:text-[var(--text)] hover:bg-[var(--card-hover)]'
-                    }`}
+                    className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${isActive ? 'nav-item-active' : 'text-[var(--text-dim)] hover:text-[var(--text)] hover:bg-[var(--card-hover)]'
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <TabIcon className={`w-4 h-4 ${isActive ? 'text-[var(--accent)]' : 'text-[var(--text-dim)]'}`} />
@@ -1152,8 +1151,8 @@ export const DashboardPage = () => {
                           <div
                             key={uniqueId}
                             className={`relative p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border transition-all duration-200 space-y-3.5 shadow-xs overflow-hidden ${isSelected
-                                ? 'border-[#00BCFF] bg-cyan-500/5 dark:bg-cyan-500/5'
-                                : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700/80 hover:scale-[1.01]'
+                              ? 'border-[#00BCFF] bg-cyan-500/5 dark:bg-cyan-500/5'
+                              : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700/80 hover:scale-[1.01]'
                               }`}
                           >
                             {/* Inline Delete Confirmation Overlay */}
@@ -1282,8 +1281,8 @@ export const DashboardPage = () => {
                                 onClick={() => handleSyncSingleLeadToGoogle(item)}
                                 disabled={googleSyncingId === uniqueId}
                                 className={`w-full py-2 px-3 rounded-xl text-[10px] font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-[0.98] ${syncedLeadIds.includes(uniqueId)
-                                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
-                                    : 'bg-[#00BCFF] hover:bg-cyan-400 text-slate-950'
+                                  ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
+                                  : 'bg-[#00BCFF] hover:bg-cyan-400 text-slate-950'
                                   }`}
                               >
                                 {googleSyncingId === uniqueId ? (
@@ -1850,9 +1849,8 @@ export const DashboardPage = () => {
               className="flex flex-col items-center justify-center gap-1 flex-1 py-1 cursor-pointer"
             >
               <div
-                className={`w-9 h-7 rounded-lg flex items-center justify-center transition-all ${
-                  isActive ? 'text-white shadow-sm' : 'bg-[#16223A] text-[#8B98AE]'
-                }`}
+                className={`w-9 h-7 rounded-lg flex items-center justify-center transition-all ${isActive ? 'text-white shadow-sm' : 'bg-[#16223A] text-[#8B98AE]'
+                  }`}
                 style={isActive ? { background: 'var(--grad)' } : {}}
               >
                 <TabIcon className="w-4 h-4" />
