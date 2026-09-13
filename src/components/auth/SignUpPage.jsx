@@ -21,14 +21,6 @@ export const SignUpPage = () => {
     try {
       await signupUser({ email, password, name: fullName });
       setSignupSuccess(true);
-      setTimeout(() => {
-        const pendingCardUid = localStorage.getItem('pending_claim_cardUid');
-        if (pendingCardUid) {
-          setCurrentPage('claim-card');
-        } else {
-          setCurrentPage('onboarding');
-        }
-      }, 1200);
     } catch (err) {
       setErrorMessage(err.message || 'Failed to create account. Please try again.');
     } finally {
@@ -69,15 +61,49 @@ export const SignUpPage = () => {
         >
           {signupSuccess ? (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-8 space-y-4"
+              className="text-center py-6 px-2 space-y-6"
             >
-              <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
-                <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
+              <div className="relative w-20 h-20 mx-auto flex items-center justify-center">
+                <div className="absolute inset-0 bg-[#00BCFF]/20 rounded-full blur-xl animate-pulse" />
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#00BCFF] to-cyan-400 text-white flex items-center justify-center shadow-lg shadow-cyan-500/30 relative z-10">
+                  <Mail className="w-10 h-10 stroke-[2]" />
+                </div>
               </div>
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white">Account Created!</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Welcome to Enlazer. Redirecting to your digital card...</p>
+
+              <div className="space-y-2">
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                  Check Your Email! 📩
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-sm mx-auto">
+                  We’ve sent a welcome email to{' '}
+                  <span className="font-bold text-[#00BCFF] break-all">{email}</span>.
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 pt-1">
+                  Please check your inbox (or spam folder) and open the email to proceed to your dashboard.
+                </p>
+              </div>
+
+              <div className="pt-4 space-y-3">
+                <a
+                  href={email.includes('@gmail.com') ? 'https://mail.google.com' : email.includes('@outlook.com') || email.includes('@hotmail.com') ? 'https://outlook.live.com' : 'mailto:' + email}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#00BCFF] hover:bg-[#00a6e0] text-white font-extrabold py-3.5 px-6 rounded-xl text-sm transition-all shadow-md shadow-cyan-500/20 cursor-pointer"
+                >
+                  <Mail className="w-4 h-4" />
+                  <span>Open Inbox & Proceed</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage('login')}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-bold py-2 px-4 rounded-xl text-xs transition-colors cursor-pointer"
+                >
+                  <span>Already checked? Log In to Dashboard →</span>
+                </button>
+              </div>
             </motion.div>
           ) : (
             <form onSubmit={handleSignUp} autoComplete="off" className="space-y-4">
