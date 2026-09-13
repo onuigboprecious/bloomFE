@@ -210,20 +210,7 @@ export const AppProvider = ({ children }) => {
 
 
   const loginUser = async ({ email, password }) => {
-    let userData;
-    try {
-      userData = await loginApi({ email, password });
-    } catch (err) {
-      // Fallback local session for seamless login under enlazer.com.ng
-      userData = {
-        token: 'enl_usr_session_' + Date.now(),
-        user: {
-          id: 'usr_' + Date.now(),
-          email: email,
-          name: email.split('@')[0].replace('.', ' ').replace(/^./, (c) => c.toUpperCase()),
-        }
-      };
-    }
+    const userData = await loginApi({ email, password });
     if (userData?.token) {
       localStorage.setItem('bloom_auth_token', userData.token);
     }
@@ -254,19 +241,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const loginWithGoogle = async (googlePayload) => {
-    let userData;
-    try {
-      userData = await googleAuthApi(googlePayload);
-    } catch (err) {
-      userData = {
-        token: 'enl_usr_google_' + Date.now(),
-        user: {
-          id: 'usr_g_' + Date.now(),
-          email: googlePayload?.email || 'user@enlazer.com.ng',
-          name: googlePayload?.name || 'Enlazer User',
-        }
-      };
-    }
+    const userData = await googleAuthApi(googlePayload);
     if (userData?.token) {
       localStorage.setItem('bloom_auth_token', userData.token);
     }
