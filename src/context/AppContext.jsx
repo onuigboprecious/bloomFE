@@ -151,6 +151,7 @@ export const AppProvider = ({ children }) => {
           .catch(() => { });
       })
       .catch(() => {
+        localStorage.removeItem('bloom_auth_token');
         setIsAuthenticated(false);
         setUser(null);
       })
@@ -158,6 +159,31 @@ export const AppProvider = ({ children }) => {
         setAuthLoading(false);
       });
   }, []);
+
+  // Client-side 30-minute inactivity auto-logout tracker
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const INACTIVITY_LIMIT = 30 * 60 * 1000; // 30 minutes
+    let timeoutId;
+
+    const resetTimer = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        logoutUser();
+      }, INACTIVITY_LIMIT);
+    };
+
+    const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+
+    resetTimer();
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+    };
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -266,13 +292,50 @@ export const AppProvider = ({ children }) => {
     }
     setIsAuthenticated(true);
     setUser(userData?.user || userData);
-    if (name) {
-      setProfile((prev) => ({
-        ...prev,
-        name,
-        email: email || prev.email,
-      }));
-    }
+
+    const userName = name || userData?.name || userData?.user?.name || (email ? email.split('@')[0] : 'User');
+    const userEmail = email || userData?.email || userData?.user?.email || '';
+
+    const cleanProfile = {
+      name: userName,
+      username: (userEmail ? userEmail.split('@')[0] : 'user') + Math.floor(1000 + Math.random() * 9000),
+      title: '',
+      company: '',
+      bio: '',
+      avatar: '',
+      email: userEmail,
+      phone: '',
+      website: '',
+      location: '',
+      theme: 'dark-luxe',
+      layout: 'stack',
+      template: 'classic-stack',
+      is_published: false,
+      cardShippingStatus: 'pending_publish',
+      customDomain: null,
+      socials: {
+        instagram: '',
+        tiktok: '',
+        twitter: '',
+        whatsapp: '',
+        calendly: '',
+        portfolio: '',
+        linkedin: '',
+        youtube: ''
+      },
+      customLinks: [],
+      stats: {
+        totalTaps: 0,
+        monthlyTaps: 0,
+        uniqueVisitors: 0,
+        leadsCaptured: 0,
+        conversionRate: 0
+      }
+    };
+
+    setProfile(cleanProfile);
+    localStorage.setItem('bloom_profile', JSON.stringify(cleanProfile));
+
     return userData;
   };
 

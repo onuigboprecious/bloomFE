@@ -80,7 +80,7 @@ export const SignUpPage = () => {
               <p className="text-xs text-slate-500 dark:text-slate-400">Welcome to Enlazer. Redirecting to your digital card...</p>
             </motion.div>
           ) : (
-            <form onSubmit={handleSignUp} className="space-y-4">
+            <form onSubmit={handleSignUp} autoComplete="off" className="space-y-4">
               {/* Header Title */}
               <div className="text-center space-y-1.5">
                 <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -132,6 +132,7 @@ export const SignUpPage = () => {
                     <input
                       type="text"
                       required
+                      autoComplete="off"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       placeholder="e.g. Precious Onuigbo"
@@ -149,6 +150,7 @@ export const SignUpPage = () => {
                     <input
                       type="email"
                       required
+                      autoComplete="off"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="name@example.com"
@@ -166,6 +168,7 @@ export const SignUpPage = () => {
                     <input
                       type="password"
                       required
+                      autoComplete="new-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="At least 8 characters"
