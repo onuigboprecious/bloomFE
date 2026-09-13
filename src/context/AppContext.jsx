@@ -262,55 +262,8 @@ export const AppProvider = ({ children }) => {
 
   const signupUser = async ({ email, password, name }) => {
     const userData = await signupApi({ email, password, name });
-    if (userData?.token) {
-      localStorage.setItem('bloom_auth_token', userData.token);
-    }
-    setIsAuthenticated(true);
-    setUser(userData?.user || userData);
-
-    const userName = name || userData?.name || userData?.user?.name || (email ? email.split('@')[0] : 'User');
-    const userEmail = email || userData?.email || userData?.user?.email || '';
-
-    const cleanProfile = {
-      name: userName,
-      username: (userEmail ? userEmail.split('@')[0] : 'user') + Math.floor(1000 + Math.random() * 9000),
-      title: '',
-      company: '',
-      bio: '',
-      avatar: '',
-      email: userEmail,
-      phone: '',
-      website: '',
-      location: '',
-      theme: 'dark-luxe',
-      layout: 'stack',
-      template: 'classic-stack',
-      is_published: false,
-      cardShippingStatus: 'pending_publish',
-      customDomain: null,
-      socials: {
-        instagram: '',
-        tiktok: '',
-        twitter: '',
-        whatsapp: '',
-        calendly: '',
-        portfolio: '',
-        linkedin: '',
-        youtube: ''
-      },
-      customLinks: [],
-      stats: {
-        totalTaps: 0,
-        monthlyTaps: 0,
-        uniqueVisitors: 0,
-        leadsCaptured: 0,
-        conversionRate: 0
-      }
-    };
-
-    setProfile(cleanProfile);
-    localStorage.setItem('bloom_profile', JSON.stringify(cleanProfile));
-
+    // User account registered and welcome email dispatched.
+    // Do NOT auto-authenticate or set session tokens so user must check email and log in.
     return userData;
   };
 
