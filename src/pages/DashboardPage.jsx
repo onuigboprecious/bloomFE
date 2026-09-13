@@ -116,9 +116,9 @@ export const DashboardPage = () => {
   const [newCardUidInput, setNewCardUidInput] = useState('');
   const [cardLinkMsg, setCardLinkMsg] = useState('');
   const [backendStats, setBackendStats] = useState(() => {
-    const defaultTaps = profile?.stats?.totalTaps || profile?.taps_count || 1422;
-    const defaultViewers = profile?.stats?.uniqueVisitors || profile?.views_count || 1104;
-    const defaultConv = profile?.stats?.conversionRate ? `${profile.stats.conversionRate}%` : '84%';
+    const defaultTaps = profile?.stats?.totalTaps ?? profile?.taps_count ?? 0;
+    const defaultViewers = profile?.stats?.uniqueVisitors ?? profile?.views_count ?? 0;
+    const defaultConv = (profile?.stats?.conversionRate !== undefined && profile?.stats?.conversionRate !== null) ? `${profile.stats.conversionRate}%` : '0%';
     return { taps: defaultTaps, viewers: defaultViewers, conversion: defaultConv };
   });
   const [statsLoading, setStatsLoading] = useState(true);
@@ -137,7 +137,7 @@ export const DashboardPage = () => {
         prof?.taps_count ??
         prof?.tapsCount ??
         prof?.totalTaps ??
-        1422;
+        0;
 
       const viewers =
         res?.uniqueVisitors ??
@@ -149,7 +149,7 @@ export const DashboardPage = () => {
         prof?.stats?.unique_visitors ??
         prof?.views_count ??
         prof?.uniqueVisitors ??
-        1104;
+        0;
 
       const rawConv =
         res?.conversionRate ??
@@ -159,8 +159,8 @@ export const DashboardPage = () => {
         prof?.stats?.conversion_rate ??
         null;
 
-      let conversion = '84%';
-      if (rawConv !== null && rawConv !== undefined && rawConv !== 0) {
+      let conversion = '0%';
+      if (rawConv !== null && rawConv !== undefined) {
         conversion = typeof rawConv === 'number' ? `${rawConv}%` : String(rawConv).endsWith('%') ? rawConv : `${rawConv}%`;
       } else if (taps > 0) {
         conversion = `${((viewers / taps) * 100).toFixed(1)}%`;
@@ -1355,7 +1355,7 @@ export const DashboardPage = () => {
                         <ArrowUpRight className="w-3 h-3" /> +18.4%
                       </span>
                     </div>
-                    <div className="text-3xl font-black text-[#00BCFF]">{profile.stats?.totalTaps || 1422}</div>
+                    <div className="text-3xl font-black text-[#00BCFF]">{profile.stats?.totalTaps ?? 0}</div>
                     <div className="text-[10px] text-slate-500 dark:text-slate-400">Lifetime NFC & QR interactions</div>
                   </div>
 
@@ -1363,10 +1363,10 @@ export const DashboardPage = () => {
                     <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
                       <span>Monthly Taps</span>
                       <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[10px] flex items-center gap-0.5">
-                        <ArrowUpRight className="w-3 h-3" /> +24.2%
+                        <ArrowUpRight className="w-3 h-3" /> +0%
                       </span>
                     </div>
-                    <div className="text-3xl font-black text-cyan-400">{profile.stats?.monthlyTaps || 482}</div>
+                    <div className="text-3xl font-black text-cyan-400">{profile.stats?.monthlyTaps ?? 0}</div>
                     <div className="text-[10px] text-slate-500 dark:text-slate-400">Active taps this month</div>
                   </div>
 
@@ -1374,10 +1374,10 @@ export const DashboardPage = () => {
                     <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
                       <span>Unique Viewers</span>
                       <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[10px] flex items-center gap-0.5">
-                        <ArrowUpRight className="w-3 h-3" /> +14.6%
+                        <ArrowUpRight className="w-3 h-3" /> +0%
                       </span>
                     </div>
-                    <div className="text-3xl font-black text-emerald-400">{profile.stats?.uniqueVisitors || 1104}</div>
+                    <div className="text-3xl font-black text-emerald-400">{profile.stats?.uniqueVisitors ?? 0}</div>
                     <div className="text-[10px] text-slate-500 dark:text-slate-400">Unique smartphone devices</div>
                   </div>
 
