@@ -54,18 +54,18 @@ export const ClaimCardPage = ({ cardUid: initialUid }) => {
 
       {/* Top Header Row */}
       <div className="max-w-7xl w-full mx-auto px-6 py-6 flex items-center justify-between z-10">
-        <button
-          onClick={() => setCurrentPage('home')}
+        <a
+          href="https://enlazer.com.ng"
           className="inline-flex items-center gap-2 text-xs font-bold text-[var(--text-dim)] hover:text-[var(--text)] bg-[var(--card-hover)] px-3.5 py-2 rounded-full transition-all duration-300 cursor-pointer border border-[var(--border)]"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Home</span>
-        </button>
+        </a>
 
-        <button onClick={() => setCurrentPage('home')} className="flex items-center gap-0.5 group">
+        <a href="https://enlazer.com.ng" className="flex items-center gap-0.5 group">
           <span className="text-2xl font-black tracking-tight text-[var(--text)] font-['Plus_Jakarta_Sans']">enlazer</span>
           <span className="text-2xl font-black text-[var(--accent)] group-hover:scale-125 transition-transform">.</span>
-        </button>
+        </a>
       </div>
 
       {/* Main Claim Container */}

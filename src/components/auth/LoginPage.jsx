@@ -44,15 +44,15 @@ export const LoginPage = () => {
 
       {/* Top Header Row */}
       <div className="max-w-7xl w-full mx-auto px-6 py-6 flex items-center justify-between z-10">
-        <button
-          onClick={() => setCurrentPage('home')}
+        <a
+          href="https://enlazer.com.ng"
           className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-transparent hover:bg-slate-200/50 dark:hover:bg-slate-800/50 px-3.5 py-2 rounded-none hover:rounded-full transition-all duration-300 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Home</span>
-        </button>
+        </a>
 
-        <a href="#" onClick={() => setCurrentPage('home')} className="flex items-center gap-0.5 group">
+        <a href="https://enlazer.com.ng" className="flex items-center gap-0.5 group">
           <span className="text-2xl font-black tracking-tight text-slate-950 dark:text-white font-['Plus_Jakarta_Sans']">enlazer</span>
           <span className="text-2xl font-black text-[#00BCFF] group-hover:scale-125 transition-transform">.</span>
         </a>
