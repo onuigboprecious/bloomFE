@@ -73,33 +73,61 @@ export const Cards = () => {
               transition={{ duration: 0.3 }}
               className="w-full max-w-md"
             >
-              <div className={`relative aspect-[1.586/1] rounded-3xl p-5 sm:p-7 ${activeCard.color} border border-white/20 text-white flex flex-col justify-between overflow-hidden group transition-all`}>
-                <div className="flex items-center justify-between z-10">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl sm:text-2xl font-black tracking-tight font-['Plus_Jakarta_Sans']">enlazer</span>
-                    <span className="w-2 h-2 rounded-full bg-[#00BCFF] animate-pulse" />
-                  </div>
-                  <div className={`px-2.5 py-1 rounded-full border text-[10px] font-bold tracking-wider uppercase flex items-center gap-1 ${activeCard.chipColor}`}>
-                    <Rss className="w-3 h-3" />
-                    <span>NFC 13.56 MHz</span>
-                  </div>
-                </div>
-                <div className="z-10 my-3 sm:my-4 flex items-center justify-between">
-                  <div className="w-11 h-8 sm:w-12 sm:h-9 rounded-md bg-amber-300/30 border border-amber-300/60 flex items-center justify-center">
-                    <div className="w-7 h-4 sm:w-8 sm:h-5 border border-amber-400/80 rounded flex items-center justify-center">
-                      <div className="w-3.5 h-2.5 sm:w-4 sm:h-3 bg-amber-400/40 rounded-xs" />
+              <div className={`relative aspect-[1.586/1] rounded-2xl p-6 sm:p-7 ${activeCard.color || 'bg-slate-900'} border border-slate-800/90 text-white shadow-2xl backdrop-blur-2xl text-left overflow-hidden flex flex-col justify-between group transition-all`}>
+                
+                {/* Card Header: Brand Logo + NFC Icon */}
+                <div className="flex items-center justify-between relative z-10">
+                  <span className="font-extrabold text-2xl sm:text-3xl tracking-tight text-white select-none">
+                    enlazer<span className="text-[#00BCFF]">.</span>
+                  </span>
+
+                  {/* NFC Contactless Wave Symbol with Glowing Ripple Effect */}
+                  <div className="relative flex items-center justify-center">
+                    {/* Outer Ripple Ring 1 */}
+                    <motion.span
+                      animate={{ scale: [1, 1.9], opacity: [0.7, 0] }}
+                      transition={{ repeat: Infinity, duration: 2.2, ease: "easeOut" }}
+                      className="absolute w-10 h-10 rounded-full border border-[#00BCFF] bg-[#00BCFF]/20 pointer-events-none"
+                    />
+                    {/* Outer Ripple Ring 2 */}
+                    <motion.span
+                      animate={{ scale: [1, 2.5], opacity: [0.5, 0] }}
+                      transition={{ repeat: Infinity, duration: 2.2, delay: 0.7, ease: "easeOut" }}
+                      className="absolute w-10 h-10 rounded-full border border-[#00BCFF]/40 bg-[#00BCFF]/10 pointer-events-none"
+                    />
+
+                    {/* Core NFC Icon Container */}
+                    <div className="relative z-10 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-800/70 border border-[#00BCFF]/50 flex items-center justify-center text-[#00BCFF] shadow-lg shadow-[#00BCFF]/30 backdrop-blur-md">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#00BCFF]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M8.5 14.5A4 4 0 0 1 8.5 9.5" />
+                        <path d="M12 17.5A8 8 0 0 0 12 6.5" />
+                        <path d="M15.5 20.5A12 12 0 0 0 15.5 3.5" />
+                      </svg>
                     </div>
                   </div>
-                  {activeCard.popular && (
-                    <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[#00BCFF] text-white text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider shadow-md">
-                      Most Popular
+                </div>
+
+                {/* Card Footer: Metadata */}
+                <div className="flex items-end justify-between relative z-10 pt-2 border-t border-slate-800/40">
+                  <div>
+                    <span className="block text-[10px] sm:text-[11px] font-bold tracking-widest text-slate-400 uppercase">
+                      PERSONAL NFC
                     </span>
-                  )}
+                    <span className="block text-base sm:text-lg font-bold text-white tracking-wide mt-0.5">
+                      {activeCard.name}
+                    </span>
+                  </div>
+
+                  <div className="text-right">
+                    <span className="block text-[10px] sm:text-[11px] font-bold tracking-widest text-slate-400 uppercase">
+                      TAP TO CONNECT
+                    </span>
+                    <span className="block text-xs sm:text-sm font-medium text-slate-200 tracking-wide mt-0.5">
+                      enlazer.cloud/mara
+                    </span>
+                  </div>
                 </div>
-                <div className="z-10 space-y-0.5 sm:space-y-1">
-                  <span className="text-[10px] sm:text-xs text-white/70 font-semibold tracking-wider block uppercase">{activeCard.material}</span>
-                  <h3 className="text-lg sm:text-xl font-black text-white tracking-wide">{activeCard.name}</h3>
-                </div>
+
               </div>
             </motion.div>
 

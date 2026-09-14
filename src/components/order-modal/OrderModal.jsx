@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { CheckCircle2, ShieldCheck, Lock, ArrowRight, CreditCard, Sparkles } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, Lock, ArrowRight, CreditCard } from 'lucide-react';
 import Modal from '../ui/Modal';
-import Button from '../ui/Button';
 import Input from '../ui/Input';
 import { useApp } from '../../context/AppContext';
 
@@ -306,10 +305,9 @@ export const OrderModal = () => {
 
           {/* Optional Post-Purchase Account Creation Callout */}
           {!isAuthenticated && (
-            <div className="p-4 rounded-2xl bg-cyan-50/70 dark:bg-cyan-950/40 border border-cyan-200/80 dark:border-cyan-800/40 text-left space-y-2">
-              <div className="flex items-center gap-2 text-xs font-extrabold text-slate-900 dark:text-white">
-                <Sparkles className="w-4 h-4 text-[#00BCFF] shrink-0" />
-                <span>Save info for live card tracking & profile management?</span>
+            <div className="text-left space-y-2 pt-1">
+              <div className="text-xs font-extrabold text-slate-900 dark:text-white">
+                Save info for live card tracking & profile management?
               </div>
               <p className="text-[11px] text-slate-600 dark:text-slate-400">
                 Create a password to access your Enlazer profile dashboard anytime.
@@ -320,21 +318,12 @@ export const OrderModal = () => {
                   handleClose();
                   setCurrentPage('signup');
                 }}
-                className="w-full mt-1.5 py-2.5 px-4 bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center block shadow-sm"
+                className="w-full mt-1.5 py-3 px-4 bg-[#00BCFF] hover:bg-cyan-500 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center block shadow-sm"
               >
                 Create Account with {email}
               </button>
             </div>
           )}
-
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={handleClose}
-            className="w-full bg-[#00BCFF] hover:bg-cyan-500 text-white font-black cursor-pointer py-3.5"
-          >
-            Close & Return to Page
-          </Button>
         </div>
       )}
     </Modal>
