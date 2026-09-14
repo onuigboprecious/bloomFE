@@ -115,6 +115,8 @@ export const DashboardPage = () => {
   const [copiedLink, setCopiedLink] = useState(false);
   const [newCardUidInput, setNewCardUidInput] = useState('');
   const [cardLinkMsg, setCardLinkMsg] = useState('');
+  const [selectedTimeframe, setSelectedTimeframe] = useState('30d');
+  const [analyticsRes, setAnalyticsRes] = useState(null);
   const [backendStats, setBackendStats] = useState(() => {
     const defaultTaps = profile?.stats?.totalTaps ?? profile?.taps_count ?? 0;
     const defaultViewers = profile?.stats?.uniqueVisitors ?? profile?.views_count ?? 0;
@@ -170,9 +172,11 @@ export const DashboardPage = () => {
     }
 
     async function loadStats() {
+      setStatsLoading(true);
       try {
-        const res = await getAnalyticsApi();
+        const res = await getAnalyticsApi(selectedTimeframe);
         if (mounted) {
+          setAnalyticsRes(res);
           const stats = parseStats(res, profile);
           setBackendStats(stats);
         }
@@ -187,7 +191,7 @@ export const DashboardPage = () => {
     }
     loadStats();
     return () => { mounted = false; };
-  }, [profile?.id, profile?.username, profile?.stats?.totalTaps, profile?.taps_count]);
+  }, [profile?.id, profile?.username, profile?.stats?.totalTaps, profile?.taps_count, selectedTimeframe]);
 
   // Google Contacts API State
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
@@ -438,7 +442,7 @@ export const DashboardPage = () => {
         const res = await uploadImageApi(file, 'avatars');
         if (res && res.url) {
           setAvatar(res.url);
-          showToastNotification('success', 'Avatar uploaded to Cloudflare R2!');
+          showToastNotification('success', 'Profile photo updated successfully!');
         }
       } catch (err) {
         console.warn('R2 upload skipped or unconfigured:', err);
@@ -1338,7 +1342,11 @@ export const DashboardPage = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-slate-400">Timeframe:</span>
-                    <select className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#00BCFF]">
+                    <select
+                      value={selectedTimeframe}
+                      onChange={(e) => setSelectedTimeframe(e.target.value)}
+                      className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#00BCFF]"
+                    >
                       <option value="24h">Last 24 Hours</option>
                       <option value="7d">Last 7 Days</option>
                       <option value="30d">Last 30 Days</option>
@@ -1352,22 +1360,22 @@ export const DashboardPage = () => {
                     <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
                       <span>Total Taps</span>
                       <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[10px] flex items-center gap-0.5">
-                        <ArrowUpRight className="w-3 h-3" /> +18.4%
+                        <ArrowUpRight className="w-3 h-3" /> +0%
                       </span>
                     </div>
-                    <div className="text-3xl font-black text-[#00BCFF]">{profile.stats?.totalTaps ?? 0}</div>
+                    <div className="text-3xl font-black text-[#00BCFF]">{analyticsRes?.totalTaps ?? backendStats.taps ?? 0}</div>
                     <div className="text-[10px] text-slate-500 dark:text-slate-400">Lifetime NFC & QR interactions</div>
                   </div>
 
                   <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-2 shadow-sm relative overflow-hidden group">
                     <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
-                      <span>Monthly Taps</span>
+                      <span>Period Taps</span>
                       <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[10px] flex items-center gap-0.5">
                         <ArrowUpRight className="w-3 h-3" /> +0%
                       </span>
                     </div>
-                    <div className="text-3xl font-black text-cyan-400">{profile.stats?.monthlyTaps ?? 0}</div>
-                    <div className="text-[10px] text-slate-500 dark:text-slate-400">Active taps this month</div>
+                    <div className="text-3xl font-black text-cyan-400">{analyticsRes?.monthlyTaps ?? 0}</div>
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400">Active taps ({selectedTimeframe})</div>
                   </div>
 
                   <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-2 shadow-sm relative overflow-hidden group">
@@ -1377,7 +1385,7 @@ export const DashboardPage = () => {
                         <ArrowUpRight className="w-3 h-3" /> +0%
                       </span>
                     </div>
-                    <div className="text-3xl font-black text-emerald-400">{profile.stats?.uniqueVisitors ?? 0}</div>
+                    <div className="text-3xl font-black text-emerald-400">{analyticsRes?.uniqueVisitors ?? backendStats.viewers ?? 0}</div>
                     <div className="text-[10px] text-slate-500 dark:text-slate-400">Unique smartphone devices</div>
                   </div>
 
@@ -1385,10 +1393,10 @@ export const DashboardPage = () => {
                     <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
                       <span>Conversion Rate</span>
                       <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[10px] flex items-center gap-0.5">
-                        <ArrowUpRight className="w-3 h-3" /> +8.2%
+                        <ArrowUpRight className="w-3 h-3" /> +0%
                       </span>
                     </div>
-                    <div className="text-3xl font-black text-purple-400">{profile.stats?.conversionRate || 84}%</div>
+                    <div className="text-3xl font-black text-purple-400">{analyticsRes?.conversionRate !== undefined ? `${analyticsRes.conversionRate}%` : backendStats.conversion}</div>
                     <div className="text-[10px] text-slate-500 dark:text-slate-400">vCard saves & lead submissions</div>
                   </div>
                 </div>
@@ -1495,48 +1503,27 @@ export const DashboardPage = () => {
                         <Smartphone className="w-4 h-4 text-[#00BCFF]" />
                         <span>Smartphone OS Distribution</span>
                       </h4>
-                      <span className="text-[10px] font-mono text-cyan-400 font-bold">100% Mobile Native</span>
+                      <span className="text-[10px] font-mono text-cyan-400 font-bold">Timeframe: {selectedTimeframe}</span>
                     </div>
 
                     <div className="space-y-4">
-                      {/* iOS / iPhone */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-bold">
-                          <span className="text-slate-900 dark:text-white flex items-center gap-1.5">
-                            <span className="w-2.5 h-2.5 rounded-full bg-[#00BCFF]" /> iPhone / iOS
-                          </span>
-                          <span className="font-mono text-[#00BCFF]">68% (967 Taps)</span>
-                        </div>
-                        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                          <div className="bg-[#00BCFF] h-full rounded-full w-[68%]" />
-                        </div>
-                      </div>
-
-                      {/* Android */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-bold">
-                          <span className="text-slate-900 dark:text-white flex items-center gap-1.5">
-                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" /> Android Devices
-                          </span>
-                          <span className="font-mono text-emerald-400">28% (398 Taps)</span>
-                        </div>
-                        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                          <div className="bg-emerald-400 h-full rounded-full w-[28%]" />
-                        </div>
-                      </div>
-
-                      {/* Desktop / Dynamic QR */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-bold">
-                          <span className="text-slate-900 dark:text-white flex items-center gap-1.5">
-                            <span className="w-2.5 h-2.5 rounded-full bg-purple-400" /> Dynamic QR Code / Web
-                          </span>
-                          <span className="font-mono text-purple-400">4% (57 Scans)</span>
-                        </div>
-                        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                          <div className="bg-purple-400 h-full rounded-full w-[4%]" />
-                        </div>
-                      </div>
+                      {analyticsRes?.deviceOs && analyticsRes.deviceOs.length > 0 ? (
+                        analyticsRes.deviceOs.map((item, idx) => (
+                          <div key={idx} className="space-y-1.5">
+                            <div className="flex justify-between text-xs font-bold">
+                              <span className="text-slate-900 dark:text-white flex items-center gap-1.5">
+                                <span className={`w-2.5 h-2.5 rounded-full ${idx % 2 === 0 ? 'bg-[#00BCFF]' : 'bg-emerald-400'}`} /> {item.os}
+                              </span>
+                              <span className="font-mono text-[#00BCFF]">{item.percentage}% ({item.taps ?? 0} Taps)</span>
+                            </div>
+                            <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                              <div className={`h-full rounded-full ${idx % 2 === 0 ? 'bg-[#00BCFF]' : 'bg-emerald-400'}`} style={{ width: `${Math.min(item.percentage, 100)}%` }} />
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-xs text-slate-400 font-medium py-4 text-center">No smartphone OS logs recorded for this period</div>
+                      )}
                     </div>
                   </div>
 
@@ -1547,42 +1534,25 @@ export const DashboardPage = () => {
                         <MapPin className="w-4 h-4 text-emerald-400" />
                         <span>Top Tap Locations</span>
                       </h4>
-                      <span className="text-[10px] font-mono text-emerald-400 font-bold">Lagos & Abuja Peak</span>
+                      <span className="text-[10px] font-mono text-emerald-400 font-bold">Timeframe: {selectedTimeframe}</span>
                     </div>
 
                     <div className="space-y-4">
-                      {/* Lagos */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-bold">
-                          <span className="text-slate-900 dark:text-white">Victoria Island & Lekki, Lagos</span>
-                          <span className="font-mono text-cyan-400">58% (825 Taps)</span>
-                        </div>
-                        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                          <div className="bg-cyan-500 h-full rounded-full w-[58%]" />
-                        </div>
-                      </div>
-
-                      {/* Abuja */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-bold">
-                          <span className="text-slate-900 dark:text-white">CBD & Maitama, Abuja</span>
-                          <span className="font-mono text-emerald-400">28% (398 Taps)</span>
-                        </div>
-                        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                          <div className="bg-emerald-400 h-full rounded-full w-[28%]" />
-                        </div>
-                      </div>
-
-                      {/* Port Harcourt & Others */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-bold">
-                          <span className="text-slate-900 dark:text-white">Port Harcourt & International</span>
-                          <span className="font-mono text-purple-400">14% (199 Taps)</span>
-                        </div>
-                        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                          <div className="bg-purple-400 h-full rounded-full w-[14%]" />
-                        </div>
-                      </div>
+                      {analyticsRes?.locations && analyticsRes.locations.length > 0 ? (
+                        analyticsRes.locations.map((item, idx) => (
+                          <div key={idx} className="space-y-1.5">
+                            <div className="flex justify-between text-xs font-bold">
+                              <span className="text-slate-900 dark:text-white">{item.location}</span>
+                              <span className="font-mono text-emerald-400">{item.percentage}% ({item.taps ?? 0} Taps)</span>
+                            </div>
+                            <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                              <div className="bg-emerald-400 h-full rounded-full" style={{ width: `${Math.min(item.percentage, 100)}%` }} />
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-xs text-slate-400 font-medium py-4 text-center">No location logs recorded for this period</div>
+                      )}
                     </div>
                   </div>
 
@@ -1635,25 +1605,25 @@ export const DashboardPage = () => {
       <AnimatePresence>
         {toast.show && (
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            initial={{ opacity: 0, y: -40, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-slate-950/95 dark:bg-slate-900/95 backdrop-blur-xl border shadow-2xl max-w-md cursor-pointer transition-all ${toast.type === 'success' ? 'border-emerald-500/40 shadow-emerald-950/20' : 'border-rose-500/40 shadow-rose-950/20'
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className={`fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-4 px-6 py-4 rounded-2xl bg-slate-950/95 dark:bg-slate-900/95 backdrop-blur-xl border-2 shadow-2xl w-[92%] max-w-lg cursor-pointer transition-all ${toast.type === 'success' ? 'border-emerald-500/60 shadow-emerald-500/20' : 'border-rose-500/60 shadow-rose-500/20'
               }`}
             onClick={() => setToast((prev) => ({ ...prev, show: false }))}
           >
-            <div className={`p-2 rounded-xl shrink-0 ${toast.type === 'success' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
+            <div className={`p-3 rounded-xl shrink-0 ${toast.type === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
               {toast.type === 'success' ? (
-                <CheckCircle2 className="w-5 h-5" />
+                <CheckCircle2 className="w-6 h-6 stroke-[2.5]" />
               ) : (
-                <AlertCircle className="w-5 h-5" />
+                <AlertCircle className="w-6 h-6 stroke-[2.5]" />
               )}
             </div>
-            <div className="space-y-0.5 flex-1 min-w-0 pr-2">
-              <h5 className={`text-xs font-black ${toast.type === 'success' ? 'text-emerald-400' : 'text-rose-400'}`}>
-                {toast.type === 'success' ? 'Profile Saved Successfully!' : 'Save Profile Failed'}
+            <div className="space-y-1 flex-1 min-w-0 pr-2">
+              <h5 className={`text-sm sm:text-base font-extrabold ${toast.type === 'success' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                {toast.type === 'success' ? 'Profile Saved Successfully!' : 'Notice'}
               </h5>
-              <p className="text-[11px] font-medium text-slate-300 truncate">
+              <p className="text-xs sm:text-sm font-semibold text-slate-200">
                 {toast.message}
               </p>
             </div>
@@ -1662,9 +1632,9 @@ export const DashboardPage = () => {
                 e.stopPropagation();
                 setToast((prev) => ({ ...prev, show: false }));
               }}
-              className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+              className="text-slate-400 hover:text-white p-1.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
           </motion.div>
         )}

@@ -74,11 +74,11 @@ export const SignUpPage = () => {
 
               <div className="space-y-2">
                 <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                  Check Your Email! 📩
+                  Check Your Email!
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-sm mx-auto">
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-md mx-auto">
                   We’ve sent a welcome email to{' '}
-                  <span className="font-bold text-[#00BCFF] break-all">{email}</span>.
+                  <span className="font-bold text-[#00BCFF] whitespace-nowrap">{email}</span>.
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 pt-1">
                   Please check your inbox (or spam folder) and open the email to proceed to your dashboard.

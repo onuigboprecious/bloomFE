@@ -56,7 +56,7 @@ export async function uploadImageApi(file, folder = 'avatars') {
   formData.append('file', file);
   formData.append('folder', folder);
 
-  const token = localStorage.getItem('bloom_token');
+  const token = localStorage.getItem('bloom_auth_token');
   const response = await fetch(`${API_BASE_URL}/api/upload`, {
     method: 'POST',
     headers: token ? { Authorization: `Bearer ${token}` } : {},

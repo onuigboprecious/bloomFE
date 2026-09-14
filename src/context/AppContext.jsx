@@ -23,6 +23,63 @@ import { createGoogleContact, getGoogleUserProfile, loadGoogleGsiScript, request
 
 const AppContext = createContext();
 
+export const defaultBlankProfile = {
+  name: "",
+  username: "",
+  title: "",
+  company: "",
+  bio: "",
+  avatar: "",
+  email: "",
+  phone: "",
+  website: "",
+  location: "",
+  theme: "dark-luxe",
+  layout: "stack",
+  is_published: false,
+  cardShippingStatus: "pending_publish",
+  socials: {},
+  socialList: [],
+  customLinks: [],
+  stats: {
+    totalTaps: 0,
+    monthlyTaps: 0,
+    uniqueVisitors: 0,
+    leadsCaptured: 0,
+    conversionRate: 0,
+  },
+};
+
+function applyProfileData(baseUser, profData) {
+  return {
+    id: profData?.id || baseUser?.id || "",
+    name: profData?.name || baseUser?.name || baseUser?.user?.name || "",
+    username: profData?.username || baseUser?.username || baseUser?.user?.username || "",
+    title: profData?.title || "",
+    company: profData?.company || "",
+    bio: profData?.bio || "",
+    avatar: profData?.avatar || baseUser?.avatar_url || baseUser?.user?.avatar_url || "",
+    email: profData?.email || baseUser?.email || baseUser?.user?.email || "",
+    phone: profData?.phone || "",
+    website: profData?.website || "",
+    location: profData?.location || "",
+    theme: profData?.theme || "dark-luxe",
+    layout: profData?.layout || "stack",
+    cardUid: profData?.cardUid || baseUser?.cardUid || "",
+    socials: profData?.socials || {},
+    socialList: profData?.socialList || profData?.socialHandles || [],
+    customLinks: profData?.customLinks || [],
+    stats: profData?.stats || {
+      totalTaps: 0,
+      monthlyTaps: 0,
+      uniqueVisitors: 0,
+      leadsCaptured: 0,
+      conversionRate: 0,
+    },
+    is_published: profData?.is_published || false,
+  };
+}
+
 export const AppProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'login' | 'signup' | 'dashboard'
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -50,10 +107,11 @@ export const AppProvider = ({ children }) => {
 
   const [profile, setProfile] = useState(() => {
     const saved = localStorage.getItem('bloom_profile');
-    if (saved) {
+    const token = localStorage.getItem('bloom_auth_token');
+    if (saved && token) {
       try { return JSON.parse(saved); } catch (e) { }
     }
-    return mockProfileData;
+    return defaultBlankProfile;
   });
 
   const [isPublished, setIsPublished] = useState(() => {
@@ -71,10 +129,11 @@ export const AppProvider = ({ children }) => {
   const [isTapSimulating, setIsTapSimulating] = useState(false);
   const [leads, setLeads] = useState(() => {
     const saved = localStorage.getItem('bloom_leads');
-    if (saved) {
+    const token = localStorage.getItem('bloom_auth_token');
+    if (saved && token) {
       try { return JSON.parse(saved); } catch (e) { }
     }
-    return mockRecentLeads;
+    return [];
   });
   const [isCardLinked, setIsCardLinked] = useState(() => {
     return localStorage.getItem('bloom_is_card_linked') !== 'false';
@@ -130,30 +189,24 @@ export const AppProvider = ({ children }) => {
       .then((userData) => {
         setIsAuthenticated(true);
         setUser(userData);
-        if (userData?.name) {
-          setProfile((prev) => ({
-            ...prev,
-            name: userData.name,
-            email: userData.email || prev.email,
-            avatar: userData.avatar_url || userData.user?.avatar_url || prev.avatar,
-          }));
-        }
+        const baseUser = userData?.user || userData;
         getProfileMeApi()
           .then((profData) => {
-            if (profData) {
-              setProfile((prev) => ({
-                ...prev,
-                ...profData,
-                socials: profData.socials || prev.socials || {},
-              }));
-            }
+            const cleanProf = applyProfileData(baseUser, profData);
+            setProfile(cleanProf);
+            localStorage.setItem('bloom_profile', JSON.stringify(cleanProf));
           })
-          .catch(() => { });
+          .catch(() => {
+            const cleanProf = applyProfileData(baseUser, null);
+            setProfile(cleanProf);
+          });
       })
       .catch(() => {
         localStorage.removeItem('bloom_auth_token');
+        localStorage.removeItem('bloom_profile');
         setIsAuthenticated(false);
         setUser(null);
+        setProfile(defaultBlankProfile);
       })
       .finally(() => {
         setAuthLoading(false);
@@ -196,17 +249,15 @@ export const AppProvider = ({ children }) => {
         .catch(() => { });
       getProfileMeApi()
         .then((profData) => {
-          if (profData) {
-            setProfile((prev) => ({
-              ...prev,
-              ...profData,
-              socials: profData.socials || prev.socials || {},
-            }));
+          if (profData && user) {
+            const cleanProf = applyProfileData(user, profData);
+            setProfile(cleanProf);
+            localStorage.setItem('bloom_profile', JSON.stringify(cleanProf));
           }
         })
         .catch(() => { });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user?.id]);
 
 
   const loginUser = async ({ email, password }) => {
@@ -217,23 +268,16 @@ export const AppProvider = ({ children }) => {
     setIsAuthenticated(true);
     setUser(userData?.user || userData);
 
-    const userEmail = userData?.email || userData?.user?.email || email;
-    const userName = userData?.name || userData?.user?.name || email.split('@')[0];
-
-    setProfile((prev) => ({
-      ...prev,
-      name: userName,
-      email: userEmail,
-    }));
+    const baseUser = userData?.user || userData;
+    const initialProf = applyProfileData(baseUser, null);
+    setProfile(initialProf);
 
     getProfileMeApi()
       .then((profData) => {
         if (profData) {
-          setProfile((prev) => ({
-            ...prev,
-            ...profData,
-            socials: profData.socials || prev.socials || {},
-          }));
+          const cleanProf = applyProfileData(baseUser, profData);
+          setProfile(cleanProf);
+          localStorage.setItem('bloom_profile', JSON.stringify(cleanProf));
         }
       })
       .catch(() => { });
@@ -247,11 +291,20 @@ export const AppProvider = ({ children }) => {
     }
     setIsAuthenticated(true);
     setUser(userData?.user || userData);
-    setProfile((prev) => ({
-      ...prev,
-      name: userData?.name || userData?.user?.name || prev.name,
-      email: userData?.email || userData?.user?.email || prev.email,
-    }));
+
+    const baseUser = userData?.user || userData;
+    const cleanProf = applyProfileData(baseUser, null);
+    setProfile(cleanProf);
+
+    getProfileMeApi()
+      .then((profData) => {
+        if (profData) {
+          const updatedProf = applyProfileData(baseUser, profData);
+          setProfile(updatedProf);
+          localStorage.setItem('bloom_profile', JSON.stringify(updatedProf));
+        }
+      })
+      .catch(() => { });
     return userData;
   };
 
@@ -261,9 +314,24 @@ export const AppProvider = ({ children }) => {
   };
 
   const signupUser = async ({ email, password, name }) => {
+    // Clear any stale local cached data from a previous account on this device
+    localStorage.removeItem('bloom_auth_token');
+    localStorage.removeItem('bloom_profile');
+    localStorage.removeItem('bloom_leads');
+    localStorage.removeItem('enlazer_is_published');
+    localStorage.removeItem('bloom_is_card_linked');
+    localStorage.removeItem('bloom_linked_card_uid');
+    localStorage.removeItem('bloom_synced_leads');
+    localStorage.removeItem('bloom_google_access_token');
+    localStorage.removeItem('bloom_google_user_email');
+    localStorage.removeItem('bloom_google_connected');
+
+    setIsAuthenticated(false);
+    setUser(null);
+    setProfile(defaultBlankProfile);
+    setLeads([]);
+
     const userData = await signupApi({ email, password, name });
-    // User account registered and welcome email dispatched.
-    // Do NOT auto-authenticate or set session tokens so user must check email and log in.
     return userData;
   };
 
@@ -274,8 +342,20 @@ export const AppProvider = ({ children }) => {
       // Continue client logout even if API call fails
     }
     localStorage.removeItem('bloom_auth_token');
+    localStorage.removeItem('bloom_profile');
+    localStorage.removeItem('bloom_leads');
+    localStorage.removeItem('enlazer_is_published');
+    localStorage.removeItem('bloom_is_card_linked');
+    localStorage.removeItem('bloom_linked_card_uid');
+    localStorage.removeItem('bloom_synced_leads');
+    localStorage.removeItem('bloom_google_access_token');
+    localStorage.removeItem('bloom_google_user_email');
+    localStorage.removeItem('bloom_google_connected');
+
     setIsAuthenticated(false);
     setUser(null);
+    setProfile(defaultBlankProfile);
+    setLeads([]);
     setCurrentPage('home');
   };
 
@@ -899,13 +979,13 @@ export const AppProvider = ({ children }) => {
 
       {/* Toast Notification when Card is Claimed or New Lead is Captured */}
       {claimToast.show && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 border border-cyan-500/50 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4">
-          <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0">
-            <span className="font-bold text-sm">✓</span>
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] bg-slate-950/95 border-2 border-cyan-500/60 text-white px-6 py-4 rounded-2xl shadow-2xl shadow-cyan-500/20 flex items-center gap-4 w-[92%] max-w-lg animate-in fade-in slide-in-from-top-4 backdrop-blur-xl">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0">
+            <span className="font-bold text-lg">✓</span>
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <span className="text-xs font-black text-cyan-400 uppercase tracking-wider block">Realtime Alert</span>
-            <span className="text-xs font-bold text-white block">{claimToast.message}</span>
+            <span className="text-sm font-bold text-white block">{claimToast.message}</span>
           </div>
         </div>
       )}

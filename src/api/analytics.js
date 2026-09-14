@@ -1,7 +1,7 @@
 import { apiClient } from './client';
 
-export async function getAnalyticsApi() {
-  return apiClient('/api/analytics', {
+export async function getAnalyticsApi(timeframe = '24h') {
+  return apiClient(`/api/analytics?timeframe=${encodeURIComponent(timeframe)}`, {
     method: 'GET',
   });
 }

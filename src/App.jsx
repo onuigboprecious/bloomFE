@@ -36,7 +36,6 @@ import InvalidCardPage from './pages/InvalidCardPage';
 import CardTapHandler from './pages/CardTapHandler';
 
 import SEO from './components/common/SEO';
-import GoogleOAuthDisclosure from './components/hero/GoogleOAuthDisclosure';
 
 // Home Page Layout Component (enlazer.cloud & enlazer.com.ng)
 export const HomePage = () => {
@@ -54,7 +53,6 @@ export const HomePage = () => {
         <HeroSection />
         <ConnectionBanner />
         <HeroShowcase />
-        <GoogleOAuthDisclosure />
         <PricingSection />
         <Testimonials />
         <FaqSection />
