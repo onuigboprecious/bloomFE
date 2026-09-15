@@ -404,17 +404,17 @@ export const DashboardPage = () => {
   // Keep local form fields in sync when profile state is updated from backend
   useEffect(() => {
     if (profile) {
-      if (profile.avatar) setAvatar(profile.avatar);
-      if (profile.name) setName(profile.name);
-      if (profile.title) setTitle(profile.title);
-      if (profile.company) setCompany(profile.company);
-      if (profile.phone) setPhone(profile.phone);
-      if (profile.bio) setBio(profile.bio);
-      if (profile.website) setWebsite(profile.website);
-      if (profile.location) setLocation(profile.location);
-      if (profile.username) setCustomHandle(profile.username);
-      if (profile.customLinks) setCustomLinks(profile.customLinks);
-      if (profile.theme) setSelectedTheme(profile.theme);
+      if (profile.avatar !== undefined) setAvatar(profile.avatar || '');
+      if (profile.name !== undefined) setName(profile.name || '');
+      if (profile.title !== undefined) setTitle(profile.title || '');
+      if (profile.company !== undefined) setCompany(profile.company || '');
+      if (profile.phone !== undefined) setPhone(profile.phone || '');
+      if (profile.bio !== undefined) setBio(profile.bio || '');
+      if (profile.website !== undefined) setWebsite(profile.website || '');
+      if (profile.location !== undefined) setLocation(profile.location || '');
+      if (profile.username !== undefined) setCustomHandle(profile.username || '');
+      if (profile.customLinks !== undefined) setCustomLinks(profile.customLinks || []);
+      if (profile.theme !== undefined) setSelectedTheme(profile.theme);
       if (profile.template || profile.layout) setSelectedTemplate(profile.template || profile.layout);
 
       if (profile.socials && Object.keys(profile.socials).length > 0) {

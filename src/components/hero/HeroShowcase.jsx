@@ -56,7 +56,7 @@ export const HeroShowcase = () => {
         </motion.div>
 
         {/* 3 Step Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full max-w-6xl mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full max-w-6xl mb-12 sm:mb-16">
           {steps.map((s, idx) => {
             const Icon = s.icon;
             return (
@@ -94,6 +94,30 @@ export const HeroShowcase = () => {
             );
           })}
         </div>
+
+        {/* Tap Experience Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center space-y-3 max-w-4xl mx-auto mb-12 sm:mb-16"
+        >
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+            <span className="text-[#00BCFF] text-xs font-extrabold tracking-wider uppercase shrink-0">
+              TAP & SHARE
+            </span>
+            <span className="hidden sm:inline-block text-[#00BCFF] text-2xl sm:text-3xl font-extrabold select-none opacity-90">
+              |
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              How your card connects with any phone.
+            </h2>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+            No apps, no typing, no friction. Just hover your card against any smartphone and your profile opens in under a second.
+          </p>
+        </motion.div>
 
       </div>
 
