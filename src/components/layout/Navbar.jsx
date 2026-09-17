@@ -30,7 +30,6 @@ import { useApp } from '../../context/AppContext';
 export const Navbar = () => {
   const {
     setIsOrderModalOpen,
-    openWaitlistModal,
     cardFinishes,
     setSelectedFinish,
     currentPage,

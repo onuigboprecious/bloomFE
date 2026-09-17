@@ -40,13 +40,6 @@ export async function claimCardApi(cardUid) {
   });
 }
 
-export async function joinWaitlistApi(waitlistData) {
-  return apiClient('/api/waitlist', {
-    method: 'POST',
-    body: JSON.stringify(waitlistData),
-  });
-}
-
 export function getVCardUrl(username) {
   return `${API_BASE_URL}/api/vcard/@${username}`;
 }

@@ -14,7 +14,6 @@ import Footer from './components/layout/Footer';
 import OrderModal from './components/order-modal/OrderModal';
 import PublishModal from './components/order-modal/PublishModal';
 import StickyCtaBar from './components/layout/StickyCtaBar';
-import WaitlistModal from './components/ui/WaitlistModal';
 
 import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
@@ -39,7 +38,7 @@ import SEO from './components/common/SEO';
 
 // Home Page Layout Component (enlazer.cloud & enlazer.com.ng)
 export const HomePage = () => {
-  const { isWaitlistModalOpen, closeWaitlistModal, isPublishModalOpen, setIsPublishModalOpen } = useApp();
+  const { isPublishModalOpen, setIsPublishModalOpen } = useApp();
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors overflow-x-hidden relative pb-16">
@@ -61,7 +60,6 @@ export const HomePage = () => {
       <OrderModal />
       <PublishModal isOpen={isPublishModalOpen} onClose={() => setIsPublishModalOpen(false)} />
       <StickyCtaBar />
-      <WaitlistModal isOpen={isWaitlistModalOpen} onClose={closeWaitlistModal} />
     </div>
   );
 };

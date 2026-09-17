@@ -5,12 +5,10 @@ import { useApp } from '../../context/AppContext';
 import Globe from './Globe';
 
 export const HeroSection = () => {
-  const { openWaitlistModal, setCurrentPage } = useApp() || {};
+  const { setCurrentPage } = useApp() || {};
 
   const handleCtaClick = () => {
-    if (openWaitlistModal) {
-      openWaitlistModal();
-    } else if (setCurrentPage) {
+    if (setCurrentPage) {
       setCurrentPage('signup');
     }
   };

@@ -12,7 +12,6 @@ import {
   activateCardApi,
   claimCardApi,
   recordTapApi,
-  joinWaitlistApi,
   updateProfileApi,
   checkHandleApi,
   googleAuthApi,
@@ -124,7 +123,6 @@ export const AppProvider = ({ children }) => {
   const [isProUser, setIsProUser] = useState(true);
   const [selectedFinish, setSelectedFinish] = useState(mockCardFinishes[0]);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const [isWaitlistModalOpen, setIsWaitlistModalOpen] = useState(false);
   const [isShareBackModalOpen, setIsShareBackModalOpen] = useState(false);
   const [isTapSimulating, setIsTapSimulating] = useState(false);
   const [leads, setLeads] = useState(() => {
@@ -875,32 +873,6 @@ export const AppProvider = ({ children }) => {
 
   const openShareBackModal = () => setIsShareBackModalOpen(true);
   const closeShareBackModal = () => setIsShareBackModalOpen(false);
-  const openWaitlistModal = () => setIsWaitlistModalOpen(true);
-  const closeWaitlistModal = () => setIsWaitlistModalOpen(false);
-
-  const joinWaitlist = (data) => {
-    joinWaitlistApi(data).catch(() => { });
-    const existing = JSON.parse(localStorage.getItem('bloom_waitlist') || '[]');
-    const newEntry = {
-      id: 'waitlist-' + Date.now(),
-      name: data.name,
-      email: data.email,
-      phone: data.phone || '',
-      preferredFinish: data.preferredFinish || 'Stealth Matte Black',
-      createdAt: new Date().toISOString()
-    };
-    localStorage.setItem('bloom_waitlist', JSON.stringify([newEntry, ...existing]));
-
-    setClaimToast({
-      show: true,
-      uid: data.name,
-      message: `🎉 Joined VIP Waitlist! Check your inbox for launch details.`
-    });
-    setTimeout(() => {
-      setClaimToast((prev) => ({ ...prev, show: false }));
-    }, 5000);
-    return newEntry;
-  };
 
   return (
     <AppContext.Provider
@@ -937,11 +909,6 @@ export const AppProvider = ({ children }) => {
         setSelectedFinish,
         isOrderModalOpen,
         setIsOrderModalOpen,
-        isWaitlistModalOpen,
-        setIsWaitlistModalOpen,
-        openWaitlistModal,
-        closeWaitlistModal,
-        joinWaitlist,
         isShareBackModalOpen,
         setIsShareBackModalOpen,
         openShareBackModal,
