@@ -18,7 +18,7 @@ export const WhatsAppFloatingButton = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 pointer-events-auto flex flex-col items-end space-y-3 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="fixed bottom-24 right-4 sm:bottom-6 sm:right-6 z-50 pointer-events-auto flex flex-col items-end space-y-3 font-['Plus_Jakarta_Sans',sans-serif]">
 
       {/* Expandable Chat Box Popover */}
       <AnimatePresence>
