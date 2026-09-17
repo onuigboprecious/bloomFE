@@ -74,7 +74,7 @@ export const HeroShowcase = () => {
                     <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-[#00BCFF] flex items-center justify-center group-hover:scale-110 transition-transform">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <span className="text-3xl font-black text-slate-200 dark:text-slate-800 font-mono group-hover:text-[#00BCFF]/40 transition-colors">
+                    <span className="text-3xl font-black text-cyan-500/60 dark:text-cyan-400/40 font-mono group-hover:text-[#00BCFF] transition-colors">
                       {s.num}
                     </span>
                   </div>
