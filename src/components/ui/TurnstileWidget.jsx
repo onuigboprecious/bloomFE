@@ -21,6 +21,16 @@ export const TurnstileWidget = ({
   const containerRef = useRef(null);
   const widgetIdRef = useRef(null);
 
+  const onVerifyRef = useRef(onVerify);
+  const onErrorRef = useRef(onError);
+  const onExpireRef = useRef(onExpire);
+
+  useEffect(() => {
+    onVerifyRef.current = onVerify;
+    onErrorRef.current = onError;
+    onExpireRef.current = onExpire;
+  }, [onVerify, onError, onExpire]);
+
   useEffect(() => {
     // Check if script is already injected
     const scriptId = 'cf-turnstile-script';
@@ -32,13 +42,13 @@ export const TurnstileWidget = ({
           widgetIdRef.current = window.turnstile.render(containerRef.current, {
             sitekey: siteKey,
             callback: (token) => {
-              if (onVerify) onVerify(token);
+              if (onVerifyRef.current) onVerifyRef.current(token);
             },
             'error-callback': () => {
-              if (onError) onError();
+              if (onErrorRef.current) onErrorRef.current();
             },
             'expired-callback': () => {
-              if (onExpire) onExpire();
+              if (onExpireRef.current) onExpireRef.current();
             },
             theme: 'auto',
           });
@@ -72,7 +82,7 @@ export const TurnstileWidget = ({
         widgetIdRef.current = null;
       }
     };
-  }, [siteKey, onVerify, onError, onExpire]);
+  }, [siteKey]);
 
   return <div ref={containerRef} className={className} />;
 };
