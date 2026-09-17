@@ -12,7 +12,7 @@ import React, { useEffect, useRef } from 'react';
  * @param {string} [props.className] Optional CSS container styles
  */
 export const TurnstileWidget = ({
-  siteKey = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY || '0x4AAAAAAAx_sample_site_key',
+  siteKey = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA',
   onVerify,
   onError,
   onExpire,
