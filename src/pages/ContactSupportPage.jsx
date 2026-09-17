@@ -5,11 +5,13 @@ import SEO from '../components/common/SEO';
 import { Mail, Phone, MapPin, Send, CheckCircle2, Loader2 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { apiClient } from '../api/client';
+import { TurnstileWidget } from '../components/ui/TurnstileWidget';
 
 export const ContactSupportPage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [ticketId, setTicketId] = useState(null);
+  const [turnstileToken, setTurnstileToken] = useState('');
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
 
   const handleSubmit = async (e) => {
@@ -18,6 +20,7 @@ export const ContactSupportPage = () => {
     try {
       const response = await apiClient('/api/support', {
         method: 'POST',
+        headers: turnstileToken ? { 'X-Turnstile-Token': turnstileToken } : {},
         body: JSON.stringify(formData),
       });
       if (response && response.ticketId) {
@@ -170,6 +173,11 @@ export const ContactSupportPage = () => {
                     className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-2xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#00BCFF]/40"
                   />
                 </div>
+
+                <TurnstileWidget
+                  onVerify={(token) => setTurnstileToken(token)}
+                  onExpire={() => setTurnstileToken('')}
+                />
 
                 <Button
                   type="submit"
