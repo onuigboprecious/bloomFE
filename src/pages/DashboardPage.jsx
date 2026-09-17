@@ -500,7 +500,7 @@ export const DashboardPage = () => {
 
   const navTabs = [
     { id: 'creators', label: 'Profile Studio', icon: User },
-    { id: 'cards', label: 'Hardware & NFC', icon: CreditCard },
+    { id: 'cards', label: 'Wearables & Cards', icon: CreditCard },
     { id: 'leads', label: 'Received Contacts', icon: Users, count: (leads || []).length },
     { id: 'analytics', label: 'Tap Analytics', icon: BarChart3 },
     { id: 'settings', label: 'Account Settings', icon: Settings }

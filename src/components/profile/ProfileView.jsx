@@ -305,7 +305,7 @@ export const ProfileView = ({ data }) => {
 
       {/* Footer Powered By */}
       <div className={`text-center pt-8 text-xs ${theme.footerText} z-10`}>
-        Powered by <button onClick={handleGetOwnCard} className={`font-bold ${theme.textPrimary} hover:text-[#00BCFF] transition-colors cursor-pointer`}>Infarbloom</button> — IaaS Solutions
+        Powered by <button onClick={handleGetOwnCard} className={`font-bold ${theme.textPrimary} hover:text-[#00BCFF] transition-colors cursor-pointer`}>Infarbloom</button>
       </div>
 
       <ShareBackModal

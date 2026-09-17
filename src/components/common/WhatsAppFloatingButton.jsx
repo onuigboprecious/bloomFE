@@ -1,10 +1,50 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 export const WhatsAppFloatingButton = () => {
+  const location = useLocation();
+  const { currentPage } = useApp() || {};
   const [isOpen, setIsOpen] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
+
+  const marketingPages = [
+    'home',
+    'cards',
+    'wristbands',
+    'about',
+    'press',
+    'support',
+    'legal',
+    'privacy',
+    'terms',
+    'security',
+    'returns'
+  ];
+
+  const marketingPaths = [
+    '/',
+    '/cards',
+    '/wristbands',
+    '/about',
+    '/press',
+    '/support',
+    '/legal',
+    '/privacy',
+    '/terms',
+    '/security',
+    '/returns'
+  ];
+
+  const isMarketingPage =
+    marketingPages.includes(currentPage) ||
+    marketingPaths.includes(location.pathname.toLowerCase());
+
+  if (!isMarketingPage) {
+    return null;
+  }
 
   const defaultWhatsappUrl = "https://wa.me/2348084137577?text=Hello%20Enlazer%20Support%2C%20I%20have%20a%20question%20about%20my%20NFC%20card";
 
