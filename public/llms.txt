@@ -10,14 +10,14 @@ Enlazer enables professionals, founders, realtors, executives, creators, and tea
 - **NFC Wristbands**: IP68 waterproof contactless NFC wristbands for events, networking, and outdoor active professionals.
 - **Instant Digital Profile Studio**: Live customizable profile builder with dynamic link management, leads capture, and analytics.
 
-## Canonical Locations
-- Main Site (Nigeria): https://enlazer.com.ng/
-- App Platform: https://enlazer.cloud/
-- NFC Cards: https://enlazer.com.ng/cards
-- NFC Wristbands: https://enlazer.com.ng/wristbands
-- Contact & Support: https://enlazer.com.ng/support
+## Links
+- [Enlazer Official Website](https://enlazer.com.ng/): Main website for NFC smart cards, wearables, and digital profile management across Nigeria & Africa.
+- [Enlazer NFC Cards Collection](https://enlazer.com.ng/cards): Explore premium matte PVC, stainless steel, rose gold, and bamboo NFC business cards.
+- [Enlazer NFC Wearables](https://enlazer.com.ng/wristbands): Explore IP68 waterproof eco-silicone contactless NFC wristbands.
+- [Enlazer Cloud App](https://enlazer.cloud/): Live digital profile app platform and link-in-bio management.
+- [Contact & Support](https://enlazer.com.ng/support): 24/7 customer support, enterprise onboarding, and contact form.
 
 ## Contact
 - Email: support@enlazer.com.ng
-- WhatsApp / Phone: +234 803 123 4567
-- Headquarters: Bloom Card Technologies Ltd., Victoria Island, Lagos & Maitama, Abuja, Nigeria.
+- Phone / WhatsApp: +234 803 123 4567
+- Address: Bloom Card Technologies Ltd., Victoria Island, Lagos & Maitama, Abuja, Nigeria.

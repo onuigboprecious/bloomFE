@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import Globe from './Globe';
+const Globe = React.lazy(() => import('./Globe'));
 
 export const HeroSection = () => {
   const { setCurrentPage } = useApp() || {};
@@ -19,7 +19,9 @@ export const HeroSection = () => {
       {/* 3D Globe Background Layer */}
       <div className="absolute -top-12 sm:-top-16 left-1/2 -translate-x-1/2 w-[1200px] sm:w-[1400px] md:w-[1600px] h-[780px] pointer-events-none opacity-25 dark:opacity-30 z-0 flex items-center justify-center">
         <div className="w-full h-full">
-          <Globe />
+          <React.Suspense fallback={null}>
+            <Globe />
+          </React.Suspense>
         </div>
       </div>
 
