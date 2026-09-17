@@ -13,9 +13,9 @@ export const mockProfileData = {
   bio: "Designing digital experiences & building next-gen physical NFC profile cards across Nigeria. Tap to connect or download my vCard!",
   avatar: africanFounderImg,
   email: "alex.morgan@enlazer.com.ng",
-  phone: "+234 803 123 4567",
+  phone: "+234 808 413 7577",
   website: "https://alexmorgan.design",
-  location: "buja, Nigeria",
+  location: "Abuja, Nigeria",
   theme: "dark-luxe", // 'dark-luxe' | 'neon-cyber' | 'sunset-amber' | 'emerald-green'
   layout: "stack", // 'stack' | 'grid' | 'linktree'
   is_published: false, // Core state: Draft by default until published
@@ -25,7 +25,7 @@ export const mockProfileData = {
     instagram: "alexmorgan.design",
     tiktok: "@alexmorgan_creator",
     twitter: "alexmorgandesign",
-    whatsapp: "+2348031234567",
+    whatsapp: "+2348084137577",
     calendly: "https://calendly.com/alex-morgan/30min",
     portfolio: "https://alexmorgan.design",
     linkedin: "alexmorgandesign",

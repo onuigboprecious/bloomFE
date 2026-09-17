@@ -6,12 +6,12 @@ export const WhatsAppFloatingButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
 
-  const defaultWhatsappUrl = "https://wa.me/2348031234567?text=Hello%20Enlazer%20Support%2C%20I%20have%20a%20question%20about%20my%20NFC%20card";
+  const defaultWhatsappUrl = "https://wa.me/2348084137577?text=Hello%20Enlazer%20Support%2C%20I%20have%20a%20question%20about%20my%20NFC%20card";
 
   const handleSendCustomMessage = (e) => {
     e.preventDefault();
     const encodedText = encodeURIComponent(customMessage.trim() || "Hello Enlazer Support, I would like to inquire about NFC cards.");
-    const fullUrl = `https://wa.me/2348031234567?text=${encodedText}`;
+    const fullUrl = `https://wa.me/2348084137577?text=${encodedText}`;
     window.open(fullUrl, '_blank');
     setIsOpen(false);
     setCustomMessage('');

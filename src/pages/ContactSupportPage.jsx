@@ -75,8 +75,8 @@ export const ContactSupportPage = () => {
                 </div>
                 <h4 className="font-bold text-slate-900 dark:text-white text-base">WhatsApp & Calls</h4>
               </div>
-              <a href="tel:+2348031234567" className="text-sm font-bold text-emerald-600 dark:text-emerald-400 hover:underline block pl-10">
-                +234 803 123 4567
+              <a href="tel:+2348084137577" className="text-sm font-bold text-emerald-600 dark:text-emerald-400 hover:underline block pl-10">
+                +234 808 413 7577
               </a>
               <p className="text-xs text-slate-500 dark:text-slate-400 pl-10">Mon–Sat, 8:00 AM – 7:00 PM WAT</p>
             </div>

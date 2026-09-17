@@ -5,7 +5,7 @@ import { useApp } from '../../context/AppContext';
 export const Footer = () => {
   const { setCurrentPage } = useApp();
 
-  const whatsappUrl = "https://wa.me/2348031234567?text=Hello%20Enlazer%20Support%2C%20I%20have%20a%20question%20about%20my%20NFC%20card";
+  const whatsappUrl = "https://wa.me/2348084137577?text=Hello%20Enlazer%20Support%2C%20I%20have%20a%20question%20about%20my%20NFC%20card";
 
   return (
     <footer id="footer" className="bg-slate-900 text-white pt-16 pb-12 mt-24 border-t border-slate-800 relative z-10">
@@ -55,7 +55,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2 text-xs">
                 <Phone className="w-4 h-4 text-cyan-400 shrink-0" />
-                <a href="tel:+2348031234567" className="hover:text-cyan-400 transition-colors">+234 803 123 4567</a>
+                <a href="tel:+2348084137577" className="hover:text-cyan-400 transition-colors">+234 808 413 7577</a>
               </li>
             </ul>
           </div>
