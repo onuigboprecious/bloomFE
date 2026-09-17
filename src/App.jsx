@@ -345,11 +345,14 @@ export const AppRoutes = () => {
   );
 };
 
+import WhatsAppFloatingButton from './components/common/WhatsAppFloatingButton';
+
 export default function App() {
   return (
     <BrowserRouter>
       <AppProvider>
         <AppRoutes />
+        <WhatsAppFloatingButton />
       </AppProvider>
     </BrowserRouter>
   );
