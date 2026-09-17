@@ -1,9 +1,9 @@
-import africanFounderImg from '../assets/images/african_founder.png';
-import nfcMatteBlackImg from '../assets/images/nfc_wristband_showcase.png';
-import africanWomanImg from '../assets/images/african_woman_executive.png';
-import africanMaleCorporateImg from '../assets/images/african_male_corporate.png';
-import africanFemaleRealtorImg from '../assets/images/african_female_realtor.png';
-import africanMaleDeveloperImg from '../assets/images/african_male_developer.png';
+import africanFounderImg from '../assets/images/african_founder.webp';
+import nfcMatteBlackImg from '../assets/images/nfc_wristband_showcase.webp';
+import africanWomanImg from '../assets/images/african_woman_executive.webp';
+import africanMaleCorporateImg from '../assets/images/african_male_corporate.webp';
+import africanFemaleRealtorImg from '../assets/images/african_female_realtor.webp';
+import africanMaleDeveloperImg from '../assets/images/african_male_developer.webp';
 
 export const mockProfileData = {
   name: "Alex Morgan",

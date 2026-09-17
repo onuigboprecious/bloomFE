@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import handshakeImg from '../../assets/images/handshake.png';
+import handshakeImg from '../../assets/images/handshake.webp';
 
 export const ConnectionBanner = () => {
   const { setCurrentPage, isAuthenticated } = useApp();

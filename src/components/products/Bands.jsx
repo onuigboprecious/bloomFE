@@ -15,7 +15,7 @@ import {
   Truck,
   CheckCircle2
 } from 'lucide-react';
-import wristbandShowcaseImg from '../../assets/images/nfc_wristband_showcase.png';
+import wristbandShowcaseImg from '../../assets/images/nfc_wristband_showcase.webp';
 import { useApp } from '../../context/AppContext';
 
 export const Bands = () => {

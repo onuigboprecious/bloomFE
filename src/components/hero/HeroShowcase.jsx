@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { UserPlus, Palette, CreditCard, CheckCircle2 } from 'lucide-react';
-import phoneHandImg from '../../assets/images/phone-hand-new.png';
-import mobilePhoneHandImg from '../../assets/images/mobile-phone-hand-new.png';
+import phoneHandImg from '../../assets/images/phone-hand-new.webp';
+import mobilePhoneHandImg from '../../assets/images/mobile-phone-hand-new.webp';
 
 export const HeroShowcase = () => {
   const steps = [

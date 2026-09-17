@@ -183,6 +183,15 @@ export const AppProvider = ({ children }) => {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
 
+    const activeToken = localStorage.getItem('bloom_auth_token');
+    if (!activeToken) {
+      setIsAuthenticated(false);
+      setUser(null);
+      setProfile(defaultBlankProfile);
+      setAuthLoading(false);
+      return;
+    }
+
     getMeApi()
       .then((userData) => {
         setIsAuthenticated(true);
