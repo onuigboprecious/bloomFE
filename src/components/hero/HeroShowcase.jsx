@@ -1,8 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { UserPlus, Palette, CreditCard, CheckCircle2 } from 'lucide-react';
-import phoneHandImg from '../../assets/images/phone-hand-new.webp';
-import mobilePhoneHandImg from '../../assets/images/mobile-phone-hand-new.webp';
 
 export const HeroShowcase = () => {
   const steps = [
@@ -131,14 +129,14 @@ export const HeroShowcase = () => {
           className="w-full relative flex justify-center items-end px-0"
         >
           <picture className="w-full flex justify-center items-end">
-            <source media="(min-width: 640px)" srcSet={phoneHandImg} />
+            <source media="(min-width: 640px)" srcSet="/phone-hand-new.webp" />
             <img
-              src={mobilePhoneHandImg}
+              src="/mobile-phone-hand-new.webp"
               alt="Enlazer Hosted Profile Mobile Showcase"
               fetchpriority="high"
               decoding="async"
-              width="1000"
-              height="1000"
+              width="1344"
+              height="896"
               className="w-full min-w-full h-auto object-cover sm:object-contain block align-bottom origin-bottom"
             />
           </picture>
