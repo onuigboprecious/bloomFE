@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Lock, Mail, User, Building2, CheckCircle2 } from 'lucide-react';
 import Button from '../ui/Button';
 import { useApp } from '../../context/AppContext';
+import { TurnstileWidget } from '../ui/TurnstileWidget';
 
 export const SignUpPage = () => {
   const { setCurrentPage, signupUser, loginWithGoogleRedirect } = useApp();
@@ -13,6 +14,7 @@ export const SignUpPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -203,6 +205,12 @@ export const SignUpPage = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Turnstile Protection */}
+              <TurnstileWidget
+                onVerify={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken('')}
+              />
 
               {/* Submit Button */}
               <Button

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Lock, Mail, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import Button from '../ui/Button';
 import { useApp } from '../../context/AppContext';
+import { TurnstileWidget } from '../ui/TurnstileWidget';
 
 export const LoginPage = () => {
   const { setCurrentPage, loginUser, loginWithGoogleRedirect } = useApp();
@@ -12,6 +13,7 @@ export const LoginPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -183,6 +185,12 @@ export const LoginPage = () => {
                   <span>Remember this device</span>
                 </label>
               </div>
+
+              {/* Turnstile Protection */}
+              <TurnstileWidget
+                onVerify={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken('')}
+              />
 
               {/* Submit Button */}
               <Button
