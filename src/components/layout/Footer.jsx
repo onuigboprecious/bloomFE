@@ -93,7 +93,7 @@ export const Footer = () => {
 
             {/* Facebook */}
             <a
-              href="https://facebook.com/enlazer"
+              href="https://facebook.com/enlazer_cloud"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
