@@ -135,6 +135,10 @@ export const HeroShowcase = () => {
             <img
               src={mobilePhoneHandImg}
               alt="Enlazer Hosted Profile Mobile Showcase"
+              fetchpriority="high"
+              decoding="async"
+              width="1000"
+              height="1000"
               className="w-full min-w-full h-auto object-cover sm:object-contain block align-bottom origin-bottom"
             />
           </picture>

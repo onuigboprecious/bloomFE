@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
 import { isAppDomain, isMarketingDomain, getMarketingDomainUrl, getAppDomainUrl } from './config/domainConfig';
@@ -15,24 +15,25 @@ import OrderModal from './components/order-modal/OrderModal';
 import PublishModal from './components/order-modal/PublishModal';
 import StickyCtaBar from './components/layout/StickyCtaBar';
 
-import LoginPage from './components/auth/LoginPage';
-import SignUpPage from './components/auth/SignUpPage';
-import DashboardPage from './pages/DashboardPage';
-import NfcCardsPage from './components/products/NfcCardsPage';
-import NfcWristbandsPage from './components/products/NfcWristbandsPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
-import AboutUsPage from './pages/AboutUsPage';
-import PressMediaPage from './pages/PressMediaPage';
-import ContactSupportPage from './pages/ContactSupportPage';
-import LegalPage from './pages/LegalPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import TermsOfServicePage from './pages/TermsOfServicePage';
-import SecurityPage from './pages/SecurityPage';
-import ReturnsGuaranteePage from './pages/ReturnsGuaranteePage';
-import ClaimCardPage from './pages/ClaimCardPage';
-import InvalidCardPage from './pages/InvalidCardPage';
-import CardTapHandler from './pages/CardTapHandler';
+// Lazy-loaded routes for code splitting & optimum performance
+const LoginPage = lazy(() => import('./components/auth/LoginPage'));
+const SignUpPage = lazy(() => import('./components/auth/SignUpPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const NfcCardsPage = lazy(() => import('./components/products/NfcCardsPage'));
+const NfcWristbandsPage = lazy(() => import('./components/products/NfcWristbandsPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
+const AboutUsPage = lazy(() => import('./pages/AboutUsPage'));
+const PressMediaPage = lazy(() => import('./pages/PressMediaPage'));
+const ContactSupportPage = lazy(() => import('./pages/ContactSupportPage'));
+const LegalPage = lazy(() => import('./pages/LegalPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
+const SecurityPage = lazy(() => import('./pages/SecurityPage'));
+const ReturnsGuaranteePage = lazy(() => import('./pages/ReturnsGuaranteePage'));
+const ClaimCardPage = lazy(() => import('./pages/ClaimCardPage'));
+const InvalidCardPage = lazy(() => import('./pages/InvalidCardPage'));
+const CardTapHandler = lazy(() => import('./pages/CardTapHandler'));
 
 import SEO from './components/common/SEO';
 
@@ -239,101 +240,107 @@ export const AppRoutes = () => {
   return (
     <>
       <RouteSyncBridge />
-      <Routes>
-        {/* 1. Home / Root Route */}
-        {/* On enlazer.cloud / www.enlazer.cloud app domain, redirect authenticated to /dashboard, unauthenticated to /login */}
-        {/* On enlazer.com.ng marketing domain, render HomePage */}
-        <Route
-          path="/"
-          element={
-            isApp ? (
-              authLoading ? (
-                <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex items-center justify-center p-4 text-center">
-                  <div className="space-y-4">
-                    <div className="w-12 h-12 border-4 border-[#00BCFF] border-t-transparent rounded-full animate-spin mx-auto" />
-                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400">Verifying session...</p>
+      <Suspense fallback={
+        <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-[#00BCFF] border-t-transparent rounded-full animate-spin" />
+        </div>
+      }>
+        <Routes>
+          {/* 1. Home / Root Route */}
+          {/* On enlazer.cloud / www.enlazer.cloud app domain, redirect authenticated to /dashboard, unauthenticated to /login */}
+          {/* On enlazer.com.ng marketing domain, render HomePage */}
+          <Route
+            path="/"
+            element={
+              isApp ? (
+                authLoading ? (
+                  <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex items-center justify-center p-4 text-center">
+                    <div className="space-y-4">
+                      <div className="w-12 h-12 border-4 border-[#00BCFF] border-t-transparent rounded-full animate-spin mx-auto" />
+                      <p className="text-xs font-bold text-slate-500 dark:text-slate-400">Verifying session...</p>
+                    </div>
                   </div>
-                </div>
-              ) : isAuthenticated ? (
-                <Navigate to="/dashboard" replace />
+                ) : isAuthenticated ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
               ) : (
-                <Navigate to="/login" replace />
+                <HomePage />
               )
-            ) : (
-              <HomePage />
-            )
-          }
-        />
+            }
+          />
 
-        {/* 2. Dashboard Route (enlazer.cloud/dashboard) */}
-        <Route
-          path="/dashboard"
-          element={
-            <RequireAuth>
-              <DashboardPage />
-            </RequireAuth>
-          }
-        />
+          {/* 2. Dashboard Route (enlazer.cloud/dashboard) */}
+          <Route
+            path="/dashboard"
+            element={
+              <RequireAuth>
+                <DashboardPage />
+              </RequireAuth>
+            }
+          />
 
-        {/* 3. Profile & NFC Card Tap Views (enlazer.cloud/profile, enlazer.cloud/@username, enlazer.cloud/profile/:username, enlazer.cloud/card/:cardUid) */}
-        <Route path="/profile" element={<CardTapHandler />} />
-        <Route path="/profile/:username" element={<CardTapHandler />} />
-        <Route path="/@:username" element={<CardTapHandler />} />
-        <Route path="/card/:cardUid" element={<CardTapHandler />} />
+          {/* 3. Profile & NFC Card Tap Views (enlazer.cloud/profile, enlazer.cloud/@username, enlazer.cloud/profile/:username, enlazer.cloud/card/:cardUid) */}
+          <Route path="/profile" element={<CardTapHandler />} />
+          <Route path="/profile/:username" element={<CardTapHandler />} />
+          <Route path="/@:username" element={<CardTapHandler />} />
+          <Route path="/card/:cardUid" element={<CardTapHandler />} />
 
-        {/* Auth Pages */}
-        <Route
-          path="/login"
-          element={
-            <RedirectIfAuth>
-              <LoginPage />
-            </RedirectIfAuth>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <RedirectIfAuth>
-              <SignUpPage />
-            </RedirectIfAuth>
-          }
-        />
-        <Route path="/claim" element={<ClaimCardPage />} />
-        <Route path="/invalid-card" element={<InvalidCardPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+          {/* Auth Pages */}
+          <Route
+            path="/login"
+            element={
+              <RedirectIfAuth>
+                <LoginPage />
+              </RedirectIfAuth>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <RedirectIfAuth>
+                <SignUpPage />
+              </RedirectIfAuth>
+            }
+          />
+          <Route path="/claim" element={<ClaimCardPage />} />
+          <Route path="/invalid-card" element={<InvalidCardPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-        {/* Marketing Pages (enlazer.com.ng) */}
-        <Route path="/cards" element={<NfcCardsPage />} />
-        <Route path="/wristbands" element={<NfcWristbandsPage />} />
-        <Route path="/about" element={<AboutUsPage />} />
-        <Route path="/press" element={<PressMediaPage />} />
-        <Route path="/support" element={<ContactSupportPage />} />
-        <Route path="/legal" element={<LegalPage />} />
-        <Route path="/privacy" element={<PrivacyPolicyPage />} />
-        <Route path="/terms" element={<TermsOfServicePage />} />
-        <Route path="/security" element={<SecurityPage />} />
-        <Route path="/returns" element={<ReturnsGuaranteePage />} />
+          {/* Marketing Pages (enlazer.com.ng) */}
+          <Route path="/cards" element={<NfcCardsPage />} />
+          <Route path="/wristbands" element={<NfcWristbandsPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/press" element={<PressMediaPage />} />
+          <Route path="/support" element={<ContactSupportPage />} />
+          <Route path="/legal" element={<LegalPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsOfServicePage />} />
+          <Route path="/security" element={<SecurityPage />} />
+          <Route path="/returns" element={<ReturnsGuaranteePage />} />
 
-        {/* Dynamic Handle Profile route */}
-        <Route path="/:username" element={<CardTapHandler />} />
+          {/* Dynamic Handle Profile route */}
+          <Route path="/:username" element={<CardTapHandler />} />
 
-        {/* Fallback route */}
-        <Route
-          path="*"
-          element={
-            isApp ? (
-              isAuthenticated ? (
-                <Navigate to="/dashboard" replace />
+          {/* Fallback route */}
+          <Route
+            path="*"
+            element={
+              isApp ? (
+                isAuthenticated ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
               ) : (
-                <Navigate to="/login" replace />
+                <HomePage />
               )
-            ) : (
-              <HomePage />
-            )
-          }
-        />
-      </Routes>
+            }
+          />
+        </Routes>
+      </Suspense>
     </>
   );
 };

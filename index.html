@@ -63,10 +63,18 @@
     <meta name="twitter:label2" content="Availability" />
     <meta name="twitter:data2" content="Nationwide Delivery across FCT Abuja & All 36 States" />
 
-    <!-- Speed Optimization & Font Preconnects -->
+    <!-- Speed Optimization & Critical Resource Preloads -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap">
+    </noscript>
+
+    <!-- Preload Critical LCP Hero Showcase Images -->
+    <link rel="preload" as="image" href="/phone-hand-new.png" fetchpriority="high" media="(min-width: 640px)">
+    <link rel="preload" as="image" href="/mobile-phone-hand-new.png" fetchpriority="high" media="(max-width: 639px)">
 
     <!-- Comprehensive Schema.org JSON-LD Graph for #1 Google SERP Ranking in Nigeria, Africa, FCT Abuja & All 36 States -->
     <script type="application/ld+json">
@@ -78,8 +86,8 @@
           "@id": "https://enlazer.cloud/#website",
           "url": "https://enlazer.cloud/",
           "name": "Enlazer",
-          "alternateName": ["Enlazer NFC Nigeria", "Enlazer Africa", "Enlazer Digital Business Cards"],
-          "description": "Nigeria's #1 NFC Smart Cards and Digital Business Cards platform across FCT Abuja, Lagos, and all 36 states of Nigeria & Africa.",
+          "alternateName": ["Enlazer NFC Nigeria", "Enlazer Africa", "Enlazer Digital Business Cards", "Enlazer Connectivity"],
+          "description": "Nigeria's #1 NFC Smart Cards, Digital Business Cards, and Smart Connectivity platform across FCT Abuja, Lagos, and all 36 states of Nigeria & Africa.",
           "inLanguage": "en-NG",
           "publisher": { "@id": "https://enlazer.cloud/#organization" },
           "potentialAction": {
@@ -151,7 +159,8 @@
             "Digital Business Cards Nigeria 36 States",
             "WhatsApp Link Sharing",
             "IP68 Waterproof NFC Wristbands",
-            "Contactless Digital Profile Networking"
+            "Contactless Digital Profile Networking",
+            "Smart Cards Connectivity"
           ]
         },
         {
@@ -160,7 +169,7 @@
           "name": "Enlazer Smart NFC Nigeria & Africa",
           "url": "https://enlazer.cloud/",
           "image": "https://enlazer.cloud/og-image.png",
-          "priceRange": "₦0 - ₦19,999",
+          "priceRange": "₦0 - ₦19,000",
           "currenciesAccepted": "NGN, USD",
           "paymentAccepted": "Bank Transfer, Paystack, Flutterwave, Credit Card",
           "address": {
@@ -185,7 +194,7 @@
             "@type": "AggregateOffer",
             "priceCurrency": "NGN",
             "lowPrice": "0",
-            "highPrice": "19999",
+            "highPrice": "19000",
             "offerCount": "4",
             "priceValidUntil": "2027-12-31",
             "availability": "https://schema.org/InStock",
@@ -224,6 +233,30 @@
                 "@type": "Answer",
                 "text": "Yes! Enlazer delivers custom NFC cards and wristbands to all 36 states (Abia, Adamawa, Akwa Ibom, Anambra, Bauchi, Bayelsa, Benue, Borno, Cross River, Delta, Ebonyi, Edo, Ekiti, Enugu, Gombe, Imo, Jigawa, Kaduna, Kano, Katsina, Kebbi, Kogi, Kwara, Lagos, Nasarawa, Niger, Ogun, Ondo, Osun, Oyo, Plateau, Rivers, Sokoto, Taraba, Yobe, Zamfara) and FCT Abuja."
               }
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://enlazer.cloud/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://enlazer.cloud/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "NFC Cards",
+              "item": "https://enlazer.cloud/cards"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "NFC Wristbands",
+              "item": "https://enlazer.cloud/wristbands"
             }
           ]
         }

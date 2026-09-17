@@ -5,10 +5,10 @@ import { useEffect } from 'react';
  * Open Graph, Twitter Cards, Geo-targeting, and JSON-LD schema injection.
  */
 export default function SEO({
-  title = "Enlazer — #1 NFC Smart Cards & Digital Business Cards in Nigeria, FCT Abuja & Africa",
-  description = "Enlazer is Nigeria's #1 NFC Smart Card & Digital Business Card platform. Share your WhatsApp, socials, and portfolio with one NFC tap across FCT Abuja, Lagos, and all 36 states of Nigeria & Africa.",
+  title = "Enlazer — #1 NFC Smart Cards, Digital Business Cards & Smart Connectivity in Nigeria, FCT Abuja & Africa",
+  description = "Enlazer is Nigeria's #1 NFC Smart Card, Digital Business Card & Smart Connectivity platform. Share your WhatsApp, socials, and portfolio with one NFC tap across FCT Abuja, Lagos, and all 36 states of Nigeria & Africa.",
   image = "https://enlazer.cloud/og-image.png",
-  url = "https://enlazer.cloud/",
+  url = typeof window !== 'undefined' ? window.location.href : "https://enlazer.cloud/",
   type = "website",
   schema = null
 }) {

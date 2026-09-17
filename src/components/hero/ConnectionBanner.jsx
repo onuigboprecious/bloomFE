@@ -61,6 +61,9 @@ export const ConnectionBanner = () => {
         <img
           src={handshakeImg}
           alt="Enlazer Hosted Digital Profile Connection Handshake Showcase"
+          loading="lazy"
+          width="1920"
+          height="1080"
           className="w-full min-w-full h-auto object-cover block shadow-2xl"
         />
       </motion.div>

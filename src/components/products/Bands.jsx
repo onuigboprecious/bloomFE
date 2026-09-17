@@ -67,6 +67,9 @@ export const Bands = () => {
                 <img
                   src={activeBand.image || wristbandShowcaseImg}
                   alt={activeBand.name}
+                  loading="lazy"
+                  width="600"
+                  height="600"
                   className="w-full h-auto object-contain rounded-3xl drop-shadow-xl"
                 />
               </div>

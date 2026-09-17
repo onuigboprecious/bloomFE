@@ -91,6 +91,9 @@ export const Testimonials = () => {
                     <img
                       src={card.avatar}
                       alt={card.name}
+                      loading="lazy"
+                      width="96"
+                      height="96"
                       className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white/90 dark:border-slate-800 shadow-2xl transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#00BCFF] text-white flex items-center justify-center shadow-md border-2 border-slate-950">
