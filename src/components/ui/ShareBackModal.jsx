@@ -66,7 +66,7 @@ export const ShareBackModal = ({ isOpen, onClose, ownerName, cardUid, username }
     onClose();
   };
 
-  const displayName = ownerName || profile?.name || 'Precious Onuigbo';
+  const displayName = ownerName || profile?.name || 'Alex Morgan';
 
   return (
     <AnimatePresence>

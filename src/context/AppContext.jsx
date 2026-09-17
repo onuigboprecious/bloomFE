@@ -396,7 +396,7 @@ export const AppProvider = ({ children }) => {
     setClaimToast({
       show: true,
       uid: cardId,
-      message: `Card #${cardId} Claimed & Linked Immediately to @${profile.username || 'precious'}!`
+      message: `Card #${cardId} Claimed & Linked Immediately to @${profile.username || 'alexmorgan'}!`
     });
     setTimeout(() => {
       setClaimToast((prev) => ({ ...prev, show: false }));
